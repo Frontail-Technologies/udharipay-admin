@@ -4,14 +4,23 @@ import type { ReactNode } from "react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { QueryProvider } from "@/providers/QueryProvider";
+import { AppErrorBoundary } from "@/components/feedback/AppErrorBoundary";
+import { ConfirmProvider } from "@/components/feedback/ConfirmProvider";
+import { AuthProvider } from "@/features/auth/AuthProvider";
 
 export function AppProviders({ children }: { children: ReactNode }) {
   return (
-    <QueryProvider>
-      <TooltipProvider delayDuration={200}>
-        {children}
-        <Toaster position="top-right" />
-      </TooltipProvider>
-    </QueryProvider>
+    <AppErrorBoundary>
+      <QueryProvider>
+        <AuthProvider>
+          <ConfirmProvider>
+            <TooltipProvider delayDuration={200}>
+              {children}
+              <Toaster position="top-right" />
+            </TooltipProvider>
+          </ConfirmProvider>
+        </AuthProvider>
+      </QueryProvider>
+    </AppErrorBoundary>
   );
 }

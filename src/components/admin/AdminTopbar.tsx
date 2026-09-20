@@ -16,6 +16,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/features/auth/AuthProvider";
 
 function useActiveLabel() {
   const pathname = usePathname();
@@ -28,6 +29,7 @@ function useActiveLabel() {
 
 export function AdminTopbar({ onOpenMobileNav }: { onOpenMobileNav: () => void }) {
   const activeLabel = useActiveLabel();
+  const { logout, session } = useAuth();
 
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center gap-2 border-b border-border bg-surface/95 px-4 backdrop-blur supports-backdrop-filter:bg-surface/80 sm:gap-3 sm:px-5 lg:gap-4 lg:px-6">
@@ -100,13 +102,13 @@ export function AdminTopbar({ onOpenMobileNav }: { onOpenMobileNav: () => void }
               aria-label="Admin account menu"
               className="ml-1 flex size-9 items-center justify-center rounded-full bg-primary-muted text-[12px] font-semibold text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              AU
+              {session?.user.role.slice(0, 2).toUpperCase() ?? "AU"}
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48">
             <DropdownMenuItem disabled>Profile</DropdownMenuItem>
             <DropdownMenuItem disabled>Settings</DropdownMenuItem>
-            <DropdownMenuItem disabled>Log out</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => void logout()}>Log out</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
