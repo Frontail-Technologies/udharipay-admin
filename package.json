@@ -9,7 +9,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "api:generate": "orval --config orval.config.ts",
+    "api:generate": "orval --config orval.config.ts && node scripts/clean-generated-api.mjs",
     "api:sync": "npm --prefix ../backend run api:spec && npm run api:generate",
     "api:check": "npm run api:generate && git diff --exit-code -- src/api/generated"
   },

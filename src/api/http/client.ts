@@ -44,12 +44,12 @@ httpClient.interceptors.response.use(
   },
 );
 
-export async function apiClient<T>(config: AxiosRequestConfig, options?: AxiosRequestConfig): Promise<T> {
+export type ApiRequestOptions = AxiosRequestConfig;
+
+export async function apiClient<T>(config: AxiosRequestConfig, options?: ApiRequestOptions): Promise<T> {
   const response = await httpClient.request<T>({ ...config, ...options });
   return response.data;
 }
-
-export type BodyType<T> = T;
 
 function createRequestId() {
   return globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(16).slice(2)}`;

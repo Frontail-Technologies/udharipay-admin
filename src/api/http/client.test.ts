@@ -1,7 +1,7 @@
 import AxiosMockAdapter from "axios-mock-adapter";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { adminLogin, getCurrentSession } from "@/api/generated/auth/auth";
-import { exportReport } from "@/api/generated/reports/reports";
+import { adminLogin, getCurrentSession } from "@/api/generated/auth";
+import { exportReport } from "@/api/generated/reports";
 import { httpClient } from "./client";
 
 const mock = new AxiosMockAdapter(httpClient);

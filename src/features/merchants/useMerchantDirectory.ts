@@ -3,8 +3,8 @@
 import { useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { assignMerchant, listMerchants } from "@/api/generated/merchants/merchants";
-import type { ListMerchantsParams, MerchantListItem } from "@/api/generated/udhariPayAPI.schemas";
+import { assignMerchant, listMerchants } from "@/api/generated/merchants";
+import type { ListMerchantsParams, MerchantListItem } from "@/api/generated/contracts/merchants";
 import type { DerivedMerchant } from "@/data/admin";
 import { useAdminMerchants } from "@/hooks/useAdminEntities";
 import { useConfirm } from "@/components/feedback/ConfirmProvider";

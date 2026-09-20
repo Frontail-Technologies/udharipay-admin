@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { adminLogin } from "@/api/generated/auth/auth";
+import { adminLogin } from "@/api/generated/auth";
 import { applyApiFormErrors } from "@/api/forms/formErrors";
 import { authKeys, useAuth } from "@/features/auth/AuthProvider";
 import { Button } from "@/components/ui/button";

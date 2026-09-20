@@ -3,8 +3,8 @@
 import { createContext, useContext, useEffect, type ReactNode } from "react";
 import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { getCurrentSession, logout as logoutSession } from "@/api/generated/auth/auth";
-import type { SessionContext } from "@/api/generated/udhariPayAPI.schemas";
+import { getCurrentSession, logout as logoutSession } from "@/api/generated/auth";
+import type { SessionContext } from "@/api/generated/contracts/auth";
 
 type AuthValue = {
   session: SessionContext | null;
