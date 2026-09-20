@@ -1,10 +1,10 @@
 "use client";
 
 import { createContext, useContext, useEffect, type ReactNode } from "react";
-import { useQueryClient, type QueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useGetCurrentSession, useLogout } from "@/api/generated/auth/auth";
-import type { SessionContext } from "@/api/generated/models";
+import { getCurrentSession, logout as logoutSession } from "@/api/generated/auth/auth";
+import type { SessionContext } from "@/api/generated/udhariPayAPI.schemas";
 
 type AuthValue = {
   session: SessionContext | null;
@@ -15,11 +15,15 @@ type AuthValue = {
 
 const AuthContext = createContext<AuthValue | null>(null);
 
+export const authKeys = {
+  session: ["auth", "session"] as const,
+};
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const sessionQuery = useGetCurrentSession({ query: { retry: false } });
-  const logoutMutation = useLogout();
+  const sessionQuery = useQuery({ queryKey: authKeys.session, queryFn: ({ signal }) => getCurrentSession({ signal }), retry: false });
+  const logoutMutation = useMutation({ mutationFn: () => logoutSession() });
 
   const clearSession = async () => {
     clearAuthenticatedCache(queryClient);

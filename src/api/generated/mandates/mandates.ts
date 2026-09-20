@@ -5,27 +5,7 @@
  * Canonical contracts for UdhariPay clients
  * OpenAPI spec version: 1.0.0
  */
-import {
-  useMutation,
-  useQuery
-} from '@tanstack/react-query';
 import type {
-  DataTag,
-  DefinedInitialDataOptions,
-  DefinedUseQueryResult,
-  MutationFunction,
-  QueryClient,
-  QueryFunction,
-  QueryKey,
-  UndefinedInitialDataOptions,
-  UseMutationOptions,
-  UseMutationResult,
-  UseQueryOptions,
-  UseQueryResult
-} from '@tanstack/react-query';
-
-import type {
-  ApiError,
   CreateMandate201,
   CreateMandateBody,
   GetMandate200,
@@ -33,388 +13,67 @@ import type {
   ListCustomerMandatesParams,
   ListMandateAttempts200,
   ListMandateAttemptsParams
-} from '../models';
+} from '../udhariPayAPI.schemas';
 
 import { apiClient } from '../../http/client';
-import type { ErrorType , BodyType } from '../../http/client';
+import type { BodyType } from '../../http/client';
 
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
-
-const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKey: K } => {
-  const result = { queryKey } as T & { queryKey: K };
-  for (const key of Object.keys(query)) {
-    // The explicit queryKey always wins, matching the previous
-    // `{ ...query, queryKey }` spread where it was set last.
-    if (key === 'queryKey') continue;
-    Object.defineProperty(result, key, {
-      enumerable: true,
-      configurable: true,
-      get: () => (query as Record<string, unknown>)[key],
-    });
-  }
-  return result;
-};
-
-/**
+  /**
  * @summary Create a mandate
  */
 export const createMandate = (
     customerId: string,
     createMandateBody?: BodyType<CreateMandateBody>,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<CreateMandate201>>,) => {
       return apiClient<CreateMandate201>(
       {url: `/api/v1/customers/${customerId}/mandates`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
-      data: createMandateBody, signal
+      data: createMandateBody
     },
       options);
     }
-
-
-
-
-export const getCreateMandateMutationKey = () => ['createMandate'] as const;
-
-export const getCreateMandateMutationOptions = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createMandate>>, TError,CreateMandateMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
-): UseMutationOptions<Awaited<ReturnType<typeof createMandate>>, TError,CreateMandateMutationVariables, TContext> => {
-
-const mutationKey = getCreateMandateMutationKey();
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createMandate>>, CreateMandateMutationVariables> = (props) => {
-          const {customerId,data} = props ?? {};
-
-          return  createMandate(customerId,data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type CreateMandateMutationResult = NonNullable<Awaited<ReturnType<typeof createMandate>>>
-    export type CreateMandateMutationBody = BodyType<CreateMandateBody> | undefined
-    export type CreateMandateMutationError = ErrorType<ApiError>
-    export type CreateMandateMutationVariables = {customerId: string;data?: BodyType<CreateMandateBody>}
-
-    /**
- * @summary Create a mandate
- */
-export const useCreateMandate = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createMandate>>, TError,CreateMandateMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof createMandate>>,
-        TError,
-        CreateMandateMutationVariables,
-        TContext
-      > => {
-      return useMutation(getCreateMandateMutationOptions(options), queryClient);
-    }
-    /**
+  /**
  * @summary List customer mandates
  */
 export const listCustomerMandates = (
     customerId: string,
     params?: ListCustomerMandatesParams,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<ListCustomerMandates200>>,) => {
       return apiClient<ListCustomerMandates200>(
       {url: `/api/v1/customers/${customerId}/mandates`, method: 'GET',
-        params, signal
+        params
     },
       options);
     }
-
-
-
-
-export const getListCustomerMandatesQueryKey = (customerId: string,
-    params?: ListCustomerMandatesParams,) => {
-    return [
-    `/api/v1/customers/${customerId}/mandates`, ...(params ? [params] : [])
-    ] as const;
-    }
-
-
-export const getListCustomerMandatesQueryOptions = <TData = Awaited<ReturnType<typeof listCustomerMandates>>, TError = ErrorType<ApiError>>(customerId: string,
-    params?: ListCustomerMandatesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listCustomerMandates>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getListCustomerMandatesQueryKey(customerId,params);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listCustomerMandates>>> = ({ signal }) => listCustomerMandates(customerId,params, requestOptions, signal);
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: customerId !== null && customerId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listCustomerMandates>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type ListCustomerMandatesQueryResult = NonNullable<Awaited<ReturnType<typeof listCustomerMandates>>>
-export type ListCustomerMandatesQueryError = ErrorType<ApiError>
-
-
-export function useListCustomerMandates<TData = Awaited<ReturnType<typeof listCustomerMandates>>, TError = ErrorType<ApiError>>(
- customerId: string,
-    params: undefined |  ListCustomerMandatesParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listCustomerMandates>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof listCustomerMandates>>,
-          TError,
-          Awaited<ReturnType<typeof listCustomerMandates>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListCustomerMandates<TData = Awaited<ReturnType<typeof listCustomerMandates>>, TError = ErrorType<ApiError>>(
- customerId: string,
-    params?: ListCustomerMandatesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listCustomerMandates>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof listCustomerMandates>>,
-          TError,
-          Awaited<ReturnType<typeof listCustomerMandates>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListCustomerMandates<TData = Awaited<ReturnType<typeof listCustomerMandates>>, TError = ErrorType<ApiError>>(
- customerId: string,
-    params?: ListCustomerMandatesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listCustomerMandates>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary List customer mandates
- */
-
-export function useListCustomerMandates<TData = Awaited<ReturnType<typeof listCustomerMandates>>, TError = ErrorType<ApiError>>(
- customerId: string,
-    params?: ListCustomerMandatesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listCustomerMandates>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getListCustomerMandatesQueryOptions(customerId,params,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
-/**
+  /**
  * @summary Get a mandate
  */
 export const getMandate = (
     mandateId: string,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<GetMandate200>>,) => {
       return apiClient<GetMandate200>(
-      {url: `/api/v1/mandates/${mandateId}`, method: 'GET', signal
+      {url: `/api/v1/mandates/${mandateId}`, method: 'GET'
     },
       options);
     }
-
-
-
-
-export const getGetMandateQueryKey = (mandateId: string,) => {
-    return [
-    `/api/v1/mandates/${mandateId}`
-    ] as const;
-    }
-
-
-export const getGetMandateQueryOptions = <TData = Awaited<ReturnType<typeof getMandate>>, TError = ErrorType<ApiError>>(mandateId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMandate>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetMandateQueryKey(mandateId);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMandate>>> = ({ signal }) => getMandate(mandateId, requestOptions, signal);
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: mandateId !== null && mandateId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getMandate>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetMandateQueryResult = NonNullable<Awaited<ReturnType<typeof getMandate>>>
-export type GetMandateQueryError = ErrorType<ApiError>
-
-
-export function useGetMandate<TData = Awaited<ReturnType<typeof getMandate>>, TError = ErrorType<ApiError>>(
- mandateId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMandate>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getMandate>>,
-          TError,
-          Awaited<ReturnType<typeof getMandate>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetMandate<TData = Awaited<ReturnType<typeof getMandate>>, TError = ErrorType<ApiError>>(
- mandateId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMandate>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getMandate>>,
-          TError,
-          Awaited<ReturnType<typeof getMandate>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetMandate<TData = Awaited<ReturnType<typeof getMandate>>, TError = ErrorType<ApiError>>(
- mandateId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMandate>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Get a mandate
- */
-
-export function useGetMandate<TData = Awaited<ReturnType<typeof getMandate>>, TError = ErrorType<ApiError>>(
- mandateId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMandate>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getGetMandateQueryOptions(mandateId,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
-/**
+  /**
  * @summary List mandate attempts
  */
 export const listMandateAttempts = (
     mandateId: string,
     params?: ListMandateAttemptsParams,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<ListMandateAttempts200>>,) => {
       return apiClient<ListMandateAttempts200>(
       {url: `/api/v1/mandates/${mandateId}/attempts`, method: 'GET',
-        params, signal
+        params
     },
       options);
     }
-
-
-
-
-export const getListMandateAttemptsQueryKey = (mandateId: string,
-    params?: ListMandateAttemptsParams,) => {
-    return [
-    `/api/v1/mandates/${mandateId}/attempts`, ...(params ? [params] : [])
-    ] as const;
-    }
-
-
-export const getListMandateAttemptsQueryOptions = <TData = Awaited<ReturnType<typeof listMandateAttempts>>, TError = ErrorType<ApiError>>(mandateId: string,
-    params?: ListMandateAttemptsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listMandateAttempts>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getListMandateAttemptsQueryKey(mandateId,params);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listMandateAttempts>>> = ({ signal }) => listMandateAttempts(mandateId,params, requestOptions, signal);
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: mandateId !== null && mandateId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listMandateAttempts>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type ListMandateAttemptsQueryResult = NonNullable<Awaited<ReturnType<typeof listMandateAttempts>>>
-export type ListMandateAttemptsQueryError = ErrorType<ApiError>
-
-
-export function useListMandateAttempts<TData = Awaited<ReturnType<typeof listMandateAttempts>>, TError = ErrorType<ApiError>>(
- mandateId: string,
-    params: undefined |  ListMandateAttemptsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listMandateAttempts>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof listMandateAttempts>>,
-          TError,
-          Awaited<ReturnType<typeof listMandateAttempts>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListMandateAttempts<TData = Awaited<ReturnType<typeof listMandateAttempts>>, TError = ErrorType<ApiError>>(
- mandateId: string,
-    params?: ListMandateAttemptsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listMandateAttempts>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof listMandateAttempts>>,
-          TError,
-          Awaited<ReturnType<typeof listMandateAttempts>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListMandateAttempts<TData = Awaited<ReturnType<typeof listMandateAttempts>>, TError = ErrorType<ApiError>>(
- mandateId: string,
-    params?: ListMandateAttemptsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listMandateAttempts>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary List mandate attempts
- */
-
-export function useListMandateAttempts<TData = Awaited<ReturnType<typeof listMandateAttempts>>, TError = ErrorType<ApiError>>(
- mandateId: string,
-    params?: ListMandateAttemptsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listMandateAttempts>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getListMandateAttemptsQueryOptions(mandateId,params,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
+  export type CreateMandateResult = NonNullable<Awaited<ReturnType<typeof createMandate>>>
+export type ListCustomerMandatesResult = NonNullable<Awaited<ReturnType<typeof listCustomerMandates>>>
+export type GetMandateResult = NonNullable<Awaited<ReturnType<typeof getMandate>>>
+export type ListMandateAttemptsResult = NonNullable<Awaited<ReturnType<typeof listMandateAttempts>>>

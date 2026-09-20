@@ -5,27 +5,7 @@
  * Canonical contracts for UdhariPay clients
  * OpenAPI spec version: 1.0.0
  */
-import {
-  useMutation,
-  useQuery
-} from '@tanstack/react-query';
 import type {
-  DataTag,
-  DefinedInitialDataOptions,
-  DefinedUseQueryResult,
-  MutationFunction,
-  QueryClient,
-  QueryFunction,
-  QueryKey,
-  UndefinedInitialDataOptions,
-  UseMutationOptions,
-  UseMutationResult,
-  UseQueryOptions,
-  UseQueryResult
-} from '@tanstack/react-query';
-
-import type {
-  ApiError,
   ApproveKycReview200,
   ConfirmKycDocument200,
   CreateCustomerKyc201,
@@ -45,1148 +25,202 @@ import type {
   RequestResubmissionKycReview200,
   RequestResubmissionKycReviewBody,
   SubmitKycReview200
-} from '../models';
+} from '../udhariPayAPI.schemas';
 
 import { apiClient } from '../../http/client';
-import type { ErrorType , BodyType } from '../../http/client';
+import type { BodyType } from '../../http/client';
 
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
-
-const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKey: K } => {
-  const result = { queryKey } as T & { queryKey: K };
-  for (const key of Object.keys(query)) {
-    // The explicit queryKey always wins, matching the previous
-    // `{ ...query, queryKey }` spread where it was set last.
-    if (key === 'queryKey') continue;
-    Object.defineProperty(result, key, {
-      enumerable: true,
-      configurable: true,
-      get: () => (query as Record<string, unknown>)[key],
-    });
-  }
-  return result;
-};
-
-/**
+  /**
  * @summary Create a KYC review
  */
 export const createMerchantKyc = (
     merchantId: string,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<CreateMerchantKyc201>>,) => {
       return apiClient<CreateMerchantKyc201>(
-      {url: `/api/v1/merchants/${merchantId}/kyc`, method: 'POST', signal
+      {url: `/api/v1/merchants/${merchantId}/kyc`, method: 'POST'
     },
       options);
     }
-
-
-
-
-export const getCreateMerchantKycMutationKey = () => ['createMerchantKyc'] as const;
-
-export const getCreateMerchantKycMutationOptions = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createMerchantKyc>>, TError,CreateMerchantKycMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
-): UseMutationOptions<Awaited<ReturnType<typeof createMerchantKyc>>, TError,CreateMerchantKycMutationVariables, TContext> => {
-
-const mutationKey = getCreateMerchantKycMutationKey();
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createMerchantKyc>>, CreateMerchantKycMutationVariables> = (props) => {
-          const {merchantId} = props ?? {};
-
-          return  createMerchantKyc(merchantId,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type CreateMerchantKycMutationResult = NonNullable<Awaited<ReturnType<typeof createMerchantKyc>>>
-
-    export type CreateMerchantKycMutationError = ErrorType<ApiError>
-    export type CreateMerchantKycMutationVariables = {merchantId: string}
-
-    /**
- * @summary Create a KYC review
- */
-export const useCreateMerchantKyc = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createMerchantKyc>>, TError,CreateMerchantKycMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof createMerchantKyc>>,
-        TError,
-        CreateMerchantKycMutationVariables,
-        TContext
-      > => {
-      return useMutation(getCreateMerchantKycMutationOptions(options), queryClient);
-    }
-    /**
+  /**
  * @summary Get current KYC review
  */
 export const getMerchantKyc = (
     merchantId: string,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<GetMerchantKyc200>>,) => {
       return apiClient<GetMerchantKyc200>(
-      {url: `/api/v1/merchants/${merchantId}/kyc`, method: 'GET', signal
+      {url: `/api/v1/merchants/${merchantId}/kyc`, method: 'GET'
     },
       options);
     }
-
-
-
-
-export const getGetMerchantKycQueryKey = (merchantId: string,) => {
-    return [
-    `/api/v1/merchants/${merchantId}/kyc`
-    ] as const;
-    }
-
-
-export const getGetMerchantKycQueryOptions = <TData = Awaited<ReturnType<typeof getMerchantKyc>>, TError = ErrorType<ApiError>>(merchantId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMerchantKyc>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetMerchantKycQueryKey(merchantId);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMerchantKyc>>> = ({ signal }) => getMerchantKyc(merchantId, requestOptions, signal);
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: merchantId !== null && merchantId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getMerchantKyc>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetMerchantKycQueryResult = NonNullable<Awaited<ReturnType<typeof getMerchantKyc>>>
-export type GetMerchantKycQueryError = ErrorType<ApiError>
-
-
-export function useGetMerchantKyc<TData = Awaited<ReturnType<typeof getMerchantKyc>>, TError = ErrorType<ApiError>>(
- merchantId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMerchantKyc>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getMerchantKyc>>,
-          TError,
-          Awaited<ReturnType<typeof getMerchantKyc>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetMerchantKyc<TData = Awaited<ReturnType<typeof getMerchantKyc>>, TError = ErrorType<ApiError>>(
- merchantId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMerchantKyc>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getMerchantKyc>>,
-          TError,
-          Awaited<ReturnType<typeof getMerchantKyc>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetMerchantKyc<TData = Awaited<ReturnType<typeof getMerchantKyc>>, TError = ErrorType<ApiError>>(
- merchantId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMerchantKyc>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Get current KYC review
- */
-
-export function useGetMerchantKyc<TData = Awaited<ReturnType<typeof getMerchantKyc>>, TError = ErrorType<ApiError>>(
- merchantId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMerchantKyc>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getGetMerchantKycQueryOptions(merchantId,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
-/**
+  /**
  * @summary Create a KYC review
  */
 export const createCustomerKyc = (
     customerId: string,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<CreateCustomerKyc201>>,) => {
       return apiClient<CreateCustomerKyc201>(
-      {url: `/api/v1/customers/${customerId}/kyc`, method: 'POST', signal
+      {url: `/api/v1/customers/${customerId}/kyc`, method: 'POST'
     },
       options);
     }
-
-
-
-
-export const getCreateCustomerKycMutationKey = () => ['createCustomerKyc'] as const;
-
-export const getCreateCustomerKycMutationOptions = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCustomerKyc>>, TError,CreateCustomerKycMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
-): UseMutationOptions<Awaited<ReturnType<typeof createCustomerKyc>>, TError,CreateCustomerKycMutationVariables, TContext> => {
-
-const mutationKey = getCreateCustomerKycMutationKey();
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createCustomerKyc>>, CreateCustomerKycMutationVariables> = (props) => {
-          const {customerId} = props ?? {};
-
-          return  createCustomerKyc(customerId,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type CreateCustomerKycMutationResult = NonNullable<Awaited<ReturnType<typeof createCustomerKyc>>>
-
-    export type CreateCustomerKycMutationError = ErrorType<ApiError>
-    export type CreateCustomerKycMutationVariables = {customerId: string}
-
-    /**
- * @summary Create a KYC review
- */
-export const useCreateCustomerKyc = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCustomerKyc>>, TError,CreateCustomerKycMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof createCustomerKyc>>,
-        TError,
-        CreateCustomerKycMutationVariables,
-        TContext
-      > => {
-      return useMutation(getCreateCustomerKycMutationOptions(options), queryClient);
-    }
-    /**
+  /**
  * @summary Get current KYC review
  */
 export const getCustomerKyc = (
     customerId: string,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<GetCustomerKyc200>>,) => {
       return apiClient<GetCustomerKyc200>(
-      {url: `/api/v1/customers/${customerId}/kyc`, method: 'GET', signal
+      {url: `/api/v1/customers/${customerId}/kyc`, method: 'GET'
     },
       options);
     }
-
-
-
-
-export const getGetCustomerKycQueryKey = (customerId: string,) => {
-    return [
-    `/api/v1/customers/${customerId}/kyc`
-    ] as const;
-    }
-
-
-export const getGetCustomerKycQueryOptions = <TData = Awaited<ReturnType<typeof getCustomerKyc>>, TError = ErrorType<ApiError>>(customerId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomerKyc>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetCustomerKycQueryKey(customerId);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCustomerKyc>>> = ({ signal }) => getCustomerKyc(customerId, requestOptions, signal);
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: customerId !== null && customerId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCustomerKyc>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetCustomerKycQueryResult = NonNullable<Awaited<ReturnType<typeof getCustomerKyc>>>
-export type GetCustomerKycQueryError = ErrorType<ApiError>
-
-
-export function useGetCustomerKyc<TData = Awaited<ReturnType<typeof getCustomerKyc>>, TError = ErrorType<ApiError>>(
- customerId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomerKyc>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getCustomerKyc>>,
-          TError,
-          Awaited<ReturnType<typeof getCustomerKyc>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetCustomerKyc<TData = Awaited<ReturnType<typeof getCustomerKyc>>, TError = ErrorType<ApiError>>(
- customerId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomerKyc>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getCustomerKyc>>,
-          TError,
-          Awaited<ReturnType<typeof getCustomerKyc>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetCustomerKyc<TData = Awaited<ReturnType<typeof getCustomerKyc>>, TError = ErrorType<ApiError>>(
- customerId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomerKyc>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Get current KYC review
- */
-
-export function useGetCustomerKyc<TData = Awaited<ReturnType<typeof getCustomerKyc>>, TError = ErrorType<ApiError>>(
- customerId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomerKyc>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getGetCustomerKycQueryOptions(customerId,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
-/**
+  /**
  * @summary Create a KYC review
  */
 export const createEmployeeKyc = (
     employeeId: string,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<CreateEmployeeKyc201>>,) => {
       return apiClient<CreateEmployeeKyc201>(
-      {url: `/api/v1/employees/${employeeId}/kyc`, method: 'POST', signal
+      {url: `/api/v1/employees/${employeeId}/kyc`, method: 'POST'
     },
       options);
     }
-
-
-
-
-export const getCreateEmployeeKycMutationKey = () => ['createEmployeeKyc'] as const;
-
-export const getCreateEmployeeKycMutationOptions = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createEmployeeKyc>>, TError,CreateEmployeeKycMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
-): UseMutationOptions<Awaited<ReturnType<typeof createEmployeeKyc>>, TError,CreateEmployeeKycMutationVariables, TContext> => {
-
-const mutationKey = getCreateEmployeeKycMutationKey();
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createEmployeeKyc>>, CreateEmployeeKycMutationVariables> = (props) => {
-          const {employeeId} = props ?? {};
-
-          return  createEmployeeKyc(employeeId,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type CreateEmployeeKycMutationResult = NonNullable<Awaited<ReturnType<typeof createEmployeeKyc>>>
-
-    export type CreateEmployeeKycMutationError = ErrorType<ApiError>
-    export type CreateEmployeeKycMutationVariables = {employeeId: string}
-
-    /**
- * @summary Create a KYC review
- */
-export const useCreateEmployeeKyc = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createEmployeeKyc>>, TError,CreateEmployeeKycMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof createEmployeeKyc>>,
-        TError,
-        CreateEmployeeKycMutationVariables,
-        TContext
-      > => {
-      return useMutation(getCreateEmployeeKycMutationOptions(options), queryClient);
-    }
-    /**
+  /**
  * @summary Get current KYC review
  */
 export const getEmployeeKyc = (
     employeeId: string,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<GetEmployeeKyc200>>,) => {
       return apiClient<GetEmployeeKyc200>(
-      {url: `/api/v1/employees/${employeeId}/kyc`, method: 'GET', signal
+      {url: `/api/v1/employees/${employeeId}/kyc`, method: 'GET'
     },
       options);
     }
-
-
-
-
-export const getGetEmployeeKycQueryKey = (employeeId: string,) => {
-    return [
-    `/api/v1/employees/${employeeId}/kyc`
-    ] as const;
-    }
-
-
-export const getGetEmployeeKycQueryOptions = <TData = Awaited<ReturnType<typeof getEmployeeKyc>>, TError = ErrorType<ApiError>>(employeeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEmployeeKyc>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetEmployeeKycQueryKey(employeeId);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getEmployeeKyc>>> = ({ signal }) => getEmployeeKyc(employeeId, requestOptions, signal);
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: employeeId !== null && employeeId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getEmployeeKyc>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetEmployeeKycQueryResult = NonNullable<Awaited<ReturnType<typeof getEmployeeKyc>>>
-export type GetEmployeeKycQueryError = ErrorType<ApiError>
-
-
-export function useGetEmployeeKyc<TData = Awaited<ReturnType<typeof getEmployeeKyc>>, TError = ErrorType<ApiError>>(
- employeeId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEmployeeKyc>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getEmployeeKyc>>,
-          TError,
-          Awaited<ReturnType<typeof getEmployeeKyc>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetEmployeeKyc<TData = Awaited<ReturnType<typeof getEmployeeKyc>>, TError = ErrorType<ApiError>>(
- employeeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEmployeeKyc>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getEmployeeKyc>>,
-          TError,
-          Awaited<ReturnType<typeof getEmployeeKyc>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetEmployeeKyc<TData = Awaited<ReturnType<typeof getEmployeeKyc>>, TError = ErrorType<ApiError>>(
- employeeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEmployeeKyc>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Get current KYC review
- */
-
-export function useGetEmployeeKyc<TData = Awaited<ReturnType<typeof getEmployeeKyc>>, TError = ErrorType<ApiError>>(
- employeeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getEmployeeKyc>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getGetEmployeeKycQueryOptions(employeeId,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
-/**
+  /**
  * @summary List KYC reviews
  */
 export const listKycReviews = (
     params?: ListKycReviewsParams,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<ListKycReviews200>>,) => {
       return apiClient<ListKycReviews200>(
       {url: `/api/v1/kyc/reviews`, method: 'GET',
-        params, signal
+        params
     },
       options);
     }
-
-
-
-
-export const getListKycReviewsQueryKey = (params?: ListKycReviewsParams,) => {
-    return [
-    `/api/v1/kyc/reviews`, ...(params ? [params] : [])
-    ] as const;
-    }
-
-
-export const getListKycReviewsQueryOptions = <TData = Awaited<ReturnType<typeof listKycReviews>>, TError = ErrorType<ApiError>>(params?: ListKycReviewsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listKycReviews>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getListKycReviewsQueryKey(params);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listKycReviews>>> = ({ signal }) => listKycReviews(params, requestOptions, signal);
-
-
-
-
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listKycReviews>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type ListKycReviewsQueryResult = NonNullable<Awaited<ReturnType<typeof listKycReviews>>>
-export type ListKycReviewsQueryError = ErrorType<ApiError>
-
-
-export function useListKycReviews<TData = Awaited<ReturnType<typeof listKycReviews>>, TError = ErrorType<ApiError>>(
- params: undefined |  ListKycReviewsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listKycReviews>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof listKycReviews>>,
-          TError,
-          Awaited<ReturnType<typeof listKycReviews>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListKycReviews<TData = Awaited<ReturnType<typeof listKycReviews>>, TError = ErrorType<ApiError>>(
- params?: ListKycReviewsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listKycReviews>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof listKycReviews>>,
-          TError,
-          Awaited<ReturnType<typeof listKycReviews>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListKycReviews<TData = Awaited<ReturnType<typeof listKycReviews>>, TError = ErrorType<ApiError>>(
- params?: ListKycReviewsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listKycReviews>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary List KYC reviews
- */
-
-export function useListKycReviews<TData = Awaited<ReturnType<typeof listKycReviews>>, TError = ErrorType<ApiError>>(
- params?: ListKycReviewsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listKycReviews>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getListKycReviewsQueryOptions(params,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
-/**
+  /**
  * @summary Get a KYC review
  */
 export const getKycReview = (
     reviewId: string,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<GetKycReview200>>,) => {
       return apiClient<GetKycReview200>(
-      {url: `/api/v1/kyc/reviews/${reviewId}`, method: 'GET', signal
+      {url: `/api/v1/kyc/reviews/${reviewId}`, method: 'GET'
     },
       options);
     }
-
-
-
-
-export const getGetKycReviewQueryKey = (reviewId: string,) => {
-    return [
-    `/api/v1/kyc/reviews/${reviewId}`
-    ] as const;
-    }
-
-
-export const getGetKycReviewQueryOptions = <TData = Awaited<ReturnType<typeof getKycReview>>, TError = ErrorType<ApiError>>(reviewId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getKycReview>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetKycReviewQueryKey(reviewId);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getKycReview>>> = ({ signal }) => getKycReview(reviewId, requestOptions, signal);
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: reviewId !== null && reviewId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getKycReview>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetKycReviewQueryResult = NonNullable<Awaited<ReturnType<typeof getKycReview>>>
-export type GetKycReviewQueryError = ErrorType<ApiError>
-
-
-export function useGetKycReview<TData = Awaited<ReturnType<typeof getKycReview>>, TError = ErrorType<ApiError>>(
- reviewId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getKycReview>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getKycReview>>,
-          TError,
-          Awaited<ReturnType<typeof getKycReview>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetKycReview<TData = Awaited<ReturnType<typeof getKycReview>>, TError = ErrorType<ApiError>>(
- reviewId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getKycReview>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getKycReview>>,
-          TError,
-          Awaited<ReturnType<typeof getKycReview>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetKycReview<TData = Awaited<ReturnType<typeof getKycReview>>, TError = ErrorType<ApiError>>(
- reviewId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getKycReview>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Get a KYC review
- */
-
-export function useGetKycReview<TData = Awaited<ReturnType<typeof getKycReview>>, TError = ErrorType<ApiError>>(
- reviewId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getKycReview>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getGetKycReviewQueryOptions(reviewId,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
-/**
+  /**
  * @summary Create a private upload URL
  */
 export const createKycUploadUrl = (
     reviewId: string,
     createKycUploadUrlBody?: BodyType<CreateKycUploadUrlBody>,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<CreateKycUploadUrl201>>,) => {
       return apiClient<CreateKycUploadUrl201>(
       {url: `/api/v1/kyc/reviews/${reviewId}/documents/upload-url`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
-      data: createKycUploadUrlBody, signal
+      data: createKycUploadUrlBody
     },
       options);
     }
-
-
-
-
-export const getCreateKycUploadUrlMutationKey = () => ['createKycUploadUrl'] as const;
-
-export const getCreateKycUploadUrlMutationOptions = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createKycUploadUrl>>, TError,CreateKycUploadUrlMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
-): UseMutationOptions<Awaited<ReturnType<typeof createKycUploadUrl>>, TError,CreateKycUploadUrlMutationVariables, TContext> => {
-
-const mutationKey = getCreateKycUploadUrlMutationKey();
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createKycUploadUrl>>, CreateKycUploadUrlMutationVariables> = (props) => {
-          const {reviewId,data} = props ?? {};
-
-          return  createKycUploadUrl(reviewId,data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type CreateKycUploadUrlMutationResult = NonNullable<Awaited<ReturnType<typeof createKycUploadUrl>>>
-    export type CreateKycUploadUrlMutationBody = BodyType<CreateKycUploadUrlBody> | undefined
-    export type CreateKycUploadUrlMutationError = ErrorType<ApiError>
-    export type CreateKycUploadUrlMutationVariables = {reviewId: string;data?: BodyType<CreateKycUploadUrlBody>}
-
-    /**
- * @summary Create a private upload URL
- */
-export const useCreateKycUploadUrl = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createKycUploadUrl>>, TError,CreateKycUploadUrlMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof createKycUploadUrl>>,
-        TError,
-        CreateKycUploadUrlMutationVariables,
-        TContext
-      > => {
-      return useMutation(getCreateKycUploadUrlMutationOptions(options), queryClient);
-    }
-    /**
+  /**
  * @summary Confirm a KYC upload
  */
 export const confirmKycDocument = (
     documentId: string,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<ConfirmKycDocument200>>,) => {
       return apiClient<ConfirmKycDocument200>(
-      {url: `/api/v1/kyc/documents/${documentId}/confirm`, method: 'POST', signal
+      {url: `/api/v1/kyc/documents/${documentId}/confirm`, method: 'POST'
     },
       options);
     }
-
-
-
-
-export const getConfirmKycDocumentMutationKey = () => ['confirmKycDocument'] as const;
-
-export const getConfirmKycDocumentMutationOptions = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof confirmKycDocument>>, TError,ConfirmKycDocumentMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
-): UseMutationOptions<Awaited<ReturnType<typeof confirmKycDocument>>, TError,ConfirmKycDocumentMutationVariables, TContext> => {
-
-const mutationKey = getConfirmKycDocumentMutationKey();
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof confirmKycDocument>>, ConfirmKycDocumentMutationVariables> = (props) => {
-          const {documentId} = props ?? {};
-
-          return  confirmKycDocument(documentId,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type ConfirmKycDocumentMutationResult = NonNullable<Awaited<ReturnType<typeof confirmKycDocument>>>
-
-    export type ConfirmKycDocumentMutationError = ErrorType<ApiError>
-    export type ConfirmKycDocumentMutationVariables = {documentId: string}
-
-    /**
- * @summary Confirm a KYC upload
- */
-export const useConfirmKycDocument = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof confirmKycDocument>>, TError,ConfirmKycDocumentMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof confirmKycDocument>>,
-        TError,
-        ConfirmKycDocumentMutationVariables,
-        TContext
-      > => {
-      return useMutation(getConfirmKycDocumentMutationOptions(options), queryClient);
-    }
-    /**
+  /**
  * @summary Create a private document view URL
  */
 export const createKycViewUrl = (
     documentId: string,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<CreateKycViewUrl200>>,) => {
       return apiClient<CreateKycViewUrl200>(
-      {url: `/api/v1/kyc/documents/${documentId}/view-url`, method: 'POST', signal
+      {url: `/api/v1/kyc/documents/${documentId}/view-url`, method: 'POST'
     },
       options);
     }
-
-
-
-
-export const getCreateKycViewUrlMutationKey = () => ['createKycViewUrl'] as const;
-
-export const getCreateKycViewUrlMutationOptions = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createKycViewUrl>>, TError,CreateKycViewUrlMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
-): UseMutationOptions<Awaited<ReturnType<typeof createKycViewUrl>>, TError,CreateKycViewUrlMutationVariables, TContext> => {
-
-const mutationKey = getCreateKycViewUrlMutationKey();
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createKycViewUrl>>, CreateKycViewUrlMutationVariables> = (props) => {
-          const {documentId} = props ?? {};
-
-          return  createKycViewUrl(documentId,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type CreateKycViewUrlMutationResult = NonNullable<Awaited<ReturnType<typeof createKycViewUrl>>>
-
-    export type CreateKycViewUrlMutationError = ErrorType<ApiError>
-    export type CreateKycViewUrlMutationVariables = {documentId: string}
-
-    /**
- * @summary Create a private document view URL
- */
-export const useCreateKycViewUrl = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createKycViewUrl>>, TError,CreateKycViewUrlMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof createKycViewUrl>>,
-        TError,
-        CreateKycViewUrlMutationVariables,
-        TContext
-      > => {
-      return useMutation(getCreateKycViewUrlMutationOptions(options), queryClient);
-    }
-    /**
+  /**
  * @summary submit a KYC review
  */
 export const submitKycReview = (
     reviewId: string,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<SubmitKycReview200>>,) => {
       return apiClient<SubmitKycReview200>(
-      {url: `/api/v1/kyc/reviews/${reviewId}/submit`, method: 'POST', signal
+      {url: `/api/v1/kyc/reviews/${reviewId}/submit`, method: 'POST'
     },
       options);
     }
-
-
-
-
-export const getSubmitKycReviewMutationKey = () => ['submitKycReview'] as const;
-
-export const getSubmitKycReviewMutationOptions = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof submitKycReview>>, TError,SubmitKycReviewMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
-): UseMutationOptions<Awaited<ReturnType<typeof submitKycReview>>, TError,SubmitKycReviewMutationVariables, TContext> => {
-
-const mutationKey = getSubmitKycReviewMutationKey();
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof submitKycReview>>, SubmitKycReviewMutationVariables> = (props) => {
-          const {reviewId} = props ?? {};
-
-          return  submitKycReview(reviewId,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type SubmitKycReviewMutationResult = NonNullable<Awaited<ReturnType<typeof submitKycReview>>>
-
-    export type SubmitKycReviewMutationError = ErrorType<ApiError>
-    export type SubmitKycReviewMutationVariables = {reviewId: string}
-
-    /**
- * @summary submit a KYC review
- */
-export const useSubmitKycReview = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof submitKycReview>>, TError,SubmitKycReviewMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof submitKycReview>>,
-        TError,
-        SubmitKycReviewMutationVariables,
-        TContext
-      > => {
-      return useMutation(getSubmitKycReviewMutationOptions(options), queryClient);
-    }
-    /**
+  /**
  * @summary approve a KYC review
  */
 export const approveKycReview = (
     reviewId: string,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<ApproveKycReview200>>,) => {
       return apiClient<ApproveKycReview200>(
-      {url: `/api/v1/kyc/reviews/${reviewId}/approve`, method: 'POST', signal
+      {url: `/api/v1/kyc/reviews/${reviewId}/approve`, method: 'POST'
     },
       options);
     }
-
-
-
-
-export const getApproveKycReviewMutationKey = () => ['approveKycReview'] as const;
-
-export const getApproveKycReviewMutationOptions = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof approveKycReview>>, TError,ApproveKycReviewMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
-): UseMutationOptions<Awaited<ReturnType<typeof approveKycReview>>, TError,ApproveKycReviewMutationVariables, TContext> => {
-
-const mutationKey = getApproveKycReviewMutationKey();
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof approveKycReview>>, ApproveKycReviewMutationVariables> = (props) => {
-          const {reviewId} = props ?? {};
-
-          return  approveKycReview(reviewId,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type ApproveKycReviewMutationResult = NonNullable<Awaited<ReturnType<typeof approveKycReview>>>
-
-    export type ApproveKycReviewMutationError = ErrorType<ApiError>
-    export type ApproveKycReviewMutationVariables = {reviewId: string}
-
-    /**
- * @summary approve a KYC review
- */
-export const useApproveKycReview = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof approveKycReview>>, TError,ApproveKycReviewMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof approveKycReview>>,
-        TError,
-        ApproveKycReviewMutationVariables,
-        TContext
-      > => {
-      return useMutation(getApproveKycReviewMutationOptions(options), queryClient);
-    }
-    /**
+  /**
  * @summary reject a KYC review
  */
 export const rejectKycReview = (
     reviewId: string,
     rejectKycReviewBody?: BodyType<RejectKycReviewBody>,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<RejectKycReview200>>,) => {
       return apiClient<RejectKycReview200>(
       {url: `/api/v1/kyc/reviews/${reviewId}/reject`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
-      data: rejectKycReviewBody, signal
+      data: rejectKycReviewBody
     },
       options);
     }
-
-
-
-
-export const getRejectKycReviewMutationKey = () => ['rejectKycReview'] as const;
-
-export const getRejectKycReviewMutationOptions = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof rejectKycReview>>, TError,RejectKycReviewMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
-): UseMutationOptions<Awaited<ReturnType<typeof rejectKycReview>>, TError,RejectKycReviewMutationVariables, TContext> => {
-
-const mutationKey = getRejectKycReviewMutationKey();
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof rejectKycReview>>, RejectKycReviewMutationVariables> = (props) => {
-          const {reviewId,data} = props ?? {};
-
-          return  rejectKycReview(reviewId,data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type RejectKycReviewMutationResult = NonNullable<Awaited<ReturnType<typeof rejectKycReview>>>
-    export type RejectKycReviewMutationBody = BodyType<RejectKycReviewBody> | undefined
-    export type RejectKycReviewMutationError = ErrorType<ApiError>
-    export type RejectKycReviewMutationVariables = {reviewId: string;data?: BodyType<RejectKycReviewBody>}
-
-    /**
- * @summary reject a KYC review
- */
-export const useRejectKycReview = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof rejectKycReview>>, TError,RejectKycReviewMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof rejectKycReview>>,
-        TError,
-        RejectKycReviewMutationVariables,
-        TContext
-      > => {
-      return useMutation(getRejectKycReviewMutationOptions(options), queryClient);
-    }
-    /**
+  /**
  * @summary request-resubmission a KYC review
  */
 export const requestResubmissionKycReview = (
     reviewId: string,
     requestResubmissionKycReviewBody?: BodyType<RequestResubmissionKycReviewBody>,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<RequestResubmissionKycReview200>>,) => {
       return apiClient<RequestResubmissionKycReview200>(
       {url: `/api/v1/kyc/reviews/${reviewId}/request-resubmission`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
-      data: requestResubmissionKycReviewBody, signal
+      data: requestResubmissionKycReviewBody
     },
       options);
     }
-
-
-
-
-export const getRequestResubmissionKycReviewMutationKey = () => ['requestResubmissionKycReview'] as const;
-
-export const getRequestResubmissionKycReviewMutationOptions = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof requestResubmissionKycReview>>, TError,RequestResubmissionKycReviewMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
-): UseMutationOptions<Awaited<ReturnType<typeof requestResubmissionKycReview>>, TError,RequestResubmissionKycReviewMutationVariables, TContext> => {
-
-const mutationKey = getRequestResubmissionKycReviewMutationKey();
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof requestResubmissionKycReview>>, RequestResubmissionKycReviewMutationVariables> = (props) => {
-          const {reviewId,data} = props ?? {};
-
-          return  requestResubmissionKycReview(reviewId,data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type RequestResubmissionKycReviewMutationResult = NonNullable<Awaited<ReturnType<typeof requestResubmissionKycReview>>>
-    export type RequestResubmissionKycReviewMutationBody = BodyType<RequestResubmissionKycReviewBody> | undefined
-    export type RequestResubmissionKycReviewMutationError = ErrorType<ApiError>
-    export type RequestResubmissionKycReviewMutationVariables = {reviewId: string;data?: BodyType<RequestResubmissionKycReviewBody>}
-
-    /**
- * @summary request-resubmission a KYC review
- */
-export const useRequestResubmissionKycReview = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof requestResubmissionKycReview>>, TError,RequestResubmissionKycReviewMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof requestResubmissionKycReview>>,
-        TError,
-        RequestResubmissionKycReviewMutationVariables,
-        TContext
-      > => {
-      return useMutation(getRequestResubmissionKycReviewMutationOptions(options), queryClient);
-    }
+  export type CreateMerchantKycResult = NonNullable<Awaited<ReturnType<typeof createMerchantKyc>>>
+export type GetMerchantKycResult = NonNullable<Awaited<ReturnType<typeof getMerchantKyc>>>
+export type CreateCustomerKycResult = NonNullable<Awaited<ReturnType<typeof createCustomerKyc>>>
+export type GetCustomerKycResult = NonNullable<Awaited<ReturnType<typeof getCustomerKyc>>>
+export type CreateEmployeeKycResult = NonNullable<Awaited<ReturnType<typeof createEmployeeKyc>>>
+export type GetEmployeeKycResult = NonNullable<Awaited<ReturnType<typeof getEmployeeKyc>>>
+export type ListKycReviewsResult = NonNullable<Awaited<ReturnType<typeof listKycReviews>>>
+export type GetKycReviewResult = NonNullable<Awaited<ReturnType<typeof getKycReview>>>
+export type CreateKycUploadUrlResult = NonNullable<Awaited<ReturnType<typeof createKycUploadUrl>>>
+export type ConfirmKycDocumentResult = NonNullable<Awaited<ReturnType<typeof confirmKycDocument>>>
+export type CreateKycViewUrlResult = NonNullable<Awaited<ReturnType<typeof createKycViewUrl>>>
+export type SubmitKycReviewResult = NonNullable<Awaited<ReturnType<typeof submitKycReview>>>
+export type ApproveKycReviewResult = NonNullable<Awaited<ReturnType<typeof approveKycReview>>>
+export type RejectKycReviewResult = NonNullable<Awaited<ReturnType<typeof rejectKycReview>>>
+export type RequestResubmissionKycReviewResult = NonNullable<Awaited<ReturnType<typeof requestResubmissionKycReview>>>

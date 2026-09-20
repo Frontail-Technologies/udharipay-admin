@@ -5,240 +5,41 @@
  * Canonical contracts for UdhariPay clients
  * OpenAPI spec version: 1.0.0
  */
-import {
-  useQuery
-} from '@tanstack/react-query';
 import type {
-  DataTag,
-  DefinedInitialDataOptions,
-  DefinedUseQueryResult,
-  QueryClient,
-  QueryFunction,
-  QueryKey,
-  UndefinedInitialDataOptions,
-  UseQueryOptions,
-  UseQueryResult
-} from '@tanstack/react-query';
-
-import type {
-  ApiError,
   GetPayment200,
   ListPlanPayments200,
   ListPlanPaymentsParams
-} from '../models';
+} from '../udhariPayAPI.schemas';
 
 import { apiClient } from '../../http/client';
-import type { ErrorType } from '../../http/client';
 
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
-
-const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKey: K } => {
-  const result = { queryKey } as T & { queryKey: K };
-  for (const key of Object.keys(query)) {
-    // The explicit queryKey always wins, matching the previous
-    // `{ ...query, queryKey }` spread where it was set last.
-    if (key === 'queryKey') continue;
-    Object.defineProperty(result, key, {
-      enumerable: true,
-      configurable: true,
-      get: () => (query as Record<string, unknown>)[key],
-    });
-  }
-  return result;
-};
-
-/**
+  /**
  * @summary List plan payments
  */
 export const listPlanPayments = (
     planId: string,
     params?: ListPlanPaymentsParams,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<ListPlanPayments200>>,) => {
       return apiClient<ListPlanPayments200>(
       {url: `/api/v1/plans/${planId}/payments`, method: 'GET',
-        params, signal
+        params
     },
       options);
     }
-
-
-
-
-export const getListPlanPaymentsQueryKey = (planId: string,
-    params?: ListPlanPaymentsParams,) => {
-    return [
-    `/api/v1/plans/${planId}/payments`, ...(params ? [params] : [])
-    ] as const;
-    }
-
-
-export const getListPlanPaymentsQueryOptions = <TData = Awaited<ReturnType<typeof listPlanPayments>>, TError = ErrorType<ApiError>>(planId: string,
-    params?: ListPlanPaymentsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPlanPayments>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getListPlanPaymentsQueryKey(planId,params);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listPlanPayments>>> = ({ signal }) => listPlanPayments(planId,params, requestOptions, signal);
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: planId !== null && planId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listPlanPayments>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type ListPlanPaymentsQueryResult = NonNullable<Awaited<ReturnType<typeof listPlanPayments>>>
-export type ListPlanPaymentsQueryError = ErrorType<ApiError>
-
-
-export function useListPlanPayments<TData = Awaited<ReturnType<typeof listPlanPayments>>, TError = ErrorType<ApiError>>(
- planId: string,
-    params: undefined |  ListPlanPaymentsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPlanPayments>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof listPlanPayments>>,
-          TError,
-          Awaited<ReturnType<typeof listPlanPayments>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListPlanPayments<TData = Awaited<ReturnType<typeof listPlanPayments>>, TError = ErrorType<ApiError>>(
- planId: string,
-    params?: ListPlanPaymentsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPlanPayments>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof listPlanPayments>>,
-          TError,
-          Awaited<ReturnType<typeof listPlanPayments>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListPlanPayments<TData = Awaited<ReturnType<typeof listPlanPayments>>, TError = ErrorType<ApiError>>(
- planId: string,
-    params?: ListPlanPaymentsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPlanPayments>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary List plan payments
- */
-
-export function useListPlanPayments<TData = Awaited<ReturnType<typeof listPlanPayments>>, TError = ErrorType<ApiError>>(
- planId: string,
-    params?: ListPlanPaymentsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPlanPayments>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getListPlanPaymentsQueryOptions(planId,params,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
-/**
+  /**
  * @summary Get a payment
  */
 export const getPayment = (
     paymentId: string,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<GetPayment200>>,) => {
       return apiClient<GetPayment200>(
-      {url: `/api/v1/payments/${paymentId}`, method: 'GET', signal
+      {url: `/api/v1/payments/${paymentId}`, method: 'GET'
     },
       options);
     }
-
-
-
-
-export const getGetPaymentQueryKey = (paymentId: string,) => {
-    return [
-    `/api/v1/payments/${paymentId}`
-    ] as const;
-    }
-
-
-export const getGetPaymentQueryOptions = <TData = Awaited<ReturnType<typeof getPayment>>, TError = ErrorType<ApiError>>(paymentId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPayment>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetPaymentQueryKey(paymentId);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPayment>>> = ({ signal }) => getPayment(paymentId, requestOptions, signal);
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: paymentId !== null && paymentId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPayment>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetPaymentQueryResult = NonNullable<Awaited<ReturnType<typeof getPayment>>>
-export type GetPaymentQueryError = ErrorType<ApiError>
-
-
-export function useGetPayment<TData = Awaited<ReturnType<typeof getPayment>>, TError = ErrorType<ApiError>>(
- paymentId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPayment>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getPayment>>,
-          TError,
-          Awaited<ReturnType<typeof getPayment>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetPayment<TData = Awaited<ReturnType<typeof getPayment>>, TError = ErrorType<ApiError>>(
- paymentId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPayment>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getPayment>>,
-          TError,
-          Awaited<ReturnType<typeof getPayment>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetPayment<TData = Awaited<ReturnType<typeof getPayment>>, TError = ErrorType<ApiError>>(
- paymentId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPayment>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Get a payment
- */
-
-export function useGetPayment<TData = Awaited<ReturnType<typeof getPayment>>, TError = ErrorType<ApiError>>(
- paymentId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPayment>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getGetPaymentQueryOptions(paymentId,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
+  export type ListPlanPaymentsResult = NonNullable<Awaited<ReturnType<typeof listPlanPayments>>>
+export type GetPaymentResult = NonNullable<Awaited<ReturnType<typeof getPayment>>>

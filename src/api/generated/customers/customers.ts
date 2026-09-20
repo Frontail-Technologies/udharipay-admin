@@ -5,27 +5,7 @@
  * Canonical contracts for UdhariPay clients
  * OpenAPI spec version: 1.0.0
  */
-import {
-  useMutation,
-  useQuery
-} from '@tanstack/react-query';
 import type {
-  DataTag,
-  DefinedInitialDataOptions,
-  DefinedUseQueryResult,
-  MutationFunction,
-  QueryClient,
-  QueryFunction,
-  QueryKey,
-  UndefinedInitialDataOptions,
-  UseMutationOptions,
-  UseMutationResult,
-  UseQueryOptions,
-  UseQueryResult
-} from '@tanstack/react-query';
-
-import type {
-  ApiError,
   CreateCustomer201,
   CreateCustomerBody,
   GetCustomer200,
@@ -33,356 +13,68 @@ import type {
   ListCustomersParams,
   UpdateCustomer200,
   UpdateCustomerBody
-} from '../models';
+} from '../udhariPayAPI.schemas';
 
 import { apiClient } from '../../http/client';
-import type { ErrorType , BodyType } from '../../http/client';
+import type { BodyType } from '../../http/client';
 
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
-
-const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKey: K } => {
-  const result = { queryKey } as T & { queryKey: K };
-  for (const key of Object.keys(query)) {
-    // The explicit queryKey always wins, matching the previous
-    // `{ ...query, queryKey }` spread where it was set last.
-    if (key === 'queryKey') continue;
-    Object.defineProperty(result, key, {
-      enumerable: true,
-      configurable: true,
-      get: () => (query as Record<string, unknown>)[key],
-    });
-  }
-  return result;
-};
-
-/**
+  /**
  * @summary Create a customer
  */
 export const createCustomer = (
     merchantId: string,
     createCustomerBody?: BodyType<CreateCustomerBody>,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<CreateCustomer201>>,) => {
       return apiClient<CreateCustomer201>(
       {url: `/api/v1/merchants/${merchantId}/customers`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
-      data: createCustomerBody, signal
+      data: createCustomerBody
     },
       options);
     }
-
-
-
-
-export const getCreateCustomerMutationKey = () => ['createCustomer'] as const;
-
-export const getCreateCustomerMutationOptions = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCustomer>>, TError,CreateCustomerMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
-): UseMutationOptions<Awaited<ReturnType<typeof createCustomer>>, TError,CreateCustomerMutationVariables, TContext> => {
-
-const mutationKey = getCreateCustomerMutationKey();
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createCustomer>>, CreateCustomerMutationVariables> = (props) => {
-          const {merchantId,data} = props ?? {};
-
-          return  createCustomer(merchantId,data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type CreateCustomerMutationResult = NonNullable<Awaited<ReturnType<typeof createCustomer>>>
-    export type CreateCustomerMutationBody = BodyType<CreateCustomerBody> | undefined
-    export type CreateCustomerMutationError = ErrorType<ApiError>
-    export type CreateCustomerMutationVariables = {merchantId: string;data?: BodyType<CreateCustomerBody>}
-
-    /**
- * @summary Create a customer
- */
-export const useCreateCustomer = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCustomer>>, TError,CreateCustomerMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof createCustomer>>,
-        TError,
-        CreateCustomerMutationVariables,
-        TContext
-      > => {
-      return useMutation(getCreateCustomerMutationOptions(options), queryClient);
-    }
-    /**
+  /**
  * @summary List merchant customers
  */
 export const listCustomers = (
     merchantId: string,
     params?: ListCustomersParams,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<ListCustomers200>>,) => {
       return apiClient<ListCustomers200>(
       {url: `/api/v1/merchants/${merchantId}/customers`, method: 'GET',
-        params, signal
+        params
     },
       options);
     }
-
-
-
-
-export const getListCustomersQueryKey = (merchantId: string,
-    params?: ListCustomersParams,) => {
-    return [
-    `/api/v1/merchants/${merchantId}/customers`, ...(params ? [params] : [])
-    ] as const;
-    }
-
-
-export const getListCustomersQueryOptions = <TData = Awaited<ReturnType<typeof listCustomers>>, TError = ErrorType<ApiError>>(merchantId: string,
-    params?: ListCustomersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listCustomers>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getListCustomersQueryKey(merchantId,params);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listCustomers>>> = ({ signal }) => listCustomers(merchantId,params, requestOptions, signal);
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: merchantId !== null && merchantId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listCustomers>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type ListCustomersQueryResult = NonNullable<Awaited<ReturnType<typeof listCustomers>>>
-export type ListCustomersQueryError = ErrorType<ApiError>
-
-
-export function useListCustomers<TData = Awaited<ReturnType<typeof listCustomers>>, TError = ErrorType<ApiError>>(
- merchantId: string,
-    params: undefined |  ListCustomersParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listCustomers>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof listCustomers>>,
-          TError,
-          Awaited<ReturnType<typeof listCustomers>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListCustomers<TData = Awaited<ReturnType<typeof listCustomers>>, TError = ErrorType<ApiError>>(
- merchantId: string,
-    params?: ListCustomersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listCustomers>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof listCustomers>>,
-          TError,
-          Awaited<ReturnType<typeof listCustomers>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListCustomers<TData = Awaited<ReturnType<typeof listCustomers>>, TError = ErrorType<ApiError>>(
- merchantId: string,
-    params?: ListCustomersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listCustomers>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary List merchant customers
- */
-
-export function useListCustomers<TData = Awaited<ReturnType<typeof listCustomers>>, TError = ErrorType<ApiError>>(
- merchantId: string,
-    params?: ListCustomersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listCustomers>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getListCustomersQueryOptions(merchantId,params,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
-/**
+  /**
  * @summary Get a customer
  */
 export const getCustomer = (
     customerId: string,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<GetCustomer200>>,) => {
       return apiClient<GetCustomer200>(
-      {url: `/api/v1/customers/${customerId}`, method: 'GET', signal
+      {url: `/api/v1/customers/${customerId}`, method: 'GET'
     },
       options);
     }
-
-
-
-
-export const getGetCustomerQueryKey = (customerId: string,) => {
-    return [
-    `/api/v1/customers/${customerId}`
-    ] as const;
-    }
-
-
-export const getGetCustomerQueryOptions = <TData = Awaited<ReturnType<typeof getCustomer>>, TError = ErrorType<ApiError>>(customerId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomer>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetCustomerQueryKey(customerId);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCustomer>>> = ({ signal }) => getCustomer(customerId, requestOptions, signal);
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: customerId !== null && customerId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCustomer>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetCustomerQueryResult = NonNullable<Awaited<ReturnType<typeof getCustomer>>>
-export type GetCustomerQueryError = ErrorType<ApiError>
-
-
-export function useGetCustomer<TData = Awaited<ReturnType<typeof getCustomer>>, TError = ErrorType<ApiError>>(
- customerId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomer>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getCustomer>>,
-          TError,
-          Awaited<ReturnType<typeof getCustomer>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetCustomer<TData = Awaited<ReturnType<typeof getCustomer>>, TError = ErrorType<ApiError>>(
- customerId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomer>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getCustomer>>,
-          TError,
-          Awaited<ReturnType<typeof getCustomer>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetCustomer<TData = Awaited<ReturnType<typeof getCustomer>>, TError = ErrorType<ApiError>>(
- customerId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomer>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Get a customer
- */
-
-export function useGetCustomer<TData = Awaited<ReturnType<typeof getCustomer>>, TError = ErrorType<ApiError>>(
- customerId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomer>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getGetCustomerQueryOptions(customerId,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
-/**
+  /**
  * @summary Update a customer
  */
 export const updateCustomer = (
     customerId: string,
     updateCustomerBody?: BodyType<UpdateCustomerBody>,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<UpdateCustomer200>>,) => {
       return apiClient<UpdateCustomer200>(
       {url: `/api/v1/customers/${customerId}`, method: 'PATCH',
       headers: {'Content-Type': 'application/json', },
-      data: updateCustomerBody, signal
+      data: updateCustomerBody
     },
       options);
     }
-
-
-
-
-export const getUpdateCustomerMutationKey = () => ['updateCustomer'] as const;
-
-export const getUpdateCustomerMutationOptions = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateCustomer>>, TError,UpdateCustomerMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
-): UseMutationOptions<Awaited<ReturnType<typeof updateCustomer>>, TError,UpdateCustomerMutationVariables, TContext> => {
-
-const mutationKey = getUpdateCustomerMutationKey();
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateCustomer>>, UpdateCustomerMutationVariables> = (props) => {
-          const {customerId,data} = props ?? {};
-
-          return  updateCustomer(customerId,data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type UpdateCustomerMutationResult = NonNullable<Awaited<ReturnType<typeof updateCustomer>>>
-    export type UpdateCustomerMutationBody = BodyType<UpdateCustomerBody> | undefined
-    export type UpdateCustomerMutationError = ErrorType<ApiError>
-    export type UpdateCustomerMutationVariables = {customerId: string;data?: BodyType<UpdateCustomerBody>}
-
-    /**
- * @summary Update a customer
- */
-export const useUpdateCustomer = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateCustomer>>, TError,UpdateCustomerMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof updateCustomer>>,
-        TError,
-        UpdateCustomerMutationVariables,
-        TContext
-      > => {
-      return useMutation(getUpdateCustomerMutationOptions(options), queryClient);
-    }
+  export type CreateCustomerResult = NonNullable<Awaited<ReturnType<typeof createCustomer>>>
+export type ListCustomersResult = NonNullable<Awaited<ReturnType<typeof listCustomers>>>
+export type GetCustomerResult = NonNullable<Awaited<ReturnType<typeof getCustomer>>>
+export type UpdateCustomerResult = NonNullable<Awaited<ReturnType<typeof updateCustomer>>>

@@ -4,10 +4,10 @@ import { Suspense, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
-import { useQueryClient } from "@tanstack/react-query";
-import { useAdminLogin } from "@/api/generated/auth/auth";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { adminLogin } from "@/api/generated/auth/auth";
 import { applyApiFormErrors } from "@/api/forms/formErrors";
-import { useAuth } from "@/features/auth/AuthProvider";
+import { authKeys, useAuth } from "@/features/auth/AuthProvider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FormField } from "@/components/entity/FormField";
@@ -23,7 +23,7 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuth();
-  const login = useAdminLogin();
+  const login = useMutation({ mutationFn: (values: LoginValues) => adminLogin(values) });
   const { register, handleSubmit, setError, formState: { errors } } = useForm<LoginValues>();
 
   useEffect(() => {
@@ -32,8 +32,8 @@ function LoginForm() {
 
   const onSubmit = handleSubmit(async (values) => {
     try {
-      await login.mutateAsync({ data: values });
-      await queryClient.invalidateQueries({ queryKey: ["/api/v1/auth/me"] });
+      await login.mutateAsync(values);
+      await queryClient.invalidateQueries({ queryKey: authKeys.session });
       router.replace(safeNext(searchParams.get("next")));
     } catch (error) {
       const result = applyApiFormErrors(error, setError);

@@ -49,7 +49,6 @@ export async function apiClient<T>(config: AxiosRequestConfig, options?: AxiosRe
   return response.data;
 }
 
-export type ErrorType<T> = T extends unknown ? import("./errors").ApiError : never;
 export type BodyType<T> = T;
 
 function createRequestId() {

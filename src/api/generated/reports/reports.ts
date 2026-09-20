@@ -5,249 +5,44 @@
  * Canonical contracts for UdhariPay clients
  * OpenAPI spec version: 1.0.0
  */
-import {
-  useQuery
-} from '@tanstack/react-query';
 import type {
-  DataTag,
-  DefinedInitialDataOptions,
-  DefinedUseQueryResult,
-  QueryClient,
-  QueryFunction,
-  QueryKey,
-  UndefinedInitialDataOptions,
-  UseQueryOptions,
-  UseQueryResult
-} from '@tanstack/react-query';
-
-import type {
-  ApiError,
   ExportReportParams,
   GetReport200,
   GetReportParams
-} from '../models';
+} from '../udhariPayAPI.schemas';
 
 import { apiClient } from '../../http/client';
-import type { ErrorType } from '../../http/client';
 
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
-
-const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKey: K } => {
-  const result = { queryKey } as T & { queryKey: K };
-  for (const key of Object.keys(query)) {
-    // The explicit queryKey always wins, matching the previous
-    // `{ ...query, queryKey }` spread where it was set last.
-    if (key === 'queryKey') continue;
-    Object.defineProperty(result, key, {
-      enumerable: true,
-      configurable: true,
-      get: () => (query as Record<string, unknown>)[key],
-    });
-  }
-  return result;
-};
-
-/**
+  /**
  * @summary Get a report
  */
 export const getReport = (
     report: 'collections' | 'payments' | 'outstanding' | 'customers' | 'merchants' | 'employees' | 'mandates' | 'kyc' | 'billing',
     params?: GetReportParams,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<GetReport200>>,) => {
       return apiClient<GetReport200>(
       {url: `/api/v1/reports/${report}`, method: 'GET',
-        params, signal
+        params
     },
       options);
     }
-
-
-
-
-export const getGetReportQueryKey = (report: 'collections' | 'payments' | 'outstanding' | 'customers' | 'merchants' | 'employees' | 'mandates' | 'kyc' | 'billing',
-    params?: GetReportParams,) => {
-    return [
-    `/api/v1/reports/${report}`, ...(params ? [params] : [])
-    ] as const;
-    }
-
-
-export const getGetReportQueryOptions = <TData = Awaited<ReturnType<typeof getReport>>, TError = ErrorType<ApiError>>(report: 'collections' | 'payments' | 'outstanding' | 'customers' | 'merchants' | 'employees' | 'mandates' | 'kyc' | 'billing',
-    params?: GetReportParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getReport>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetReportQueryKey(report,params);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getReport>>> = ({ signal }) => getReport(report,params, requestOptions, signal);
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: report !== null && report !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getReport>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetReportQueryResult = NonNullable<Awaited<ReturnType<typeof getReport>>>
-export type GetReportQueryError = ErrorType<ApiError>
-
-
-export function useGetReport<TData = Awaited<ReturnType<typeof getReport>>, TError = ErrorType<ApiError>>(
- report: 'collections' | 'payments' | 'outstanding' | 'customers' | 'merchants' | 'employees' | 'mandates' | 'kyc' | 'billing',
-    params: undefined |  GetReportParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getReport>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getReport>>,
-          TError,
-          Awaited<ReturnType<typeof getReport>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetReport<TData = Awaited<ReturnType<typeof getReport>>, TError = ErrorType<ApiError>>(
- report: 'collections' | 'payments' | 'outstanding' | 'customers' | 'merchants' | 'employees' | 'mandates' | 'kyc' | 'billing',
-    params?: GetReportParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getReport>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getReport>>,
-          TError,
-          Awaited<ReturnType<typeof getReport>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetReport<TData = Awaited<ReturnType<typeof getReport>>, TError = ErrorType<ApiError>>(
- report: 'collections' | 'payments' | 'outstanding' | 'customers' | 'merchants' | 'employees' | 'mandates' | 'kyc' | 'billing',
-    params?: GetReportParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getReport>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Get a report
- */
-
-export function useGetReport<TData = Awaited<ReturnType<typeof getReport>>, TError = ErrorType<ApiError>>(
- report: 'collections' | 'payments' | 'outstanding' | 'customers' | 'merchants' | 'employees' | 'mandates' | 'kyc' | 'billing',
-    params?: GetReportParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getReport>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getGetReportQueryOptions(report,params,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
-/**
+  /**
  * @summary Export a report
  */
 export const exportReport = (
     report: 'collections' | 'payments' | 'outstanding' | 'customers' | 'merchants' | 'employees' | 'mandates' | 'kyc' | 'billing',
     params: ExportReportParams,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<Blob>>,) => {
       return apiClient<Blob>(
       {url: `/api/v1/reports/${report}/export`, method: 'GET',
         params,
-        responseType: 'blob', signal
+        responseType: 'blob'
     },
       options);
     }
-
-
-
-
-export const getExportReportQueryKey = (report: 'collections' | 'payments' | 'outstanding' | 'customers' | 'merchants' | 'employees' | 'mandates' | 'kyc' | 'billing',
-    params?: ExportReportParams,) => {
-    return [
-    `/api/v1/reports/${report}/export`, ...(params ? [params] : [])
-    ] as const;
-    }
-
-
-export const getExportReportQueryOptions = <TData = Awaited<ReturnType<typeof exportReport>>, TError = ErrorType<ApiError>>(report: 'collections' | 'payments' | 'outstanding' | 'customers' | 'merchants' | 'employees' | 'mandates' | 'kyc' | 'billing',
-    params: ExportReportParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof exportReport>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getExportReportQueryKey(report,params);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportReport>>> = ({ signal }) => exportReport(report,params, requestOptions, signal);
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: report !== null && report !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof exportReport>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type ExportReportQueryResult = NonNullable<Awaited<ReturnType<typeof exportReport>>>
-export type ExportReportQueryError = ErrorType<ApiError>
-
-
-export function useExportReport<TData = Awaited<ReturnType<typeof exportReport>>, TError = ErrorType<ApiError>>(
- report: 'collections' | 'payments' | 'outstanding' | 'customers' | 'merchants' | 'employees' | 'mandates' | 'kyc' | 'billing',
-    params: ExportReportParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof exportReport>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof exportReport>>,
-          TError,
-          Awaited<ReturnType<typeof exportReport>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useExportReport<TData = Awaited<ReturnType<typeof exportReport>>, TError = ErrorType<ApiError>>(
- report: 'collections' | 'payments' | 'outstanding' | 'customers' | 'merchants' | 'employees' | 'mandates' | 'kyc' | 'billing',
-    params: ExportReportParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof exportReport>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof exportReport>>,
-          TError,
-          Awaited<ReturnType<typeof exportReport>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useExportReport<TData = Awaited<ReturnType<typeof exportReport>>, TError = ErrorType<ApiError>>(
- report: 'collections' | 'payments' | 'outstanding' | 'customers' | 'merchants' | 'employees' | 'mandates' | 'kyc' | 'billing',
-    params: ExportReportParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof exportReport>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Export a report
- */
-
-export function useExportReport<TData = Awaited<ReturnType<typeof exportReport>>, TError = ErrorType<ApiError>>(
- report: 'collections' | 'payments' | 'outstanding' | 'customers' | 'merchants' | 'employees' | 'mandates' | 'kyc' | 'billing',
-    params: ExportReportParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof exportReport>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getExportReportQueryOptions(report,params,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
+  export type GetReportResult = NonNullable<Awaited<ReturnType<typeof getReport>>>
+export type ExportReportResult = NonNullable<Awaited<ReturnType<typeof exportReport>>>

@@ -5,316 +5,61 @@
  * Canonical contracts for UdhariPay clients
  * OpenAPI spec version: 1.0.0
  */
-import {
-  useMutation,
-  useQuery
-} from '@tanstack/react-query';
 import type {
-  DataTag,
-  DefinedInitialDataOptions,
-  DefinedUseQueryResult,
-  MutationFunction,
-  QueryClient,
-  QueryFunction,
-  QueryKey,
-  UndefinedInitialDataOptions,
-  UseMutationOptions,
-  UseMutationResult,
-  UseQueryOptions,
-  UseQueryResult
-} from '@tanstack/react-query';
-
-import type {
-  ApiError,
   CreateFollowUp201,
   CreateFollowUpBody,
   ListCollectionQueue200,
   ListCollectionQueueParams,
   ListFollowUps200,
   ListFollowUpsParams
-} from '../models';
+} from '../udhariPayAPI.schemas';
 
 import { apiClient } from '../../http/client';
-import type { ErrorType , BodyType } from '../../http/client';
+import type { BodyType } from '../../http/client';
 
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
-
-const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKey: K } => {
-  const result = { queryKey } as T & { queryKey: K };
-  for (const key of Object.keys(query)) {
-    // The explicit queryKey always wins, matching the previous
-    // `{ ...query, queryKey }` spread where it was set last.
-    if (key === 'queryKey') continue;
-    Object.defineProperty(result, key, {
-      enumerable: true,
-      configurable: true,
-      get: () => (query as Record<string, unknown>)[key],
-    });
-  }
-  return result;
-};
-
-/**
+  /**
  * @summary List the collection queue
  */
 export const listCollectionQueue = (
     params?: ListCollectionQueueParams,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<ListCollectionQueue200>>,) => {
       return apiClient<ListCollectionQueue200>(
       {url: `/api/v1/collections`, method: 'GET',
-        params, signal
+        params
     },
       options);
     }
-
-
-
-
-export const getListCollectionQueueQueryKey = (params?: ListCollectionQueueParams,) => {
-    return [
-    `/api/v1/collections`, ...(params ? [params] : [])
-    ] as const;
-    }
-
-
-export const getListCollectionQueueQueryOptions = <TData = Awaited<ReturnType<typeof listCollectionQueue>>, TError = ErrorType<ApiError>>(params?: ListCollectionQueueParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listCollectionQueue>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getListCollectionQueueQueryKey(params);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listCollectionQueue>>> = ({ signal }) => listCollectionQueue(params, requestOptions, signal);
-
-
-
-
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listCollectionQueue>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type ListCollectionQueueQueryResult = NonNullable<Awaited<ReturnType<typeof listCollectionQueue>>>
-export type ListCollectionQueueQueryError = ErrorType<ApiError>
-
-
-export function useListCollectionQueue<TData = Awaited<ReturnType<typeof listCollectionQueue>>, TError = ErrorType<ApiError>>(
- params: undefined |  ListCollectionQueueParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listCollectionQueue>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof listCollectionQueue>>,
-          TError,
-          Awaited<ReturnType<typeof listCollectionQueue>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListCollectionQueue<TData = Awaited<ReturnType<typeof listCollectionQueue>>, TError = ErrorType<ApiError>>(
- params?: ListCollectionQueueParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listCollectionQueue>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof listCollectionQueue>>,
-          TError,
-          Awaited<ReturnType<typeof listCollectionQueue>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListCollectionQueue<TData = Awaited<ReturnType<typeof listCollectionQueue>>, TError = ErrorType<ApiError>>(
- params?: ListCollectionQueueParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listCollectionQueue>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary List the collection queue
- */
-
-export function useListCollectionQueue<TData = Awaited<ReturnType<typeof listCollectionQueue>>, TError = ErrorType<ApiError>>(
- params?: ListCollectionQueueParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listCollectionQueue>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getListCollectionQueueQueryOptions(params,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
-/**
+  /**
  * @summary Create a follow-up
  */
 export const createFollowUp = (
     installmentId: string,
     createFollowUpBody?: BodyType<CreateFollowUpBody>,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<CreateFollowUp201>>,) => {
       return apiClient<CreateFollowUp201>(
       {url: `/api/v1/installments/${installmentId}/follow-ups`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
-      data: createFollowUpBody, signal
+      data: createFollowUpBody
     },
       options);
     }
-
-
-
-
-export const getCreateFollowUpMutationKey = () => ['createFollowUp'] as const;
-
-export const getCreateFollowUpMutationOptions = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createFollowUp>>, TError,CreateFollowUpMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
-): UseMutationOptions<Awaited<ReturnType<typeof createFollowUp>>, TError,CreateFollowUpMutationVariables, TContext> => {
-
-const mutationKey = getCreateFollowUpMutationKey();
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createFollowUp>>, CreateFollowUpMutationVariables> = (props) => {
-          const {installmentId,data} = props ?? {};
-
-          return  createFollowUp(installmentId,data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type CreateFollowUpMutationResult = NonNullable<Awaited<ReturnType<typeof createFollowUp>>>
-    export type CreateFollowUpMutationBody = BodyType<CreateFollowUpBody> | undefined
-    export type CreateFollowUpMutationError = ErrorType<ApiError>
-    export type CreateFollowUpMutationVariables = {installmentId: string;data?: BodyType<CreateFollowUpBody>}
-
-    /**
- * @summary Create a follow-up
- */
-export const useCreateFollowUp = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createFollowUp>>, TError,CreateFollowUpMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof createFollowUp>>,
-        TError,
-        CreateFollowUpMutationVariables,
-        TContext
-      > => {
-      return useMutation(getCreateFollowUpMutationOptions(options), queryClient);
-    }
-    /**
+  /**
  * @summary List installment follow-ups
  */
 export const listFollowUps = (
     installmentId: string,
     params?: ListFollowUpsParams,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<ListFollowUps200>>,) => {
       return apiClient<ListFollowUps200>(
       {url: `/api/v1/installments/${installmentId}/follow-ups`, method: 'GET',
-        params, signal
+        params
     },
       options);
     }
-
-
-
-
-export const getListFollowUpsQueryKey = (installmentId: string,
-    params?: ListFollowUpsParams,) => {
-    return [
-    `/api/v1/installments/${installmentId}/follow-ups`, ...(params ? [params] : [])
-    ] as const;
-    }
-
-
-export const getListFollowUpsQueryOptions = <TData = Awaited<ReturnType<typeof listFollowUps>>, TError = ErrorType<ApiError>>(installmentId: string,
-    params?: ListFollowUpsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listFollowUps>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getListFollowUpsQueryKey(installmentId,params);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listFollowUps>>> = ({ signal }) => listFollowUps(installmentId,params, requestOptions, signal);
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: installmentId !== null && installmentId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listFollowUps>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type ListFollowUpsQueryResult = NonNullable<Awaited<ReturnType<typeof listFollowUps>>>
-export type ListFollowUpsQueryError = ErrorType<ApiError>
-
-
-export function useListFollowUps<TData = Awaited<ReturnType<typeof listFollowUps>>, TError = ErrorType<ApiError>>(
- installmentId: string,
-    params: undefined |  ListFollowUpsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listFollowUps>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof listFollowUps>>,
-          TError,
-          Awaited<ReturnType<typeof listFollowUps>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListFollowUps<TData = Awaited<ReturnType<typeof listFollowUps>>, TError = ErrorType<ApiError>>(
- installmentId: string,
-    params?: ListFollowUpsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listFollowUps>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof listFollowUps>>,
-          TError,
-          Awaited<ReturnType<typeof listFollowUps>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListFollowUps<TData = Awaited<ReturnType<typeof listFollowUps>>, TError = ErrorType<ApiError>>(
- installmentId: string,
-    params?: ListFollowUpsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listFollowUps>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary List installment follow-ups
- */
-
-export function useListFollowUps<TData = Awaited<ReturnType<typeof listFollowUps>>, TError = ErrorType<ApiError>>(
- installmentId: string,
-    params?: ListFollowUpsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listFollowUps>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getListFollowUpsQueryOptions(installmentId,params,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
+  export type ListCollectionQueueResult = NonNullable<Awaited<ReturnType<typeof listCollectionQueue>>>
+export type CreateFollowUpResult = NonNullable<Awaited<ReturnType<typeof createFollowUp>>>
+export type ListFollowUpsResult = NonNullable<Awaited<ReturnType<typeof listFollowUps>>>

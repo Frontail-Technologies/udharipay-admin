@@ -5,314 +5,59 @@
  * Canonical contracts for UdhariPay clients
  * OpenAPI spec version: 1.0.0
  */
-import {
-  useMutation,
-  useQuery
-} from '@tanstack/react-query';
 import type {
-  DataTag,
-  DefinedInitialDataOptions,
-  DefinedUseQueryResult,
-  MutationFunction,
-  QueryClient,
-  QueryFunction,
-  QueryKey,
-  UndefinedInitialDataOptions,
-  UseMutationOptions,
-  UseMutationResult,
-  UseQueryOptions,
-  UseQueryResult
-} from '@tanstack/react-query';
-
-import type {
-  ApiError,
   CreatePlan201,
   CreatePlanBody,
   GetPlan200,
   ListPlans200,
   ListPlansParams
-} from '../models';
+} from '../udhariPayAPI.schemas';
 
 import { apiClient } from '../../http/client';
-import type { ErrorType , BodyType } from '../../http/client';
+import type { BodyType } from '../../http/client';
 
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
-
-const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKey: K } => {
-  const result = { queryKey } as T & { queryKey: K };
-  for (const key of Object.keys(query)) {
-    // The explicit queryKey always wins, matching the previous
-    // `{ ...query, queryKey }` spread where it was set last.
-    if (key === 'queryKey') continue;
-    Object.defineProperty(result, key, {
-      enumerable: true,
-      configurable: true,
-      get: () => (query as Record<string, unknown>)[key],
-    });
-  }
-  return result;
-};
-
-/**
+  /**
  * @summary Create a plan and schedule
  */
 export const createPlan = (
     customerId: string,
     createPlanBody?: BodyType<CreatePlanBody>,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<CreatePlan201>>,) => {
       return apiClient<CreatePlan201>(
       {url: `/api/v1/customers/${customerId}/plans`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
-      data: createPlanBody, signal
+      data: createPlanBody
     },
       options);
     }
-
-
-
-
-export const getCreatePlanMutationKey = () => ['createPlan'] as const;
-
-export const getCreatePlanMutationOptions = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPlan>>, TError,CreatePlanMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
-): UseMutationOptions<Awaited<ReturnType<typeof createPlan>>, TError,CreatePlanMutationVariables, TContext> => {
-
-const mutationKey = getCreatePlanMutationKey();
-const {mutation: mutationOptions, request: requestOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, request: undefined};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createPlan>>, CreatePlanMutationVariables> = (props) => {
-          const {customerId,data} = props ?? {};
-
-          return  createPlan(customerId,data,requestOptions)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type CreatePlanMutationResult = NonNullable<Awaited<ReturnType<typeof createPlan>>>
-    export type CreatePlanMutationBody = BodyType<CreatePlanBody> | undefined
-    export type CreatePlanMutationError = ErrorType<ApiError>
-    export type CreatePlanMutationVariables = {customerId: string;data?: BodyType<CreatePlanBody>}
-
-    /**
- * @summary Create a plan and schedule
- */
-export const useCreatePlan = <TError = ErrorType<ApiError>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createPlan>>, TError,CreatePlanMutationVariables, TContext>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof createPlan>>,
-        TError,
-        CreatePlanMutationVariables,
-        TContext
-      > => {
-      return useMutation(getCreatePlanMutationOptions(options), queryClient);
-    }
-    /**
+  /**
  * @summary List customer plans
  */
 export const listPlans = (
     customerId: string,
     params?: ListPlansParams,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<ListPlans200>>,) => {
       return apiClient<ListPlans200>(
       {url: `/api/v1/customers/${customerId}/plans`, method: 'GET',
-        params, signal
+        params
     },
       options);
     }
-
-
-
-
-export const getListPlansQueryKey = (customerId: string,
-    params?: ListPlansParams,) => {
-    return [
-    `/api/v1/customers/${customerId}/plans`, ...(params ? [params] : [])
-    ] as const;
-    }
-
-
-export const getListPlansQueryOptions = <TData = Awaited<ReturnType<typeof listPlans>>, TError = ErrorType<ApiError>>(customerId: string,
-    params?: ListPlansParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPlans>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getListPlansQueryKey(customerId,params);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listPlans>>> = ({ signal }) => listPlans(customerId,params, requestOptions, signal);
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: customerId !== null && customerId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listPlans>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type ListPlansQueryResult = NonNullable<Awaited<ReturnType<typeof listPlans>>>
-export type ListPlansQueryError = ErrorType<ApiError>
-
-
-export function useListPlans<TData = Awaited<ReturnType<typeof listPlans>>, TError = ErrorType<ApiError>>(
- customerId: string,
-    params: undefined |  ListPlansParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPlans>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof listPlans>>,
-          TError,
-          Awaited<ReturnType<typeof listPlans>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListPlans<TData = Awaited<ReturnType<typeof listPlans>>, TError = ErrorType<ApiError>>(
- customerId: string,
-    params?: ListPlansParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPlans>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof listPlans>>,
-          TError,
-          Awaited<ReturnType<typeof listPlans>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useListPlans<TData = Awaited<ReturnType<typeof listPlans>>, TError = ErrorType<ApiError>>(
- customerId: string,
-    params?: ListPlansParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPlans>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary List customer plans
- */
-
-export function useListPlans<TData = Awaited<ReturnType<typeof listPlans>>, TError = ErrorType<ApiError>>(
- customerId: string,
-    params?: ListPlansParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof listPlans>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getListPlansQueryOptions(customerId,params,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
-/**
+  /**
  * @summary Get a plan
  */
 export const getPlan = (
     planId: string,
- options?: SecondParameter<typeof apiClient>,signal?: AbortSignal
-) => {
-
-
+ options?: SecondParameter<typeof apiClient<GetPlan200>>,) => {
       return apiClient<GetPlan200>(
-      {url: `/api/v1/plans/${planId}`, method: 'GET', signal
+      {url: `/api/v1/plans/${planId}`, method: 'GET'
     },
       options);
     }
-
-
-
-
-export const getGetPlanQueryKey = (planId: string,) => {
-    return [
-    `/api/v1/plans/${planId}`
-    ] as const;
-    }
-
-
-export const getGetPlanQueryOptions = <TData = Awaited<ReturnType<typeof getPlan>>, TError = ErrorType<ApiError>>(planId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlan>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetPlanQueryKey(planId);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPlan>>> = ({ signal }) => getPlan(planId, requestOptions, signal);
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: planId !== null && planId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPlan>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetPlanQueryResult = NonNullable<Awaited<ReturnType<typeof getPlan>>>
-export type GetPlanQueryError = ErrorType<ApiError>
-
-
-export function useGetPlan<TData = Awaited<ReturnType<typeof getPlan>>, TError = ErrorType<ApiError>>(
- planId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlan>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getPlan>>,
-          TError,
-          Awaited<ReturnType<typeof getPlan>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetPlan<TData = Awaited<ReturnType<typeof getPlan>>, TError = ErrorType<ApiError>>(
- planId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlan>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getPlan>>,
-          TError,
-          Awaited<ReturnType<typeof getPlan>>
-        > , 'initialData'
-      >, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetPlan<TData = Awaited<ReturnType<typeof getPlan>>, TError = ErrorType<ApiError>>(
- planId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlan>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-/**
- * @summary Get a plan
- */
-
-export function useGetPlan<TData = Awaited<ReturnType<typeof getPlan>>, TError = ErrorType<ApiError>>(
- planId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPlan>>, TError, TData>>, request?: SecondParameter<typeof apiClient>}
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getGetPlanQueryOptions(planId,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
+  export type CreatePlanResult = NonNullable<Awaited<ReturnType<typeof createPlan>>>
+export type ListPlansResult = NonNullable<Awaited<ReturnType<typeof listPlans>>>
+export type GetPlanResult = NonNullable<Awaited<ReturnType<typeof getPlan>>>
