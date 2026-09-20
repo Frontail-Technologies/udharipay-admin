@@ -12,6 +12,7 @@ export type RowAction = {
   label: string;
   href?: string;
   disabled?: boolean;
+  onSelect?: () => void;
 };
 
 /** Shared 3-dot row-actions menu. Only actions with a real `href` navigate. */
@@ -28,13 +29,17 @@ export function RowActionsMenu({ actions }: { actions: RowAction[] }) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">
           {actions.map((action) =>
-            action.disabled || !action.href ? (
+            action.disabled || (!action.href && !action.onSelect) ? (
               <DropdownMenuItem key={action.label} disabled>
+                {action.label}
+              </DropdownMenuItem>
+            ) : action.onSelect ? (
+              <DropdownMenuItem key={action.label} onSelect={action.onSelect}>
                 {action.label}
               </DropdownMenuItem>
             ) : (
               <DropdownMenuItem key={action.label} asChild>
-                <Link href={action.href}>{action.label}</Link>
+                <Link href={action.href!}>{action.label}</Link>
               </DropdownMenuItem>
             ),
           )}

@@ -1,24 +1,35 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/table/DataTable";
 import { ManagementToolbar, type ManagementFilterDef } from "@/components/table/ManagementToolbar";
 import { RowActionsMenu } from "@/components/table/RowActionsMenu";
 import { StatusBadge } from "@/components/admin/StatusBadge";
-import type { DerivedMerchant } from "@/data/admin";
 import { merchantStatusTone, kycStatusTone, subscriptionStatusTone } from "@/data/admin/statusTones";
 import { formatCompactInr, formatDateShort, humanizeSnakeCase } from "@/lib/format";
 import { exportRowsToCsv } from "@/lib/csv";
-import { useAdminMerchants } from "@/hooks/useAdminEntities";
+import { useMerchantDirectory, useUnassignMerchant, type MerchantDirectoryItem } from "@/features/merchants/useMerchantDirectory";
+import { Button } from "@/components/ui/button";
+import { readCursorState, writeCursorState } from "@/lib/urlState";
 
 const STATUS_OPTIONS = ["active", "restricted", "inactive"] as const;
 const KYC_OPTIONS = ["verified", "pending", "action_required", "rejected"] as const;
 const SUBSCRIPTION_OPTIONS = ["active", "payment_due", "grace", "restricted"] as const;
 
 export function MerchantsTable({ assignedEmployeeName }: { assignedEmployeeName?: string } = {}) {
-  const allMerchants = useAdminMerchants();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const urlState = readCursorState(searchParams);
+  const [search, setSearch] = useState(urlState.search ?? "");
+  const [statusFilter, setStatusFilter] = useState<string>(urlState.status ?? "all");
+  const [kycFilter, setKycFilter] = useState<string>("all");
+  const [subscriptionFilter, setSubscriptionFilter] = useState<string>("all");
+  const directory = useMerchantDirectory({ search, cursor: urlState.cursor });
+  const allMerchants = directory.merchants;
+  const { unassign, isPending: isAssigning } = useUnassignMerchant();
   const merchants = useMemo(
     () =>
       assignedEmployeeName
@@ -26,11 +37,6 @@ export function MerchantsTable({ assignedEmployeeName }: { assignedEmployeeName?
         : allMerchants,
     [allMerchants, assignedEmployeeName],
   );
-  const router = useRouter();
-  const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [kycFilter, setKycFilter] = useState<string>("all");
-  const [subscriptionFilter, setSubscriptionFilter] = useState<string>("all");
 
   const filtered = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -47,7 +53,7 @@ export function MerchantsTable({ assignedEmployeeName }: { assignedEmployeeName?
     });
   }, [merchants, search, statusFilter, kycFilter, subscriptionFilter]);
 
-  const columns = useMemo<ColumnDef<DerivedMerchant>[]>(
+  const columns = useMemo<ColumnDef<MerchantDirectoryItem>[]>(
     () => [
       {
         accessorKey: "businessName",
@@ -55,7 +61,7 @@ export function MerchantsTable({ assignedEmployeeName }: { assignedEmployeeName?
         cell: ({ row }) => (
           <div className="min-w-0">
             <p className="truncate font-medium text-text-primary">{row.original.businessName}</p>
-            <p className="truncate text-[11.5px] text-text-muted">{row.original.id}</p>
+            <p className="truncate text-[11.5px] text-text-muted">{row.original.displayId}</p>
           </div>
         ),
       },
@@ -134,12 +140,13 @@ export function MerchantsTable({ assignedEmployeeName }: { assignedEmployeeName?
               { label: "View Customers", href: `/merchants/${row.original.id}?tab=customers` },
               { label: "View Collections", disabled: true },
               { label: "Review KYC", href: `/merchants/${row.original.id}?tab=kyc` },
+              { label: "Remove Assignment", disabled: !row.original.apiId || isAssigning, onSelect: () => void unassign(row.original) },
             ]}
           />
         ),
       },
     ],
-    [],
+    [isAssigning, unassign],
   );
 
   const filterDefs: ManagementFilterDef[] = [
@@ -147,7 +154,10 @@ export function MerchantsTable({ assignedEmployeeName }: { assignedEmployeeName?
       id: "status",
       label: "Status",
       value: statusFilter,
-      onChange: setStatusFilter,
+      onChange: (value) => {
+        setStatusFilter(value);
+        router.replace(`?${writeCursorState(searchParams, { status: value === "all" ? undefined : value, cursor: undefined })}`);
+      },
       triggerClassName: "w-36",
       options: [
         { value: "all", label: "All statuses" },
@@ -181,7 +191,7 @@ export function MerchantsTable({ assignedEmployeeName }: { assignedEmployeeName?
   return (
     <div className="flex flex-col gap-3">
       <ManagementToolbar
-        search={{ value: search, onChange: setSearch, placeholder: "Search merchants...", ariaLabel: "Search merchants" }}
+        search={{ value: search, onChange: (value) => { setSearch(value); router.replace(`?${writeCursorState(searchParams, { search: value || undefined, cursor: undefined })}`); }, placeholder: "Search merchants...", ariaLabel: "Search merchants" }}
         filters={filterDefs}
         moreFiltersLabel="More Filters"
         exportAriaLabel="Export merchants"
@@ -203,8 +213,7 @@ export function MerchantsTable({ assignedEmployeeName }: { assignedEmployeeName?
       <DataTable
         columns={columns}
         data={filtered}
-        enablePagination
-        pageSize={8}
+        isLoading={directory.isLoading}
         stickyHeader
         tableClassName="min-w-[1250px]"
         onRowClick={(row) => router.push(`/merchants/${row.id}`)}
@@ -212,6 +221,16 @@ export function MerchantsTable({ assignedEmployeeName }: { assignedEmployeeName?
           <span className="text-[13px] text-text-muted">No merchants match these filters.</span>
         }
       />
+      {(urlState.cursor || directory.nextCursor) && (
+        <div className="flex justify-end gap-2">
+          <Button variant="outline" size="sm" disabled={!urlState.cursor} onClick={() => router.back()}>
+            <ChevronLeft className="size-3.5" /> Previous
+          </Button>
+          <Button variant="outline" size="sm" disabled={!directory.nextCursor} onClick={() => router.push(`?${writeCursorState(searchParams, { cursor: directory.nextCursor ?? undefined })}`)}>
+            Next <ChevronRight className="size-3.5" />
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
