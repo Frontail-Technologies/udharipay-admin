@@ -19,21 +19,23 @@ Application code must not import Axios directly. Generated operations use `src/a
 
 ## Integration inventory
 
-| Domain | Generated contract/client | Admin UI integration |
-| --- | --- | --- |
-| Auth | Complete | Login, `/auth/me`, refresh, logout, route protection complete |
-| Employees | Complete | Existing screens remain demo-backed |
-| Merchants | Complete | List is live with an explicit demo fallback; assignment removal is a live mutation |
-| Customers | Complete | Existing screens remain demo-backed |
-| Plans | Complete | Existing screens remain demo-backed |
-| Payments | Complete | Existing screens remain demo-backed |
-| Razorpay | Complete | No Admin action is currently required |
-| Mandates | Complete | Existing monitoring screens remain demo-backed |
-| Collections | Complete | Existing screens remain demo-backed |
-| KYC | Complete | Existing review workflow remains demo-backed |
-| Billing | Complete | Existing screens remain demo-backed |
-| Reports | Complete, including binary exports | Existing report presentation remains demo-backed |
-| Audit | Complete | Existing event screens remain demo-backed |
+| Page/domain | Current source | Backend endpoint(s) | Generated operation(s) | Feature hook / mutation | Status |
+| --- | --- | --- | --- | --- | --- |
+| `/dashboard` | Demo aggregates | Existing report endpoints can supply cards; no dashboard API added | `getReport` | Future dashboard composition hook | Pending |
+| `/employees`, detail | Demo data/store | `/employees`, `/employees/{employeeId}` | Employee list/detail/create/update | Employee list/actions hooks | Pending |
+| `/merchants`, detail | API list with demo fallback; demo detail aggregates | `/merchants`, `/merchants/{merchantId}`, `/assignment` | `useListMerchants`, `useGetMerchant`, `useAssignMerchant` | `useMerchantDirectory`, `useUnassignMerchant` | List and unassign integrated; detail pending |
+| `/customers`, detail | Demo data/store | Merchant customer list/create and customer detail/update | Customer operations | Customer list/detail/actions hooks | Pending |
+| `/plans`, detail | Demo data | Customer plan list/create and plan detail | Plan operations | Plan list/detail hooks | Pending |
+| Payment panels | Demo data | Plan payment list and payment detail | Payment operations | Payment list/detail hooks | Pending |
+| `/mandates`, detail | Demo data | Customer mandate list/create, mandate detail/attempts | Mandate operations | Mandate monitoring hooks | Pending |
+| `/collections` | Demo data/store | Collection queue and installment follow-ups | Collection operations | Queue/follow-up hooks | Pending |
+| `/kyc`, detail | Demo data/store | KYC queue/detail, upload/view, submit/decision endpoints | KYC operations | KYC review/actions hooks | Pending |
+| `/subscriptions`, detail | Demo data | Merchant subscription and invoice endpoints | Billing operations | Subscription/invoice hooks | Pending |
+| `/reports` | Demo report modules | Report data and binary export | `useGetReport`, `exportReport` | Report filters/export hook | Pending |
+| `/events` | Demo audit/event stores | `/audit-events`, `/audit-events/{auditEventId}` | Audit operations | Audit list/detail hooks | Pending |
+| `/settings` | Local Admin settings store | No matching backend settings API | None | Keep local until a real contract exists | Backend gap |
+| `/login` and protected layout | API | Admin login, refresh, `/auth/me`, logout | Generated Auth hooks | `AuthProvider`, `AdminAuthGuard` | Integrated |
+| Razorpay provider routes | Not used by Admin | Order, verify, webhook | Generated Razorpay operations | None; checkout is outside Admin scope | Documented only |
 
 The merchant adapter preserves the approved table hierarchy while backend aggregate fields are not yet returned by the merchant directory endpoint. Missing aggregate values remain neutral instead of being fabricated.
 
