@@ -1,3 +1,5 @@
+import { downloadBlob } from "./downloads";
+
 /**
  * Real, local, client-side CSV export — no backend, no fake export.
  *
@@ -39,12 +41,5 @@ export function exportRowsToCsv<T>(
   ];
 
   const blob = new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = filename;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
+  downloadBlob(blob, filename);
 }

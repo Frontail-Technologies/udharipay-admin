@@ -3,11 +3,8 @@ export function downloadBlob(blob: Blob, filename: string) {
   const link = document.createElement("a");
   link.href = url;
   link.download = filename;
+  document.body.appendChild(link);
   link.click();
+  document.body.removeChild(link);
   URL.revokeObjectURL(url);
-}
-
-export function filenameFromDisposition(value: string | null | undefined, fallback: string) {
-  const match = value?.match(/filename\*?=(?:UTF-8''|\")?([^";]+)/i);
-  return match?.[1] ? decodeURIComponent(match[1].replace(/"$/, "")) : fallback;
 }

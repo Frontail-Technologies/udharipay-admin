@@ -17,6 +17,7 @@ import {
   collectionTrendData,
   type CollectionPeriod,
 } from "@/data/admin-demo-data";
+import { formatCompactInr } from "@/lib/format";
 
 const PERIODS: CollectionPeriod[] = ["7D", "30D", "90D"];
 
@@ -25,12 +26,6 @@ const SERIES = [
   { key: "due", name: "Due", color: "var(--warning)" },
   { key: "overdue", name: "Overdue", color: "var(--error)" },
 ] as const;
-
-function formatCompactInr(value: number) {
-  if (value >= 100000) return `₹${(value / 100000).toFixed(1)}L`;
-  if (value >= 1000) return `₹${(value / 1000).toFixed(0)}K`;
-  return `₹${value}`;
-}
 
 function ChartTooltip({
   active,

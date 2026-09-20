@@ -3,6 +3,7 @@ import { isMandateIssue } from "../reports/mandateReport";
 import type { Payment, Mandate, MandateAttempt, SubscriptionInvoice, KycReview, CollectionFollowUp } from "../types";
 import type { Installment } from "../installments";
 import type { AdminOperationalEvent } from "./types";
+import { formatInr } from "@/lib/format";
 
 /**
  * PART A / EVENT GENERATION — every event here is DERIVED from canonical
@@ -67,7 +68,7 @@ export function buildOperationalEvents(params: {
         entityType: "customer",
         entityId: installment.customerId,
         title: "Collection overdue",
-        description: `Installment #${installment.installmentNumber} on ${installment.planId} — ${formatAmount(installment.amount)} due ${installment.dueDate}.`,
+        description: `Installment #${installment.installmentNumber} on ${installment.planId} — ${formatInr(installment.amount)} due ${installment.dueDate}.`,
         occurredAt: installment.dueDate,
         sourceType: "Installment",
         sourceId: installment.id,
@@ -158,7 +159,7 @@ export function buildOperationalEvents(params: {
       entityType: "subscription",
       entityId: invoice.subscriptionId,
       title: "Subscription billing failed",
-      description: `${invoice.type === "activation_fee" ? "Activation fee" : "Subscription"} invoice ${invoice.id}, ${formatAmount(invoice.amount)}.`,
+      description: `${invoice.type === "activation_fee" ? "Activation fee" : "Subscription"} invoice ${invoice.id}, ${formatInr(invoice.amount)}.`,
       occurredAt: invoice.dueDate,
       sourceType: "Subscription Invoice",
       sourceId: invoice.id,
@@ -207,10 +208,6 @@ export function buildOperationalEvents(params: {
   }
 
   return events.sort((a, b) => (a.occurredAt < b.occurredAt ? 1 : -1));
-}
-
-function formatAmount(amount: number): string {
-  return `₹${amount.toLocaleString("en-IN")}`;
 }
 
 function mandateIssueTitle(status: Mandate["status"]): string {
