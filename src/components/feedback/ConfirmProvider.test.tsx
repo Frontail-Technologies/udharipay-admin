@@ -2,9 +2,9 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { ConfirmProvider, useConfirm } from "./ConfirmProvider";
 
-function Consumer({ resolved }: { resolved: (value: boolean) => void }) {
+function Consumer({ resolved, destructive = false }: { resolved: (value: boolean) => void; destructive?: boolean }) {
   const confirm = useConfirm();
-  return <button onClick={() => void confirm({ title: "Confirm action", description: "This cannot be skipped." }).then(resolved)}>Open</button>;
+  return <button onClick={() => void confirm({ title: "Confirm action", description: "This cannot be skipped.", destructive }).then(resolved)}>Open</button>;
 }
 
 describe("confirmation system", () => {
@@ -15,5 +15,13 @@ describe("confirmation system", () => {
     expect(screen.getByText("Confirm action")).toBeInTheDocument();
     fireEvent.click(screen.getByText("Confirm"));
     await waitFor(() => expect(resolved).toHaveBeenCalledWith(true));
+  });
+
+  it("supports destructive confirmation and cancellation", async () => {
+    const resolved = vi.fn();
+    render(<ConfirmProvider><Consumer resolved={resolved} destructive /></ConfirmProvider>);
+    fireEvent.click(screen.getByText("Open"));
+    fireEvent.click(screen.getByText("Cancel"));
+    await waitFor(() => expect(resolved).toHaveBeenCalledWith(false));
   });
 });

@@ -1,6 +1,6 @@
 import AxiosMockAdapter from "axios-mock-adapter";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { adminLogin } from "@/api/generated/auth/auth";
+import { adminLogin, getCurrentSession } from "@/api/generated/auth/auth";
 import { exportReport } from "@/api/generated/reports/reports";
 import { httpClient } from "./client";
 
@@ -14,6 +14,13 @@ describe("HTTP client", () => {
     await adminLogin({ identifier: "admin@example.com", password: "password123" });
     expect(httpClient.defaults.withCredentials).toBe(true);
     expect(mock.history.post).toHaveLength(1);
+  });
+
+  it("resolves the authenticated Admin from the cookie session", async () => {
+    mock.onGet("/api/v1/auth/me").reply(200, { data: { user: { id: crypto.randomUUID(), role: "admin", status: "active" } } });
+    const session = await getCurrentSession();
+    expect(session.data.user.role).toBe("admin");
+    expect(mock.history.get[0].headers?.["X-Request-ID"]).toBeTruthy();
   });
 
   it("coalesces concurrent 401 responses into one refresh", async () => {
