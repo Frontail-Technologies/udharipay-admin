@@ -1,4 +1,4 @@
-import { CustomersTable } from "@/components/customers/CustomersTable";
+import { CustomersWorkspace } from "@/features/customers/components/CustomersWorkspace";
 
 export default function CustomersPage() {
   return (
@@ -8,11 +8,11 @@ export default function CustomersPage() {
           Customers
         </h1>
         <p className="mt-1 text-[13px] leading-relaxed text-text-secondary">
-          Monitor customer udhaar plans, collections and repayment status.
+          Manage merchant-owned customer profiles and lifecycle status.
         </p>
       </div>
 
-      <CustomersTable pageSize={10} />
+      <CustomersWorkspace />
     </div>
   );
 }

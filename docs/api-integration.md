@@ -30,7 +30,7 @@ Customer integration must follow the same structure: `src/features/customers/hoo
 | `/dashboard` | Demo aggregates | Existing report endpoints can supply cards; no dashboard API added | `getReport` | Future dashboard composition hook | Pending |
 | `/employees`, detail | API | `/employees`, `/employees/{employeeId}` | Employee list/detail/create/update | `useEmployees`, `useEmployee`, Employee mutations | Integrated |
 | `/merchants`, detail | API | `/merchants`, `/merchants/{merchantId}`, `/assignment` | Merchant list/detail/create/update/assignment operations | `useMerchants`, `useMerchant`, Merchant mutations | Integrated for Merchant-owned contracts |
-| `/customers`, detail | Demo data/store | Merchant customer list/create and customer detail/update | Customer operations | Customer list/detail/actions hooks | Pending |
+| `/customers`, detail | API | Merchant-scoped customer list/create and customer detail/update | Customer list/detail/create/update operations | `useCustomers`, `useCustomer`, Customer mutations | Integrated for Customer-owned contracts |
 | `/plans`, detail | Demo data | Customer plan list/create and plan detail | Plan operations | Plan list/detail hooks | Pending |
 | Payment panels | Demo data | Plan payment list and payment detail | Payment operations | Payment list/detail hooks | Pending |
 | `/mandates`, detail | Demo data | Customer mandate list/create, mandate detail/attempts | Mandate operations | Mandate monitoring hooks | Pending |
@@ -44,6 +44,8 @@ Customer integration must follow the same structure: `src/features/customers/hoo
 | Razorpay provider routes | Not used by Admin | Order, verify, webhook | Generated Razorpay operations | None; checkout is outside Admin scope | Documented only |
 
 Merchant screens render only fields returned by Merchant endpoints. Customer, plan, collection, KYC, billing, and activity aggregates remain deferred to their domain integration phases because the Merchant contracts do not expose them.
+
+Customer lists require an explicit Merchant context because the backend exposes Merchant-scoped Customer collection routes rather than a global Admin Customer directory. Customer screens do not fan out across Merchants. Plan, payment, mandate, collection, KYC, and activity sections remain deferred because Customer contracts do not expose those aggregates.
 
 ## Regeneration
 

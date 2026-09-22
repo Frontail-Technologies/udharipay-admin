@@ -1,7 +1,7 @@
-export type CursorState = { cursor?: string; search?: string; status?: string; category?: string };
+export type CursorState = { cursor?: string; search?: string; status?: string; category?: string; merchantId?: string };
 
 export function readCursorState(searchParams: URLSearchParams): CursorState {
-  return compact({ cursor: searchParams.get("cursor") ?? undefined, search: searchParams.get("search") ?? undefined, status: searchParams.get("status") ?? undefined, category: searchParams.get("category") ?? undefined });
+  return compact({ cursor: searchParams.get("cursor") ?? undefined, search: searchParams.get("search") ?? undefined, status: searchParams.get("status") ?? undefined, category: searchParams.get("category") ?? undefined, merchantId: searchParams.get("merchantId") ?? undefined });
 }
 
 export function writeCursorState(current: URLSearchParams, state: CursorState) {

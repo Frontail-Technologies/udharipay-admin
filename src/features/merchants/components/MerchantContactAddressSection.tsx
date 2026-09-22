@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import type { Merchant, UpdateMerchantBody } from "@/api/generated/contracts/merchants";
 import { applyApiFormErrors } from "@/api/forms/formErrors";
 import { useUpdateMerchant } from "@/features/merchants/hooks/useMerchants";
-import { INDIAN_STATES } from "@/features/merchants/utils/options";
+import { INDIAN_STATES } from "@/shared/utils/india";
 import { EditableDetailSection } from "@/components/entity/EditableDetailSection";
 import { FormField } from "@/components/entity/FormField";
 import { KeyValueRow } from "@/components/entity/KeyValueRow";

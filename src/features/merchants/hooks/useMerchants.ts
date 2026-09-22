@@ -42,10 +42,11 @@ export function useMerchants(params: ListMerchantsParams) {
   });
 }
 
-export function useMerchant(merchantId: string) {
+export function useMerchant(merchantId: string | undefined) {
   return useQuery({
-    queryKey: merchantKeys.detail(merchantId),
-    queryFn: ({ signal }) => getMerchant(merchantId, { signal }),
+    queryKey: merchantKeys.detail(merchantId ?? "unselected"),
+    queryFn: ({ signal }) => getMerchant(merchantId ?? "", { signal }),
+    enabled: Boolean(merchantId),
   });
 }
 

@@ -5,11 +5,6 @@ const phoneSchema = z
   .trim()
   .regex(/^\+91 [6-9]\d{9}$/, "Enter a valid Indian phone number (+91 XXXXXXXXXX)");
 
-const optionalPhoneSchema = z.union([
-  z.literal(""),
-  phoneSchema,
-]);
-
 const pincodeSchema = z
   .string()
   .trim()
@@ -52,14 +47,3 @@ export const merchantBankEditSchema = z.object({
     .regex(/^[A-Z]{4}0[A-Z0-9]{6}$/, "Enter a valid IFSC code (e.g. HDFC0100000)"),
 });
 export type MerchantBankEditValues = z.infer<typeof merchantBankEditSchema>;
-
-export const customerProfileEditSchema = z.object({
-  name: z.string().trim().min(2, "Name is required"),
-  phone: phoneSchema,
-  alternatePhone: optionalPhoneSchema,
-  addressLine1: z.string().trim().min(5, "Address is required"),
-  city: z.string().trim().min(2, "City is required"),
-  state: z.string().trim().min(2, "State is required"),
-  pincode: pincodeSchema,
-});
-export type CustomerProfileEditValues = z.infer<typeof customerProfileEditSchema>;
