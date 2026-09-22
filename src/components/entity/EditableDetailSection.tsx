@@ -1,24 +1,16 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { Pencil } from "lucide-react";
+import { Loader2, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-/**
- * Section-level editable panel — shares DetailSection's visual language
- * (white surface, 11px radius, compact padding) but owns the Edit/Cancel/
- * Save header affordance. It does NOT own form state: the Save button
- * submits the `<form id={formId}>` rendered by the caller's own content
- * (native HTML `form` attribute), so this stays a pure UI shell and every
- * section keeps its own react-hook-form + Zod schema instead of a shared,
- * un-typed edit implementation.
- */
 export function EditableDetailSection({
   title,
   description,
   editAriaLabel,
   editing,
+  isSaving = false,
   onEdit,
   onCancel,
   formId,
@@ -29,6 +21,7 @@ export function EditableDetailSection({
   description?: string;
   editAriaLabel: string;
   editing: boolean;
+  isSaving?: boolean;
   onEdit: () => void;
   onCancel: () => void;
   formId: string;
@@ -58,10 +51,11 @@ export function EditableDetailSection({
 
         {editing ? (
           <div className="flex shrink-0 items-center gap-1.5">
-            <Button type="button" variant="outline" size="sm" onClick={onCancel} className="h-8 text-[12.5px]">
+            <Button type="button" variant="outline" size="sm" disabled={isSaving} onClick={onCancel} className="h-8 text-[12.5px]">
               Cancel
             </Button>
-            <Button type="submit" form={formId} size="sm" className="h-8 text-[12.5px]">
+            <Button type="submit" form={formId} size="sm" disabled={isSaving} className="h-8 text-[12.5px]">
+              {isSaving && <Loader2 className="size-3.5 animate-spin" />}
               Save Changes
             </Button>
           </div>

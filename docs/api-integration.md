@@ -2,7 +2,7 @@
 
 ## Flow
 
-Backend Zod contracts generate `../backend/openapi.json`. Orval reads that document and writes endpoint functions, TanStack Query hooks, and models under `src/api/generated`.
+Backend Zod contracts generate `../backend/openapi.json`. Orval reads that document and writes endpoint functions and models under `src/api/generated`.
 
 Application code must not import Axios directly. Generated operations use `src/api/http/client.ts`, which owns the base URL, cookie credentials, request IDs, timeout, error normalization, and single-flight session refresh. Feature code consumes generated hooks through `src/features` when mapping or cross-operation behavior is required.
 
@@ -22,7 +22,7 @@ Application code must not import Axios directly. Generated operations use `src/a
 | Page/domain | Current source | Backend endpoint(s) | Generated operation(s) | Feature hook / mutation | Status |
 | --- | --- | --- | --- | --- | --- |
 | `/dashboard` | Demo aggregates | Existing report endpoints can supply cards; no dashboard API added | `getReport` | Future dashboard composition hook | Pending |
-| `/employees`, detail | Demo data/store | `/employees`, `/employees/{employeeId}` | Employee list/detail/create/update | Employee list/actions hooks | Pending |
+| `/employees`, detail | API | `/employees`, `/employees/{employeeId}` | Employee list/detail/create/update | `useEmployees`, `useEmployee`, Employee mutations | Integrated |
 | `/merchants`, detail | API list with demo fallback; demo detail aggregates | `/merchants`, `/merchants/{merchantId}`, `/assignment` | `useListMerchants`, `useGetMerchant`, `useAssignMerchant` | `useMerchantDirectory`, `useUnassignMerchant` | List and unassign integrated; detail pending |
 | `/customers`, detail | Demo data/store | Merchant customer list/create and customer detail/update | Customer operations | Customer list/detail/actions hooks | Pending |
 | `/plans`, detail | Demo data | Customer plan list/create and plan detail | Plan operations | Plan list/detail hooks | Pending |

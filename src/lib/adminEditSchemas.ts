@@ -63,18 +63,3 @@ export const customerProfileEditSchema = z.object({
   pincode: pincodeSchema,
 });
 export type CustomerProfileEditValues = z.infer<typeof customerProfileEditSchema>;
-
-export const employeeBasicInfoEditSchema = z.object({
-  name: z.string().trim().min(2, "Name is required"),
-  role: z.string().trim().min(2, "Role is required"),
-});
-export type EmployeeBasicInfoEditValues = z.infer<typeof employeeBasicInfoEditSchema>;
-
-export const employeeContactEditSchema = z.object({
-  phone: phoneSchema,
-  email: z.string().trim().email("Enter a valid email address"),
-  city: z.string().trim().min(2, "City is required"),
-  state: z.string().trim().min(2, "State is required"),
-  assignedArea: z.string().trim().min(2, "Assigned area is required"),
-});
-export type EmployeeContactEditValues = z.infer<typeof employeeContactEditSchema>;

@@ -2,93 +2,68 @@
 
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import type { Employee, UpdateEmployeeBody } from "@/api/generated/contracts/employees";
+import { applyApiFormErrors } from "@/api/forms/formErrors";
+import { useUpdateEmployee } from "@/features/employees/useEmployees";
 import { EditableDetailSection } from "@/components/entity/EditableDetailSection";
 import { FormField } from "@/components/entity/FormField";
 import { KeyValueRow } from "@/components/entity/KeyValueRow";
 import { Input } from "@/components/ui/input";
-import type { DerivedEmployee } from "@/data/admin";
 import { formatDate } from "@/lib/format";
-import { employeeBasicInfoEditSchema, type EmployeeBasicInfoEditValues } from "@/lib/adminEditSchemas";
-import { patchEmployee } from "@/store/adminDemoStore";
-import { recordAuditEvent } from "@/store/adminAuditStore";
-import { diffFlatFields } from "@/lib/auditDiff";
 
+type EmployeeProfileValues = { name: string; branch: string };
 const FORM_ID = "employee-basic-info-form";
 
-const FIELD_LABELS: Partial<Record<keyof EmployeeBasicInfoEditValues, string>> = {
-  name: "Name",
-  role: "Role",
-};
-
-function currentValues(employee: DerivedEmployee): EmployeeBasicInfoEditValues {
-  return { name: employee.name, role: employee.role };
+function currentValues(employee: Employee): EmployeeProfileValues {
+  return { name: employee.name, branch: employee.branch ?? "" };
 }
 
-/** `employee` is expected to already be the canonical effective entity (see useAdminEntities.ts). */
-export function EmployeeProfileSection({ employee: effective }: { employee: DerivedEmployee }) {
+export function EmployeeProfileSection({ employee }: { employee: Employee }) {
   const [editing, setEditing] = useState(false);
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    setFocus,
-    formState: { errors },
-  } = useForm<EmployeeBasicInfoEditValues>({
-    resolver: zodResolver(employeeBasicInfoEditSchema),
-    defaultValues: currentValues(effective),
-  });
+  const mutation = useUpdateEmployee();
+  const { register, handleSubmit, reset, setError, setFocus, formState: { errors } } = useForm<EmployeeProfileValues>({ defaultValues: currentValues(employee) });
 
   useEffect(() => {
     if (editing) setFocus("name");
   }, [editing, setFocus]);
 
   const startEdit = () => {
-    reset(currentValues(effective));
+    reset(currentValues(employee));
     setEditing(true);
   };
 
-  const cancelEdit = () => setEditing(false);
-
-  const onSubmit = (values: EmployeeBasicInfoEditValues) => {
-    patchEmployee(effective.id, values);
-    recordAuditEvent({
-      action: "Updated Employee",
-      entityType: "employee",
-      entityId: effective.id,
-      entityLabel: values.name,
-      changes: diffFlatFields(currentValues(effective), values, FIELD_LABELS),
-    });
-    toast.success("Employee details updated");
-    setEditing(false);
+  const submit = async (values: EmployeeProfileValues) => {
+    const input: UpdateEmployeeBody = {
+      ...(values.name.trim() !== employee.name ? { name: values.name.trim() } : {}),
+      ...(values.branch.trim() !== (employee.branch ?? "") ? { branch: values.branch.trim() || null } : {}),
+    };
+    if (!Object.keys(input).length) {
+      setEditing(false);
+      return;
+    }
+    try {
+      await mutation.mutateAsync({ employeeId: employee.id, input });
+      setEditing(false);
+    } catch (error) {
+      const result = applyApiFormErrors(error, setError);
+      if (!result.applied) toast.error(result.error.message);
+    }
   };
 
   return (
-    <EditableDetailSection
-      title="Basic Information"
-      editAriaLabel="Edit Basic Information"
-      editing={editing}
-      onEdit={startEdit}
-      onCancel={cancelEdit}
-      formId={FORM_ID}
-    >
+    <EditableDetailSection title="Basic Information" editAriaLabel="Edit Basic Information" editing={editing} isSaving={mutation.isPending} onEdit={startEdit} onCancel={() => setEditing(false)} formId={FORM_ID}>
       {editing ? (
-        <form id={FORM_ID} onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
-          <FormField label="Name" htmlFor="name" error={errors.name?.message}>
-            <Input id="name" className="h-9" {...register("name")} />
-          </FormField>
-          <FormField label="Role" htmlFor="role" error={errors.role?.message}>
-            <Input id="role" className="h-9" {...register("role")} />
-          </FormField>
+        <form id={FORM_ID} onSubmit={handleSubmit(submit)} className="flex flex-col gap-3">
+          <FormField label="Name" htmlFor="name" error={errors.name?.message}><Input id="name" className="h-9" {...register("name", { required: "Name is required" })} /></FormField>
+          <FormField label="Branch" htmlFor="branch" error={errors.branch?.message}><Input id="branch" className="h-9" {...register("branch")} /></FormField>
         </form>
       ) : (
         <>
-          <KeyValueRow label="Name" value={effective.name} />
-          <KeyValueRow label="Employee ID" value={effective.id} />
-          <KeyValueRow label="Role" value={effective.role} />
-          <KeyValueRow label="Joined" value={formatDate(effective.joinedAt)} />
+          <KeyValueRow label="Name" value={employee.name} />
+          <KeyValueRow label="Employee ID" value={employee.publicId} />
+          <KeyValueRow label="Branch" value={employee.branch ?? "Not assigned"} />
+          <KeyValueRow label="Joined" value={formatDate(employee.createdAt)} />
         </>
       )}
     </EditableDetailSection>

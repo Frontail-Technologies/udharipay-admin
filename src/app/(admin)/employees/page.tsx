@@ -1,6 +1,5 @@
-import { Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { EmployeesTable } from "@/components/employees/EmployeesTable";
+import { CreateEmployeeDialog } from "@/components/employees/CreateEmployeeDialog";
 
 export default function EmployeesPage() {
   return (
@@ -14,10 +13,7 @@ export default function EmployeesPage() {
             Manage field and operational users, verification and activity.
           </p>
         </div>
-        <Button size="sm" disabled className="h-9 gap-1.5 text-[13px]">
-          <Plus className="size-3.5" />
-          Add Employee
-        </Button>
+        <CreateEmployeeDialog />
       </div>
 
       <EmployeesTable />
