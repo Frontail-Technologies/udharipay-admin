@@ -1,8 +1,6 @@
-import { notFound } from "next/navigation";
-import { getPlanById } from "@/data/admin";
-import { PlanDetailView } from "@/components/plans/PlanDetailView";
+import { PlanDetailView } from "@/features/plans/components/PlanDetailView";
 
-const VALID_TABS = ["overview", "schedule", "payments", "followup"];
+const VALID_TABS = ["overview", "schedule"];
 
 export default async function PlanDetailPage({
   params,
@@ -13,8 +11,6 @@ export default async function PlanDetailPage({
 }) {
   const { planId } = await params;
   const { tab } = await searchParams;
-
-  if (!getPlanById(planId)) notFound();
 
   const defaultTab = VALID_TABS.includes(tab ?? "") ? (tab as string) : "overview";
 

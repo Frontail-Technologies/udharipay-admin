@@ -30,10 +30,11 @@ export function useCustomers(merchantId: string | undefined, params: ListCustome
   });
 }
 
-export function useCustomer(customerId: string) {
+export function useCustomer(customerId: string | undefined) {
   return useQuery({
-    queryKey: customerKeys.detail(customerId),
-    queryFn: ({ signal }) => getCustomer(customerId, { signal }),
+    queryKey: customerKeys.detail(customerId ?? "unselected"),
+    queryFn: ({ signal }) => getCustomer(customerId ?? "", { signal }),
+    enabled: Boolean(customerId),
   });
 }
 

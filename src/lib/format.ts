@@ -8,6 +8,23 @@ export function formatCompactInr(amount: number): string {
   return `₹${amount}`;
 }
 
+export function formatPaiseInr(amountPaise: string): string {
+  const paise = BigInt(amountPaise);
+  const rupees = paise / BigInt(100);
+  const remainder = paise % BigInt(100);
+  const fraction = remainder === BigInt(0) ? "" : `.${remainder.toString().padStart(2, "0")}`;
+  return `₹${rupees.toLocaleString("en-IN")}${fraction}`;
+}
+
+export function rupeesToPaise(value: string): string | null {
+  const normalized = value.trim().replace(/,/g, "");
+  const match = /^(\d+)(?:\.(\d{1,2}))?$/.exec(normalized);
+  if (!match) return null;
+  const rupees = BigInt(match[1]);
+  const paise = BigInt((match[2] ?? "").padEnd(2, "0") || "0");
+  return (rupees * BigInt(100) + paise).toString();
+}
+
 export function formatDate(iso: string | null | undefined): string {
   if (!iso) return "—";
   const date = new Date(`${iso}T00:00:00`);
