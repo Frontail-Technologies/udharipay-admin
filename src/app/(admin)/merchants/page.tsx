@@ -1,6 +1,5 @@
-import { Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { MerchantsTable } from "@/components/merchants/MerchantsTable";
+import { CreateMerchantDialog } from "@/components/merchants/CreateMerchantDialog";
 
 export default function MerchantsPage() {
   return (
@@ -11,13 +10,10 @@ export default function MerchantsPage() {
             Merchants
           </h1>
           <p className="mt-1 text-[13px] leading-relaxed text-text-secondary">
-            Manage merchant accounts, verification and collection activity.
+            Manage merchant profiles, assignments, access and lifecycle status.
           </p>
         </div>
-        <Button size="sm" disabled className="h-9 gap-1.5 text-[13px]">
-          <Plus className="size-3.5" />
-          Add Merchant
-        </Button>
+        <CreateMerchantDialog />
       </div>
 
       <MerchantsTable />

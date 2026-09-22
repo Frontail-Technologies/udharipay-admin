@@ -1,100 +1,36 @@
 "use client";
 
-import Link from "next/link";
+import { MerchantStatus, type MerchantStatus as MerchantStatusType } from "@/api/generated/contracts/merchants";
+import { normalizeApiError } from "@/api/http/errors";
+import { merchantStatusTone } from "@/features/merchants/merchantStatus";
+import { useChangeMerchantStatus, useMerchant } from "@/features/merchants/useMerchants";
 import { EntityPageHeader } from "@/components/entity/EntityPageHeader";
 import { EntitySummaryGrid } from "@/components/entity/EntitySummaryGrid";
-import { EntityTabs, ComingSoonPanel } from "@/components/entity/EntityTabs";
-import { EntityKycTab } from "@/components/entity/EntityKycTab";
-import { StatusBadge } from "@/components/admin/StatusBadge";
-import { Button } from "@/components/ui/button";
 import { MerchantOverviewTab } from "@/components/merchants/MerchantOverviewTab";
-import { MerchantSubscriptionTab } from "@/components/merchants/MerchantSubscriptionTab";
-import { CustomersTable } from "@/components/customers/CustomersTable";
-import { useAdminMerchant } from "@/hooks/useAdminEntities";
-import { merchantStatusTone, kycStatusTone, subscriptionStatusTone } from "@/data/admin/statusTones";
-import { formatCompactInr, formatDate, humanizeSnakeCase, initialsFromName } from "@/lib/format";
+import { StatusBadge } from "@/components/admin/StatusBadge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
+import { formatDate, humanizeSnakeCase, initialsFromName } from "@/lib/format";
 
-const TABS = [
-  { value: "overview", label: "Overview" },
-  { value: "customers", label: "Customers" },
-  { value: "collections", label: "Collections" },
-  { value: "kyc", label: "KYC & Documents" },
-  { value: "subscription", label: "Subscription" },
-];
+export function MerchantDetailView({ merchantId }: { merchantId: string }) {
+  const query = useMerchant(merchantId);
+  const statusChange = useChangeMerchantStatus();
 
-export function MerchantDetailView({ merchantId, defaultTab }: { merchantId: string; defaultTab: string }) {
-  const merchant = useAdminMerchant(merchantId);
+  if (query.isPending) return <MerchantDetailSkeleton />;
+  if (query.isError) return <div className="rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-8 text-center text-[13px] text-destructive">{normalizeApiError(query.error).message}</div>;
 
-  // The server page already validated the id exists (404s otherwise); this
-  // only guards the brief instant before the client store hydrates.
-  if (!merchant) return null;
+  const merchant = query.data.data;
+  return <div className="mx-auto flex max-w-6xl min-w-0 flex-col gap-5">
+    <EntityPageHeader backHref="/merchants" avatarLabel={initialsFromName(merchant.businessName)} title={merchant.businessName} meta={`${merchant.publicId} · Merchant since ${formatDate(merchant.createdAt)}`} badges={<StatusBadge tone={merchantStatusTone[merchant.status]}>Business {humanizeSnakeCase(merchant.status)}</StatusBadge>} actions={<Select value={merchant.status} disabled={statusChange.isPending} onValueChange={(value) => void statusChange.changeStatus(merchant, parseStatus(value))}><SelectTrigger className="h-8 w-36 text-[12.5px]" aria-label="Change merchant status"><SelectValue /></SelectTrigger><SelectContent>{Object.values(MerchantStatus).map((status) => <SelectItem key={status} value={status}>{humanizeSnakeCase(status)}</SelectItem>)}</SelectContent></Select>} />
+    <EntitySummaryGrid items={[{ label: "Owner", value: merchant.ownerName }, { label: "Business Category", value: merchant.businessCategory }, { label: "Location", value: `${merchant.city}, ${merchant.state}` }, { label: "Last Updated", value: formatDate(merchant.updatedAt) }]} />
+    <MerchantOverviewTab merchant={merchant} />
+  </div>;
+}
 
-  const kycReviewNeeded = merchant.kycStatus !== "verified";
+function MerchantDetailSkeleton() {
+  return <div className="mx-auto flex max-w-6xl flex-col gap-5"><Skeleton className="h-24 w-full" /><Skeleton className="h-24 w-full" /><div className="grid gap-4 lg:grid-cols-2"><Skeleton className="h-52" /><Skeleton className="h-52" /></div></div>;
+}
 
-  return (
-    <div className="mx-auto flex max-w-6xl min-w-0 flex-col gap-5">
-      <EntityPageHeader
-        backHref="/merchants"
-        avatarLabel={initialsFromName(merchant.businessName)}
-        title={merchant.businessName}
-        meta={`${merchant.id} · Merchant since ${formatDate(merchant.joinedAt)}`}
-        badges={
-          <>
-            <StatusBadge tone={merchantStatusTone[merchant.status]}>
-              Account {humanizeSnakeCase(merchant.status)}
-            </StatusBadge>
-            <StatusBadge tone={kycStatusTone[merchant.kycStatus]}>
-              KYC {humanizeSnakeCase(merchant.kycStatus)}
-            </StatusBadge>
-            <StatusBadge tone={subscriptionStatusTone[merchant.subscriptionStatus]}>
-              Subscription {humanizeSnakeCase(merchant.subscriptionStatus)}
-            </StatusBadge>
-          </>
-        }
-        actions={
-          <>
-            <Button
-              variant={kycReviewNeeded ? "default" : "outline"}
-              size="sm"
-              asChild
-              className="h-8 text-[12.5px]"
-            >
-              <Link href={`/merchants/${merchant.id}?tab=kyc`}>Review KYC</Link>
-            </Button>
-            <Button variant="outline" size="sm" asChild className="h-8 text-[12.5px]">
-              <Link href={`/merchants/${merchant.id}?tab=collections`}>View Collections</Link>
-            </Button>
-          </>
-        }
-      />
-
-      <EntitySummaryGrid
-        items={[
-          { label: "Customers", value: String(merchant.customerCount) },
-          { label: "Outstanding", value: formatCompactInr(merchant.outstanding) },
-          { label: "Collected This Month", value: formatCompactInr(merchant.collectedThisMonth) },
-          {
-            label: "Overdue",
-            value: formatCompactInr(merchant.overdueAmount),
-            emphasis: merchant.overdueAmount > 0 ? "error" : "default",
-          },
-          { label: "Active Plans", value: String(merchant.activePlans) },
-        ]}
-      />
-
-      <EntityTabs
-        tabs={TABS}
-        defaultValue={defaultTab}
-        panels={{
-          overview: <MerchantOverviewTab merchant={merchant} />,
-          customers: (
-            <CustomersTable merchantId={merchant.id} showMerchantColumn={false} showLastPaymentColumn={false} />
-          ),
-          collections: <ComingSoonPanel label="Merchant collections view" />,
-          kyc: <EntityKycTab entityType="merchant" entityId={merchant.id} />,
-          subscription: <MerchantSubscriptionTab merchantId={merchant.id} />,
-        }}
-      />
-    </div>
-  );
+function parseStatus(value: string): MerchantStatusType {
+  return Object.values(MerchantStatus).find((status) => status === value) ?? "draft";
 }

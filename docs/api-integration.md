@@ -4,7 +4,7 @@
 
 Backend Zod contracts generate `../backend/openapi.json`. Orval reads that document and writes endpoint functions and models under `src/api/generated`.
 
-Application code must not import Axios directly. Generated operations use `src/api/http/client.ts`, which owns the base URL, cookie credentials, request IDs, timeout, error normalization, and single-flight session refresh. Feature code consumes generated hooks through `src/features` when mapping or cross-operation behavior is required.
+Application code must not import Axios directly. Generated operations use `src/api/http/client.ts`, which owns the base URL, cookie credentials, request IDs, timeout, error normalization, and single-flight session refresh. Feature code consumes generated functions through handwritten hooks under `src/features` when query ownership or cross-operation behavior is required.
 
 ## Shared infrastructure
 
@@ -23,7 +23,7 @@ Application code must not import Axios directly. Generated operations use `src/a
 | --- | --- | --- | --- | --- | --- |
 | `/dashboard` | Demo aggregates | Existing report endpoints can supply cards; no dashboard API added | `getReport` | Future dashboard composition hook | Pending |
 | `/employees`, detail | API | `/employees`, `/employees/{employeeId}` | Employee list/detail/create/update | `useEmployees`, `useEmployee`, Employee mutations | Integrated |
-| `/merchants`, detail | API list with demo fallback; demo detail aggregates | `/merchants`, `/merchants/{merchantId}`, `/assignment` | `useListMerchants`, `useGetMerchant`, `useAssignMerchant` | `useMerchantDirectory`, `useUnassignMerchant` | List and unassign integrated; detail pending |
+| `/merchants`, detail | API | `/merchants`, `/merchants/{merchantId}`, `/assignment` | Merchant list/detail/create/update/assignment operations | `useMerchants`, `useMerchant`, Merchant mutations | Integrated for Merchant-owned contracts |
 | `/customers`, detail | Demo data/store | Merchant customer list/create and customer detail/update | Customer operations | Customer list/detail/actions hooks | Pending |
 | `/plans`, detail | Demo data | Customer plan list/create and plan detail | Plan operations | Plan list/detail hooks | Pending |
 | Payment panels | Demo data | Plan payment list and payment detail | Payment operations | Payment list/detail hooks | Pending |
@@ -37,7 +37,7 @@ Application code must not import Axios directly. Generated operations use `src/a
 | `/login` and protected layout | API | Admin login, refresh, `/auth/me`, logout | Generated Auth hooks | `AuthProvider`, `AdminAuthGuard` | Integrated |
 | Razorpay provider routes | Not used by Admin | Order, verify, webhook | Generated Razorpay operations | None; checkout is outside Admin scope | Documented only |
 
-The merchant adapter preserves the approved table hierarchy while backend aggregate fields are not yet returned by the merchant directory endpoint. Missing aggregate values remain neutral instead of being fabricated.
+Merchant screens render only fields returned by Merchant endpoints. Customer, plan, collection, KYC, billing, and activity aggregates remain deferred to their domain integration phases because the Merchant contracts do not expose them.
 
 ## Regeneration
 
