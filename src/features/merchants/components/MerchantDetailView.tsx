@@ -2,11 +2,11 @@
 
 import { MerchantStatus, type MerchantStatus as MerchantStatusType } from "@/api/generated/contracts/merchants";
 import { normalizeApiError } from "@/api/http/errors";
-import { merchantStatusTone } from "@/features/merchants/merchantStatus";
-import { useChangeMerchantStatus, useMerchant } from "@/features/merchants/useMerchants";
+import { merchantStatusTone } from "@/features/merchants/utils/status";
+import { useChangeMerchantStatus, useMerchant } from "@/features/merchants/hooks/useMerchants";
 import { EntityPageHeader } from "@/components/entity/EntityPageHeader";
 import { EntitySummaryGrid } from "@/components/entity/EntitySummaryGrid";
-import { MerchantOverviewTab } from "@/components/merchants/MerchantOverviewTab";
+import { MerchantOverviewTab } from "@/features/merchants/components/MerchantOverviewTab";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";

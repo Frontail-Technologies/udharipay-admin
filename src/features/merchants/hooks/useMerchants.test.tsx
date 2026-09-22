@@ -11,7 +11,7 @@ const api = vi.hoisted(() => ({ assignMerchant: vi.fn(), createMerchant: vi.fn()
 const confirm = vi.hoisted(() => vi.fn());
 
 vi.mock("@/api/generated/merchants", () => api);
-vi.mock("@/components/feedback/ConfirmProvider", () => ({ useConfirm: () => confirm }));
+vi.mock("@/shared/hooks/useConfirm", () => ({ useConfirm: () => confirm }));
 vi.mock("sonner", () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 
 const merchant: Merchant = {
@@ -52,7 +52,7 @@ beforeEach(() => {
 
 describe("Merchant API hooks", () => {
   it("keeps Merchant screens independent from demo Merchant state and unsupported aggregates", () => {
-    const files = ["src/app/(admin)/merchants/page.tsx", "src/app/(admin)/merchants/[merchantId]/page.tsx", ...fs.readdirSync("src/components/merchants").filter((name) => name.endsWith(".tsx") && !name.endsWith(".test.tsx")).map((name) => path.join("src/components/merchants", name))];
+    const files = ["src/app/(admin)/merchants/page.tsx", "src/app/(admin)/merchants/[merchantId]/page.tsx", ...fs.readdirSync("src/features/merchants/components").filter((name) => name.endsWith(".tsx") && !name.endsWith(".test.tsx")).map((name) => path.join("src/features/merchants/components", name))];
     const source = files.map((file) => fs.readFileSync(file, "utf8")).join("\n");
     expect(source).not.toMatch(/useAdminEntities|adminDemoStore|data\/admin\/merchants|customerCount|outstanding|collectedThisMonth|kycStatus|subscriptionStatus/);
   });

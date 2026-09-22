@@ -1,4 +1,4 @@
-import { EmployeeDetailView } from "@/components/employees/EmployeeDetailView";
+import { EmployeeDetailView } from "@/features/employees/components/EmployeeDetailView";
 
 export default async function EmployeeDetailPage({
   params,

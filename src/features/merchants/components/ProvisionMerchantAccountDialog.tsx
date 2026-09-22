@@ -6,7 +6,7 @@ import { Loader2, UserPlus } from "lucide-react";
 import { toast } from "sonner";
 import type { ProvisionMerchantAccountBody } from "@/api/generated/contracts/merchants";
 import { applyApiFormErrors } from "@/api/forms/formErrors";
-import { useProvisionMerchantAccount } from "@/features/merchants/useMerchants";
+import { useProvisionMerchantAccount } from "@/features/merchants/hooks/useMerchants";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";

@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { Employee, UpdateEmployeeBody } from "@/api/generated/contracts/employees";
 import { applyApiFormErrors } from "@/api/forms/formErrors";
-import { useUpdateEmployee } from "@/features/employees/useEmployees";
+import { useUpdateEmployee } from "@/features/employees/hooks/useEmployees";
 import { EditableDetailSection } from "@/components/entity/EditableDetailSection";
 import { FormField } from "@/components/entity/FormField";
 import { KeyValueRow } from "@/components/entity/KeyValueRow";

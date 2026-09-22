@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { ConfirmProvider, useConfirm } from "./ConfirmProvider";
+import { ConfirmProvider, useConfirm } from "./useConfirm";
 
 function Consumer({ resolved, destructive = false }: { resolved: (value: boolean) => void; destructive?: boolean }) {
   const confirm = useConfirm();

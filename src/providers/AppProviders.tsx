@@ -5,7 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { AppErrorBoundary } from "@/components/feedback/AppErrorBoundary";
-import { ConfirmProvider } from "@/components/feedback/ConfirmProvider";
+import { ConfirmProvider } from "@/shared/hooks/useConfirm";
 import { AuthProvider } from "@/features/auth/AuthProvider";
 
 export function AppProviders({ children }: { children: ReactNode }) {

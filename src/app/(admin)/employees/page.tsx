@@ -1,5 +1,5 @@
-import { EmployeesTable } from "@/components/employees/EmployeesTable";
-import { CreateEmployeeDialog } from "@/components/employees/CreateEmployeeDialog";
+import { EmployeesTable } from "@/features/employees/components/EmployeesTable";
+import { CreateEmployeeDialog } from "@/features/employees/components/CreateEmployeeDialog";
 
 export default function EmployeesPage() {
   return (

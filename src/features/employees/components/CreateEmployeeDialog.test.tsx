@@ -6,7 +6,7 @@ import { CreateEmployeeDialog } from "./CreateEmployeeDialog";
 const mutation = vi.hoisted(() => ({ isPending: false, mutateAsync: vi.fn() }));
 const toast = vi.hoisted(() => ({ error: vi.fn() }));
 
-vi.mock("@/features/employees/useEmployees", () => ({ useCreateEmployee: () => mutation }));
+vi.mock("@/features/employees/hooks/useEmployees", () => ({ useCreateEmployee: () => mutation }));
 vi.mock("sonner", () => ({ toast }));
 
 beforeEach(() => {

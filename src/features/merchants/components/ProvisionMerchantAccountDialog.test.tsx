@@ -6,7 +6,7 @@ import { ProvisionMerchantAccountDialog } from "./ProvisionMerchantAccountDialog
 const mutation = vi.hoisted(() => ({ isPending: false, mutateAsync: vi.fn() }));
 const toast = vi.hoisted(() => ({ error: vi.fn() }));
 
-vi.mock("@/features/merchants/useMerchants", () => ({ useProvisionMerchantAccount: () => mutation }));
+vi.mock("@/features/merchants/hooks/useMerchants", () => ({ useProvisionMerchantAccount: () => mutation }));
 vi.mock("sonner", () => ({ toast }));
 
 beforeEach(() => {

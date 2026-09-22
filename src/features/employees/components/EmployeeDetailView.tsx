@@ -2,11 +2,11 @@
 
 import { UserStatus, type UserStatus as UserStatusType } from "@/api/generated/common";
 import { normalizeApiError } from "@/api/http/errors";
-import { employeeStatusTone } from "@/features/employees/employeeStatus";
-import { useChangeEmployeeStatus, useEmployee } from "@/features/employees/useEmployees";
+import { employeeStatusTone } from "@/features/employees/utils/status";
+import { useChangeEmployeeStatus, useEmployee } from "@/features/employees/hooks/useEmployees";
 import { EntityPageHeader } from "@/components/entity/EntityPageHeader";
 import { EntitySummaryGrid } from "@/components/entity/EntitySummaryGrid";
-import { EmployeeOverviewTab } from "@/components/employees/EmployeeOverviewTab";
+import { EmployeeOverviewTab } from "@/features/employees/components/EmployeeOverviewTab";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";

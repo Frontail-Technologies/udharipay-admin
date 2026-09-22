@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { UserStatus, type UserStatus as UserStatusType } from "@/api/generated/common";
 import type { CreateEmployeeBody } from "@/api/generated/contracts/employees";
 import { applyApiFormErrors } from "@/api/forms/formErrors";
-import { useCreateEmployee } from "@/features/employees/useEmployees";
+import { useCreateEmployee } from "@/features/employees/hooks/useEmployees";
 import { humanizeSnakeCase } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";

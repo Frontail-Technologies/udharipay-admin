@@ -16,7 +16,7 @@ const api = vi.hoisted(() => ({
 const confirm = vi.hoisted(() => vi.fn());
 
 vi.mock("@/api/generated/employees", () => api);
-vi.mock("@/components/feedback/ConfirmProvider", () => ({ useConfirm: () => confirm }));
+vi.mock("@/shared/hooks/useConfirm", () => ({ useConfirm: () => confirm }));
 vi.mock("sonner", () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 
 const employee: Employee = {
@@ -49,7 +49,7 @@ describe("Employee API hooks", () => {
     const files = [
       "src/app/(admin)/employees/page.tsx",
       "src/app/(admin)/employees/[employeeId]/page.tsx",
-      ...fs.readdirSync("src/components/employees").filter((name) => name.endsWith(".tsx") && !name.endsWith(".test.tsx")).map((name) => path.join("src/components/employees", name)),
+      ...fs.readdirSync("src/features/employees/components").filter((name) => name.endsWith(".tsx") && !name.endsWith(".test.tsx")).map((name) => path.join("src/features/employees/components", name)),
     ];
     const source = files.map((file) => fs.readFileSync(file, "utf8")).join("\n");
     expect(source).not.toMatch(/useAdminEntities|adminDemoStore|data\/admin\/employees/);

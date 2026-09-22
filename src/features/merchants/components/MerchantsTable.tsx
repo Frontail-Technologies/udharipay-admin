@@ -1,14 +1,14 @@
 "use client";
 
-import { useDeferredValue, useMemo } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { ColumnDef } from "@tanstack/react-table";
-import { MerchantStatus, type MerchantListItem, type MerchantStatus as MerchantStatusType, type ListMerchantsParams } from "@/api/generated/contracts/merchants";
+import { MerchantStatus, type MerchantListItem } from "@/api/generated/contracts/merchants";
 import { normalizeApiError } from "@/api/http/errors";
-import { merchantStatusTone } from "@/features/merchants/merchantStatus";
-import { BUSINESS_CATEGORIES } from "@/features/merchants/merchantOptions";
-import { useMerchants } from "@/features/merchants/useMerchants";
+import { merchantStatusTone } from "@/features/merchants/utils/status";
+import { BUSINESS_CATEGORIES } from "@/features/merchants/utils/options";
+import { useMerchantDirectory } from "@/features/merchants/hooks/useMerchants";
 import { DataTable } from "@/components/table/DataTable";
 import { ManagementToolbar, type ManagementFilterDef } from "@/components/table/ManagementToolbar";
 import { RowActionsMenu } from "@/components/table/RowActionsMenu";
@@ -16,28 +16,11 @@ import { StatusBadge } from "@/components/admin/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { formatDateShort, humanizeSnakeCase } from "@/lib/format";
 import { exportRowsToCsv } from "@/lib/csv";
-import { readCursorState, writeCursorState } from "@/lib/urlState";
-
-const PAGE_SIZE = 25;
 
 export function MerchantsTable() {
   const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const state = readCursorState(new URLSearchParams(searchParams.toString()));
-  const search = state.search ?? "";
-  const status = parseMerchantStatus(state.status);
-  const category = state.category;
-  const deferredSearch = useDeferredValue(search);
-  const params = useMemo<ListMerchantsParams>(() => ({ limit: PAGE_SIZE, cursor: state.cursor, search: deferredSearch || undefined, status, businessCategory: category }), [category, deferredSearch, state.cursor, status]);
-  const query = useMerchants(params);
-  const merchants = query.data?.data.items ?? [];
-  const nextCursor = query.data?.data.pagination.nextCursor ?? null;
-
-  const replaceState = (next: { search?: string; status?: string; category?: string; cursor?: string }) => {
-    const queryString = writeCursorState(new URLSearchParams(searchParams.toString()), next);
-    router.replace(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
-  };
+  const directory = useMerchantDirectory();
+  const { query, merchants, nextCursor, state, search, status, category, replaceState } = directory;
 
   const columns = useMemo<ColumnDef<MerchantListItem>[]>(() => [
     { accessorKey: "businessName", header: "Merchant", cell: ({ row }) => <div className="min-w-0"><p className="truncate font-medium text-text-primary">{row.original.businessName}</p><p className="truncate text-[11.5px] text-text-muted">{row.original.publicId}</p></div> },
@@ -70,13 +53,9 @@ export function MerchantsTable() {
       ])} />
       <DataTable columns={columns} data={merchants} isLoading={query.isPending} stickyHeader tableClassName="min-w-[980px]" onRowClick={(row) => router.push(`/merchants/${row.id}`)} emptyState={<span className="text-[13px] text-text-muted">No merchants match these filters.</span>} />
       {(state.cursor || nextCursor) && <div className="flex justify-end gap-2">
-        <Button type="button" variant="outline" size="sm" disabled={!state.cursor || query.isFetching} onClick={() => router.back()}><ChevronLeft className="size-3.5" /> Previous</Button>
-        <Button type="button" variant="outline" size="sm" disabled={!nextCursor || query.isFetching} onClick={() => { if (!nextCursor) return; const queryString = writeCursorState(new URLSearchParams(searchParams.toString()), { cursor: nextCursor, search: state.search, status: state.status, category: state.category }); router.push(`${pathname}?${queryString}`, { scroll: false }); }}>Next <ChevronRight className="size-3.5" /></Button>
+        <Button type="button" variant="outline" size="sm" disabled={!state.cursor || query.isFetching} onClick={directory.goPrevious}><ChevronLeft className="size-3.5" /> Previous</Button>
+        <Button type="button" variant="outline" size="sm" disabled={!nextCursor || query.isFetching} onClick={() => { if (nextCursor) directory.goNext(nextCursor); }}>Next <ChevronRight className="size-3.5" /></Button>
       </div>}
     </div>
   );
-}
-
-function parseMerchantStatus(value: string | undefined): MerchantStatusType | undefined {
-  return Object.values(MerchantStatus).find((status) => status === value);
 }

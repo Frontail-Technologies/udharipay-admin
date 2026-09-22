@@ -1,5 +1,5 @@
-import { MerchantsTable } from "@/components/merchants/MerchantsTable";
-import { CreateMerchantDialog } from "@/components/merchants/CreateMerchantDialog";
+import { MerchantsTable } from "@/features/merchants/components/MerchantsTable";
+import { CreateMerchantDialog } from "@/features/merchants/components/CreateMerchantDialog";
 
 export default function MerchantsPage() {
   return (

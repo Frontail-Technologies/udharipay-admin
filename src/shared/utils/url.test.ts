@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { readCursorState, writeCursorState } from "./urlState";
+import { readCursorState, writeCursorState } from "./url";
 
 describe("cursor URL state", () => {
   it("round trips filters and removes cleared cursors", () => {

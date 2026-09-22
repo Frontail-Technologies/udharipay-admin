@@ -1,7 +1,7 @@
 import type { Merchant } from "@/api/generated/contracts/merchants";
 import { DetailSection } from "@/components/entity/DetailSection";
 import { StatusBadge } from "@/components/admin/StatusBadge";
-import { ProvisionMerchantAccountDialog } from "@/components/merchants/ProvisionMerchantAccountDialog";
+import { ProvisionMerchantAccountDialog } from "@/features/merchants/components/ProvisionMerchantAccountDialog";
 import { humanizeSnakeCase } from "@/lib/format";
 
 export function MerchantAccountsSection({ merchant }: { merchant: Merchant }) {

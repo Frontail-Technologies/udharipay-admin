@@ -1,14 +1,14 @@
 "use client";
 
-import { useDeferredValue, useMemo } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useMemo } from "react";
+import { useRouter } from "next/navigation";
 import type { ColumnDef } from "@tanstack/react-table";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { UserStatus, type UserStatus as UserStatusType } from "@/api/generated/common";
-import type { Employee, ListEmployeesParams } from "@/api/generated/contracts/employees";
+import { UserStatus } from "@/api/generated/common";
+import type { Employee } from "@/api/generated/contracts/employees";
 import { normalizeApiError } from "@/api/http/errors";
-import { employeeStatusTone } from "@/features/employees/employeeStatus";
-import { useEmployees } from "@/features/employees/useEmployees";
+import { employeeStatusTone } from "@/features/employees/utils/status";
+import { useEmployeeDirectory } from "@/features/employees/hooks/useEmployees";
 import { DataTable } from "@/components/table/DataTable";
 import { ManagementToolbar, type ManagementFilterDef } from "@/components/table/ManagementToolbar";
 import { RowActionsMenu } from "@/components/table/RowActionsMenu";
@@ -16,32 +16,11 @@ import { StatusBadge } from "@/components/admin/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { formatDateShort, humanizeSnakeCase } from "@/lib/format";
 import { exportRowsToCsv } from "@/lib/csv";
-import { readCursorState, writeCursorState } from "@/lib/urlState";
-
-const PAGE_SIZE = 25;
 
 export function EmployeesTable() {
   const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const state = readCursorState(new URLSearchParams(searchParams.toString()));
-  const search = state.search ?? "";
-  const status = employeeStatus(state.status);
-  const deferredSearch = useDeferredValue(search);
-  const params = useMemo<ListEmployeesParams>(() => ({
-    limit: PAGE_SIZE,
-    cursor: state.cursor,
-    search: deferredSearch || undefined,
-    status,
-  }), [deferredSearch, state.cursor, status]);
-  const query = useEmployees(params);
-  const employees = query.data?.data.items ?? [];
-  const nextCursor = query.data?.data.pagination.nextCursor ?? null;
-
-  const replaceState = (next: { search?: string; status?: string; cursor?: string }) => {
-    const queryString = writeCursorState(new URLSearchParams(searchParams.toString()), next);
-    router.replace(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
-  };
+  const directory = useEmployeeDirectory();
+  const { query, employees, nextCursor, state, search, status, replaceState } = directory;
 
   const columns = useMemo<ColumnDef<Employee>[]>(() => [
     {
@@ -118,23 +97,14 @@ export function EmployeesTable() {
       />
       {(state.cursor || nextCursor) && (
         <div className="flex justify-end gap-2">
-          <Button type="button" variant="outline" size="sm" disabled={!state.cursor || query.isFetching} onClick={() => router.back()}>
+          <Button type="button" variant="outline" size="sm" disabled={!state.cursor || query.isFetching} onClick={directory.goPrevious}>
             <ChevronLeft className="size-3.5" /> Previous
           </Button>
-          <Button type="button" variant="outline" size="sm" disabled={!nextCursor || query.isFetching} onClick={() => {
-            if (!nextCursor) return;
-            const queryString = writeCursorState(new URLSearchParams(searchParams.toString()), { cursor: nextCursor, search: state.search, status: state.status });
-            router.push(`${pathname}?${queryString}`, { scroll: false });
-          }}>
+          <Button type="button" variant="outline" size="sm" disabled={!nextCursor || query.isFetching} onClick={() => { if (nextCursor) directory.goNext(nextCursor); }}>
             Next <ChevronRight className="size-3.5" />
           </Button>
         </div>
       )}
     </div>
   );
-}
-
-function employeeStatus(value: string | undefined): UserStatusType | undefined {
-  if (value === "active" || value === "inactive" || value === "suspended") return value;
-  return undefined;
 }

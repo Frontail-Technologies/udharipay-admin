@@ -1,5 +1,7 @@
 "use client";
 
+import { useDeferredValue, useMemo } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
@@ -10,17 +12,20 @@ import {
   provisionMerchantAccount,
   updateMerchant,
 } from "@/api/generated/merchants";
+import { MerchantStatus } from "@/api/generated/contracts/merchants";
 import type {
   AssignMerchantBody,
   CreateMerchantBody,
   ListMerchantsParams,
   Merchant,
-  MerchantStatus,
   ProvisionMerchantAccountBody,
   UpdateMerchantBody,
 } from "@/api/generated/contracts/merchants";
 import { normalizeApiError } from "@/api/http/errors";
-import { useConfirm } from "@/components/feedback/ConfirmProvider";
+import { useConfirm } from "@/shared/hooks/useConfirm";
+import { readCursorState, writeCursorState, type CursorState } from "@/shared/utils/url";
+
+const PAGE_SIZE = 25;
 
 export const merchantKeys = {
   all: ["merchants"] as const,
@@ -42,6 +47,27 @@ export function useMerchant(merchantId: string) {
     queryKey: merchantKeys.detail(merchantId),
     queryFn: ({ signal }) => getMerchant(merchantId, { signal }),
   });
+}
+
+export function useMerchantDirectory() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const state = readCursorState(new URLSearchParams(searchParams.toString()));
+  const search = state.search ?? "";
+  const status = parseMerchantStatus(state.status);
+  const deferredSearch = useDeferredValue(search);
+  const params = useMemo<ListMerchantsParams>(() => ({ limit: PAGE_SIZE, cursor: state.cursor, search: deferredSearch || undefined, status, businessCategory: state.category }), [deferredSearch, state.category, state.cursor, status]);
+  const query = useMerchants(params);
+  const replaceState = (next: CursorState) => {
+    const queryString = writeCursorState(new URLSearchParams(searchParams.toString()), next);
+    router.replace(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
+  };
+  const goNext = (cursor: string) => {
+    const queryString = writeCursorState(new URLSearchParams(searchParams.toString()), { cursor, search: state.search, status: state.status, category: state.category });
+    router.push(`${pathname}?${queryString}`, { scroll: false });
+  };
+  return { query, merchants: query.data?.data.items ?? [], nextCursor: query.data?.data.pagination.nextCursor ?? null, state, search, status, category: state.category, replaceState, goPrevious: router.back, goNext };
 }
 
 export function useCreateMerchant() {
@@ -143,4 +169,8 @@ export function useProvisionMerchantAccount() {
       toast.success("Merchant account provisioned");
     },
   });
+}
+
+function parseMerchantStatus(value: string | undefined): MerchantStatus | undefined {
+  return Object.values(MerchantStatus).find((status) => status === value);
 }

@@ -15,7 +15,13 @@ Application code must not import Axios directly. Generated operations use `src/a
 - `applyApiFormErrors` maps backend Zod field errors to React Hook Form.
 - Money helpers retain paise as decimal strings or bigint and do not use floating-point storage.
 - Report exports are generated as `Blob` requests and should use the shared download helpers.
-- Cursor/filter state uses URL search parameters through `src/lib/urlState.ts`.
+- Cursor/filter state uses URL search parameters through `src/shared/utils/url.ts`.
+
+## Feature ownership
+
+Integrated domains use `src/features/<domain>/hooks` for TanStack Query state, query keys, URL-backed list state, cache invalidation, and mutation orchestration. Domain metadata and option sets live under `src/features/<domain>/utils`, while domain UI lives under `src/features/<domain>/components`. Components retain temporary form, dialog, selection, and tab state.
+
+Customer integration must follow the same structure: `src/features/customers/hooks/useCustomers.ts` owns Customer queries, URL state, mutations, and invalidation; `src/features/customers/utils` is created only for substantive Customer-specific pure logic; and `src/features/customers/components` owns Customer presentation and form-local state. Customer code must consume generated contracts and functions directly without copying server data into a store.
 
 ## Integration inventory
 
