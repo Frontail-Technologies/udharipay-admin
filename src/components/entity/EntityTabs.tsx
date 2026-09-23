@@ -16,11 +16,13 @@ type EntityTabsProps = {
   tabs: EntityTabDef[];
   defaultValue: string;
   panels: Record<string, ReactNode>;
+  value?: string;
+  onValueChange?: (value: string) => void;
 };
 
-export function EntityTabs({ tabs, defaultValue, panels }: EntityTabsProps) {
+export function EntityTabs({ tabs, defaultValue, panels, value, onValueChange }: EntityTabsProps) {
   return (
-    <Tabs defaultValue={defaultValue} className="min-w-0">
+    <Tabs defaultValue={defaultValue} value={value} onValueChange={onValueChange} className="min-w-0">
       <div
         className={cn(
           "min-w-0 max-w-full",

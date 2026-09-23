@@ -24,6 +24,7 @@ httpClient.interceptors.request.use((config) => {
 httpClient.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
+    await resolveBlobErrorData(error);
     const config = error.config as RetryConfig | undefined;
     const path = config?.url ?? "";
     const canRefresh = error.response?.status === 401 && config && !config._sessionRetry && !unauthenticatedPaths.some((entry) => path.includes(entry));
@@ -53,4 +54,14 @@ export async function apiClient<T>(config: AxiosRequestConfig, options?: ApiRequ
 
 function createRequestId() {
   return globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+async function resolveBlobErrorData(error: AxiosError) {
+  const data = error.response?.data;
+  if (!(data instanceof Blob) || !data.type.includes("json")) return;
+  try {
+    error.response!.data = JSON.parse(await data.text());
+  } catch {
+    return;
+  }
 }
