@@ -63,14 +63,20 @@ export interface MerchantSubscription {
     createdAt: string;
     updatedAt: string;
 }
-export type CreateMerchantSubscriptionBodyPlanCode = typeof CreateMerchantSubscriptionBodyPlanCode[keyof typeof CreateMerchantSubscriptionBodyPlanCode];
-export const CreateMerchantSubscriptionBodyPlanCode = {
-    standard: 'standard',
-    premium: 'premium',
-    enterprise: 'enterprise',
-} as const;
+export interface BillingSettings {
+    activationFeePaise: MoneyPaise;
+    updatedAt: string;
+}
+export interface BillingPlan {
+    code: string;
+    name: string;
+    monthlyAmountPaise: MoneyPaise;
+    isActive: boolean;
+    displayOrder: number;
+    updatedAt: string;
+}
 export type CreateMerchantSubscriptionBody = {
-    planCode: CreateMerchantSubscriptionBodyPlanCode;
+    planCode: string;
     startsOn: string;
 };
 export type CreateMerchantSubscription201 = {
@@ -108,4 +114,28 @@ export type ListBillingInvoices200Data = {
 };
 export type ListBillingInvoices200 = {
     data: ListBillingInvoices200Data;
+};
+export type GetBillingSettings200 = {
+    data: BillingSettings;
+};
+export type UpdateBillingSettingsBody = {
+    activationFeePaise?: string;
+};
+export type UpdateBillingSettings200 = {
+    data: BillingSettings;
+};
+export type ListBillingPlans200Data = {
+    items: BillingPlan[];
+};
+export type ListBillingPlans200 = {
+    data: ListBillingPlans200Data;
+};
+export type UpdateBillingPlanBody = {
+    name?: string;
+    monthlyAmountPaise?: string;
+    isActive?: boolean;
+    displayOrder?: number;
+};
+export type UpdateBillingPlan200 = {
+    data: BillingPlan;
 };

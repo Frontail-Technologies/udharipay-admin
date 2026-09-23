@@ -4,8 +4,8 @@ import { useMemo } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { createMerchantSubscription, getMerchantSubscription, getSubscriptionInvoice, listBillingInvoices, listMerchantInvoices } from "@/api/generated/billing";
-import { SubscriptionInvoiceStatus, SubscriptionInvoiceType, type CreateMerchantSubscriptionBody, type ListBillingInvoicesParams, type ListMerchantInvoicesParams } from "@/api/generated/contracts/billing";
+import { createMerchantSubscription, getBillingSettings, getMerchantSubscription, getSubscriptionInvoice, listBillingInvoices, listBillingPlans, listMerchantInvoices, updateBillingPlan, updateBillingSettings } from "@/api/generated/billing";
+import { SubscriptionInvoiceStatus, SubscriptionInvoiceType, type CreateMerchantSubscriptionBody, type ListBillingInvoicesParams, type ListMerchantInvoicesParams, type UpdateBillingPlanBody, type UpdateBillingSettingsBody } from "@/api/generated/contracts/billing";
 import { readCursorState, writeCursorState, type CursorState } from "@/shared/utils/url";
 
 const PAGE_SIZE = 25;
@@ -20,6 +20,8 @@ export const billingKeys = {
   merchantSubscription: (merchantId: string) => [...billingKeys.merchantSubscriptions(), merchantId] as const,
   merchantInvoiceLists: (merchantId: string) => [...billingKeys.all, "merchant-invoice-list", merchantId] as const,
   merchantInvoiceList: (merchantId: string, params: ListMerchantInvoicesParams) => [...billingKeys.merchantInvoiceLists(merchantId), params] as const,
+  settings: () => [...billingKeys.all, "settings"] as const,
+  plans: () => [...billingKeys.all, "plans"] as const,
 };
 
 export function useBillingInvoices(params: ListBillingInvoicesParams) {
@@ -49,6 +51,37 @@ export function useCreateMerchantSubscription() {
         queryClient.invalidateQueries({ queryKey: billingKeys.invoiceLists() }),
       ]);
       toast.success("Subscription created");
+    },
+  });
+}
+
+export function useBillingSettings() {
+  return useQuery({ queryKey: billingKeys.settings(), queryFn: ({ signal }) => getBillingSettings({ signal }) });
+}
+
+export function useBillingPlans() {
+  return useQuery({ queryKey: billingKeys.plans(), queryFn: ({ signal }) => listBillingPlans({ signal }) });
+}
+
+export function useUpdateBillingSettings() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: UpdateBillingSettingsBody) => updateBillingSettings(input),
+    onSuccess: async (response) => {
+      queryClient.setQueryData(billingKeys.settings(), response);
+      await queryClient.invalidateQueries({ queryKey: billingKeys.settings() });
+      toast.success("Billing settings updated");
+    },
+  });
+}
+
+export function useUpdateBillingPlan() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ planCode, input }: { planCode: string; input: UpdateBillingPlanBody }) => updateBillingPlan(planCode, input),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: billingKeys.plans() });
+      toast.success("Billing plan updated");
     },
   });
 }

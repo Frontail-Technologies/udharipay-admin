@@ -30,9 +30,3 @@ export const invoiceTypeLabels: Record<SubscriptionInvoiceType, string> = {
   subscription: "Subscription",
   addon: "Add-on",
 };
-
-export const billingPlanCatalog = [
-  { code: "standard", name: "Standard", monthlyAmountPaise: "349900" },
-  { code: "premium", name: "Premium", monthlyAmountPaise: "599900" },
-  { code: "enterprise", name: "Enterprise", monthlyAmountPaise: "999900" },
-] as const;
