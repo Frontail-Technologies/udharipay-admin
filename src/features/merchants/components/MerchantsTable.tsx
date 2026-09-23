@@ -14,7 +14,8 @@ import { ManagementToolbar, type ManagementFilterDef } from "@/components/table/
 import { RowActionsMenu } from "@/components/table/RowActionsMenu";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { Button } from "@/components/ui/button";
-import { formatDateShort, humanizeSnakeCase } from "@/lib/format";
+import { humanizeSnakeCase } from "@/lib/format";
+import { formatIndiaDateFromTimestamp } from "@/shared/utils/date";
 import { exportRowsToCsv } from "@/lib/csv";
 
 export function MerchantsTable() {
@@ -28,7 +29,7 @@ export function MerchantsTable() {
     { accessorKey: "businessCategory", header: "Category", cell: ({ row }) => <span className="text-text-secondary">{row.original.businessCategory}</span> },
     { id: "location", header: "Location", cell: ({ row }) => <span className="text-text-secondary">{row.original.city}, {row.original.state}</span> },
     { accessorKey: "status", header: "Status", cell: ({ row }) => <StatusBadge tone={merchantStatusTone[row.original.status]}>{humanizeSnakeCase(row.original.status)}</StatusBadge> },
-    { accessorKey: "createdAt", header: "Joined", cell: ({ row }) => <span className="text-[12px] text-text-muted">{formatDateShort(row.original.createdAt)}</span> },
+    { accessorKey: "createdAt", header: "Joined", cell: ({ row }) => <span className="text-[12px] text-text-muted">{formatIndiaDateFromTimestamp(row.original.createdAt)}</span> },
     { id: "actions", header: "", cell: ({ row }) => <RowActionsMenu actions={[{ label: "View Details", href: `/merchants/${row.original.id}` }]} /> },
   ], []);
 
@@ -41,7 +42,7 @@ export function MerchantsTable() {
 
   return (
     <div className="flex flex-col gap-3">
-      <ManagementToolbar search={{ value: search, onChange: (value) => replaceState({ search: value || undefined, status: state.status, category: state.category, cursor: undefined }), placeholder: "Search merchants...", ariaLabel: "Search merchants" }} filters={filterDefs} moreFiltersLabel="More Filters" exportAriaLabel="Export merchants" onExport={() => exportRowsToCsv("merchants.csv", merchants, [
+      <ManagementToolbar search={{ value: search, onChange: (value) => replaceState({ search: value || undefined, status: state.status, category: state.category, cursor: undefined }), placeholder: "Search merchants...", ariaLabel: "Search merchants" }} filters={filterDefs} exportAriaLabel="Export merchants" onExport={() => exportRowsToCsv("merchants.csv", merchants, [
         { header: "Merchant ID", accessor: (row) => row.publicId },
         { header: "Business Name", accessor: (row) => row.businessName },
         { header: "Owner", accessor: (row) => row.ownerName },

@@ -14,7 +14,8 @@ import { ManagementToolbar, type ManagementFilterDef } from "@/components/table/
 import { RowActionsMenu } from "@/components/table/RowActionsMenu";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { Button } from "@/components/ui/button";
-import { formatDateShort, humanizeSnakeCase } from "@/lib/format";
+import { humanizeSnakeCase } from "@/lib/format";
+import { formatIndiaDateFromTimestamp } from "@/shared/utils/date";
 import { exportRowsToCsv } from "@/lib/csv";
 
 export function EmployeesTable() {
@@ -41,7 +42,7 @@ export function EmployeesTable() {
       header: "Status",
       cell: ({ row }) => <StatusBadge tone={employeeStatusTone[row.original.status]}>{humanizeSnakeCase(row.original.status)}</StatusBadge>,
     },
-    { accessorKey: "createdAt", header: "Joined", cell: ({ row }) => <span className="text-[12px] text-text-muted">{formatDateShort(row.original.createdAt)}</span> },
+    { accessorKey: "createdAt", header: "Joined", cell: ({ row }) => <span className="text-[12px] text-text-muted">{formatIndiaDateFromTimestamp(row.original.createdAt)}</span> },
     {
       id: "actions",
       header: "",
@@ -75,7 +76,6 @@ export function EmployeesTable() {
           ariaLabel: "Search employees",
         }}
         filters={filterDefs}
-        moreFiltersLabel="More Filters"
         exportAriaLabel="Export employees"
         onExport={() => exportRowsToCsv("employees.csv", employees, [
           { header: "Employee ID", accessor: (row) => row.publicId },

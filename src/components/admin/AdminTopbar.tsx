@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Bell, HelpCircle, Menu, Search } from "lucide-react";
 import { adminNavigation } from "@/config/admin-navigation";
@@ -106,8 +107,7 @@ export function AdminTopbar({ onOpenMobileNav }: { onOpenMobileNav: () => void }
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48">
-            <DropdownMenuItem disabled>Profile</DropdownMenuItem>
-            <DropdownMenuItem disabled>Settings</DropdownMenuItem>
+            <DropdownMenuItem asChild><Link href="/settings">Settings</Link></DropdownMenuItem>
             <DropdownMenuItem onClick={() => void logout()}>Log out</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -10,7 +10,7 @@ import { EditableDetailSection } from "@/components/entity/EditableDetailSection
 import { FormField } from "@/components/entity/FormField";
 import { KeyValueRow } from "@/components/entity/KeyValueRow";
 import { Input } from "@/components/ui/input";
-import { formatDate } from "@/lib/format";
+import { formatTimestamp } from "@/shared/utils/date";
 
 type EmployeeProfileValues = { name: string; branch: string };
 const FORM_ID = "employee-basic-info-form";
@@ -63,7 +63,7 @@ export function EmployeeProfileSection({ employee }: { employee: Employee }) {
           <KeyValueRow label="Name" value={employee.name} />
           <KeyValueRow label="Employee ID" value={employee.publicId} />
           <KeyValueRow label="Branch" value={employee.branch ?? "Not assigned"} />
-          <KeyValueRow label="Joined" value={formatDate(employee.createdAt)} />
+          <KeyValueRow label="Joined" value={formatTimestamp(employee.createdAt)} />
         </>
       )}
     </EditableDetailSection>

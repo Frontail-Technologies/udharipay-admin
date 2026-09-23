@@ -75,7 +75,7 @@ export function CreateEmployeeDialog() {
           Add Employee
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-xl">
         <DialogHeader>
           <DialogTitle>Add Employee</DialogTitle>
           <DialogDescription>Create an employee account and operational profile.</DialogDescription>

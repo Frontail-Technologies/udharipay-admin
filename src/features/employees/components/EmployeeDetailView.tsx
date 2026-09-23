@@ -11,7 +11,8 @@ import { SubjectKycSection } from "@/features/kyc/components/SubjectKycSection";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatDate, humanizeSnakeCase, initialsFromName } from "@/lib/format";
+import { humanizeSnakeCase, initialsFromName } from "@/lib/format";
+import { formatTimestamp } from "@/shared/utils/date";
 
 export function EmployeeDetailView({ employeeId }: { employeeId: string }) {
   const query = useEmployee(employeeId);
@@ -28,7 +29,7 @@ export function EmployeeDetailView({ employeeId }: { employeeId: string }) {
         backHref="/employees"
         avatarLabel={initialsFromName(employee.name)}
         title={employee.name}
-        meta={`${employee.publicId} · ${employee.branch ?? "No branch"} · Joined ${formatDate(employee.createdAt)}`}
+        meta={`${employee.publicId} · ${employee.branch ?? "No branch"} · Joined ${formatTimestamp(employee.createdAt)}`}
         badges={<StatusBadge tone={employeeStatusTone[employee.status]}>Account {humanizeSnakeCase(employee.status)}</StatusBadge>}
         actions={
           <Select value={employee.status} disabled={statusChange.isPending} onValueChange={(value) => statusChange.changeStatus(employee, parseStatus(value))}>
@@ -41,7 +42,7 @@ export function EmployeeDetailView({ employeeId }: { employeeId: string }) {
         { label: "Email", value: employee.email ?? "Not provided" },
         { label: "Mobile", value: employee.phone ?? "Not provided" },
         { label: "Branch", value: employee.branch ?? "Not assigned" },
-        { label: "Last Updated", value: formatDate(employee.updatedAt) },
+        { label: "Last Updated", value: formatTimestamp(employee.updatedAt) },
       ]} />
       <EmployeeOverviewTab employee={employee} />
       <SubjectKycSection subjectType="employee" subjectId={employee.id} />
