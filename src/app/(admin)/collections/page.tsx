@@ -1,5 +1,4 @@
-import { CollectionsSummary } from "@/components/collections/CollectionsSummary";
-import { CollectionsQueueTable } from "@/components/collections/CollectionsQueueTable";
+import { CollectionsWorkspace } from "@/features/collections/components/CollectionsWorkspace";
 
 export default function CollectionsPage() {
   return (
@@ -13,8 +12,7 @@ export default function CollectionsPage() {
         </p>
       </div>
 
-      <CollectionsSummary />
-      <CollectionsQueueTable />
+      <CollectionsWorkspace />
     </div>
   );
 }

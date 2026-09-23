@@ -34,7 +34,7 @@ Integrated Customer, Plan, Payment, and Mandate domains follow the same ownershi
 | `/plans`, detail | API | Customer-scoped plan list/create and plan detail | `listPlans`, `createPlan`, `getPlan` | `usePlans`, `usePlan`, `useCreatePlan` | Integrated for Plan and Installment contracts |
 | Payment panels, detail | API | Plan-scoped payment list and payment detail | `listPlanPayments`, `getPayment` | `usePayments`, `usePayment`, `usePlanPaymentHistory` | Integrated for Payment ledger visibility |
 | `/mandates`, detail | API | Customer-scoped mandate list, detail, and attempts | `listCustomerMandates`, `getMandate`, `listMandateAttempts` | `useMandates`, `useMandate`, `useMandateAttempts` | Integrated for read-only Mandate visibility |
-| `/collections` | Demo data/store | Collection queue and installment follow-ups | Collection operations | Queue/follow-up hooks | Pending |
+| `/collections` | API | Canonical collection queue and installment follow-ups | `listCollectionQueue`, `listFollowUps`, `createFollowUp` | `useCollectionDirectory`, `useFollowUpHistory`, `useCreateFollowUp` | Integrated for queue and follow-up operations |
 | `/kyc`, detail | Demo data/store | KYC queue/detail, upload/view, submit/decision endpoints | KYC operations | KYC review/actions hooks | Pending |
 | `/subscriptions`, detail | Demo data | Merchant subscription and invoice endpoints | Billing operations | Subscription/invoice hooks | Pending |
 | `/reports` | Demo report modules | Report data and binary export | `useGetReport`, `exportReport` | Report filters/export hook | Pending |
