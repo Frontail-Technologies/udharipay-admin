@@ -1,7 +1,9 @@
 import type { LucideIcon } from "lucide-react";
 import { ArrowDownRight, ArrowUpRight, Minus } from "lucide-react";
+import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import type { TrendDirection } from "@/data/admin-demo-data";
+
+export type TrendDirection = "up" | "down" | "flat";
 
 const trendStyles: Record<TrendDirection, { icon: LucideIcon; className: string }> = {
   up: { icon: ArrowUpRight, className: "text-success" },
@@ -18,14 +20,14 @@ export function MetricCard({
   trendLabel,
 }: {
   label: string;
-  value: string;
+  value: ReactNode;
   icon: LucideIcon;
-  trendValue: string;
-  trendDirection: TrendDirection;
-  trendLabel: string;
+  trendValue?: string;
+  trendDirection?: TrendDirection;
+  trendLabel?: string;
 }) {
-  const trend = trendStyles[trendDirection];
-  const TrendIcon = trend.icon;
+  const trend = trendDirection ? trendStyles[trendDirection] : undefined;
+  const TrendIcon = trend?.icon;
 
   return (
     <div className="flex h-full min-w-0 flex-col justify-between gap-3 rounded-lg border border-border bg-surface p-4">
@@ -40,13 +42,15 @@ export function MetricCard({
       <p className="text-[26px] font-semibold leading-tight tracking-tight text-text-primary">
         {value}
       </p>
-      <div className="flex items-center gap-1 text-[12px] leading-4">
-        <span className={cn("flex shrink-0 items-center gap-0.5 font-medium", trend.className)}>
-          <TrendIcon className="size-3.5" />
-          {trendValue}
-        </span>
-        <span className="truncate text-text-muted">{trendLabel}</span>
-      </div>
+      {trend && TrendIcon && (
+        <div className="flex items-center gap-1 text-[12px] leading-4">
+          <span className={cn("flex shrink-0 items-center gap-0.5 font-medium", trend.className)}>
+            <TrendIcon className="size-3.5" />
+            {trendValue}
+          </span>
+          <span className="truncate text-text-muted">{trendLabel}</span>
+        </div>
+      )}
     </div>
   );
 }
@@ -58,7 +62,7 @@ export function SecondaryMetricCard({
   tone = "neutral",
 }: {
   label: string;
-  value: string;
+  value: ReactNode;
   icon: LucideIcon;
   tone?: "neutral" | "warning" | "error";
 }) {
