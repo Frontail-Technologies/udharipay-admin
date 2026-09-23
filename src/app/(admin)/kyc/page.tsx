@@ -1,10 +1,6 @@
-import { KycQueueTable } from "@/components/kyc/KycQueueTable";
-import { KycQueueSummary } from "@/components/kyc/KycQueueSummary";
-import { DEMO_TODAY } from "@/data/admin";
+import { KycDirectory } from "@/features/kyc/components/KycDirectory";
 
 export default function KycQueuePage() {
-  const demoTodayIso = DEMO_TODAY.toISOString().slice(0, 10);
-
   return (
     <div className="mx-auto flex max-w-7xl min-w-0 flex-col gap-5">
       <div className="min-w-0">
@@ -16,8 +12,7 @@ export default function KycQueuePage() {
         </p>
       </div>
 
-      <KycQueueSummary />
-      <KycQueueTable demoTodayIso={demoTodayIso} />
+      <KycDirectory />
     </div>
   );
 }

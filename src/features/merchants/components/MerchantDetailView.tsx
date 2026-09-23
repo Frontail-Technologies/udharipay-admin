@@ -7,6 +7,7 @@ import { useChangeMerchantStatus, useMerchant } from "@/features/merchants/hooks
 import { EntityPageHeader } from "@/components/entity/EntityPageHeader";
 import { EntitySummaryGrid } from "@/components/entity/EntitySummaryGrid";
 import { MerchantOverviewTab } from "@/features/merchants/components/MerchantOverviewTab";
+import { SubjectKycSection } from "@/features/kyc/components/SubjectKycSection";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -24,6 +25,7 @@ export function MerchantDetailView({ merchantId }: { merchantId: string }) {
     <EntityPageHeader backHref="/merchants" avatarLabel={initialsFromName(merchant.businessName)} title={merchant.businessName} meta={`${merchant.publicId} · Merchant since ${formatDate(merchant.createdAt)}`} badges={<StatusBadge tone={merchantStatusTone[merchant.status]}>Business {humanizeSnakeCase(merchant.status)}</StatusBadge>} actions={<Select value={merchant.status} disabled={statusChange.isPending} onValueChange={(value) => void statusChange.changeStatus(merchant, parseStatus(value))}><SelectTrigger className="h-8 w-36 text-[12.5px]" aria-label="Change merchant status"><SelectValue /></SelectTrigger><SelectContent>{Object.values(MerchantStatus).map((status) => <SelectItem key={status} value={status}>{humanizeSnakeCase(status)}</SelectItem>)}</SelectContent></Select>} />
     <EntitySummaryGrid items={[{ label: "Owner", value: merchant.ownerName }, { label: "Business Category", value: merchant.businessCategory }, { label: "Location", value: `${merchant.city}, ${merchant.state}` }, { label: "Last Updated", value: formatDate(merchant.updatedAt) }]} />
     <MerchantOverviewTab merchant={merchant} />
+    <SubjectKycSection subjectType="merchant" subjectId={merchant.id} />
   </div>;
 }
 

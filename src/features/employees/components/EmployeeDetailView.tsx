@@ -7,6 +7,7 @@ import { useChangeEmployeeStatus, useEmployee } from "@/features/employees/hooks
 import { EntityPageHeader } from "@/components/entity/EntityPageHeader";
 import { EntitySummaryGrid } from "@/components/entity/EntitySummaryGrid";
 import { EmployeeOverviewTab } from "@/features/employees/components/EmployeeOverviewTab";
+import { SubjectKycSection } from "@/features/kyc/components/SubjectKycSection";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -43,6 +44,7 @@ export function EmployeeDetailView({ employeeId }: { employeeId: string }) {
         { label: "Last Updated", value: formatDate(employee.updatedAt) },
       ]} />
       <EmployeeOverviewTab employee={employee} />
+      <SubjectKycSection subjectType="employee" subjectId={employee.id} />
     </div>
   );
 }

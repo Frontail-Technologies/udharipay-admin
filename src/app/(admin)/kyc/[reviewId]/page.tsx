@@ -1,6 +1,4 @@
-import { notFound } from "next/navigation";
-import { getKycReviewById } from "@/data/admin";
-import { KycReviewWorkspace } from "@/components/kyc/KycReviewWorkspace";
+import { KycReviewDetailView } from "@/features/kyc/components/KycReviewDetailView";
 
 export default async function KycReviewPage({
   params,
@@ -9,7 +7,5 @@ export default async function KycReviewPage({
 }) {
   const { reviewId } = await params;
 
-  if (!getKycReviewById(reviewId)) notFound();
-
-  return <KycReviewWorkspace reviewId={reviewId} />;
+  return <KycReviewDetailView reviewId={reviewId} />;
 }
