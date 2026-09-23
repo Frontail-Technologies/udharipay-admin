@@ -35,7 +35,7 @@ export interface Mandate {
     authorizedAt: string | null;
     activatedAt: string | null;
     expiresAt: string | null;
-    maxAmountPaise: MoneyPaise & (string | null);
+    maxAmountPaise: MoneyPaise | null;
     createdAt: string;
     updatedAt: string;
 }
@@ -44,7 +44,7 @@ export interface MandateAttempt {
     mandateId: string;
     planId: string | null;
     installmentId: string | null;
-    amountPaise: MoneyPaise & (string | null);
+    amountPaise: MoneyPaise | null;
     status: MandateAttemptStatus;
     provider: string | null;
     providerReference: string | null;

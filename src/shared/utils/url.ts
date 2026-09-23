@@ -1,7 +1,7 @@
-export type CursorState = { cursor?: string; paymentCursor?: string; search?: string; status?: string; category?: string; merchantId?: string; customerId?: string; frequency?: string };
+export type CursorState = { cursor?: string; paymentCursor?: string; mandateCursor?: string; attemptCursor?: string; search?: string; status?: string; category?: string; merchantId?: string; customerId?: string; frequency?: string };
 
 export function readCursorState(searchParams: URLSearchParams): CursorState {
-  return compact({ cursor: searchParams.get("cursor") ?? undefined, paymentCursor: searchParams.get("paymentCursor") ?? undefined, search: searchParams.get("search") ?? undefined, status: searchParams.get("status") ?? undefined, category: searchParams.get("category") ?? undefined, merchantId: searchParams.get("merchantId") ?? undefined, customerId: searchParams.get("customerId") ?? undefined, frequency: searchParams.get("frequency") ?? undefined });
+  return compact({ cursor: searchParams.get("cursor") ?? undefined, paymentCursor: searchParams.get("paymentCursor") ?? undefined, mandateCursor: searchParams.get("mandateCursor") ?? undefined, attemptCursor: searchParams.get("attemptCursor") ?? undefined, search: searchParams.get("search") ?? undefined, status: searchParams.get("status") ?? undefined, category: searchParams.get("category") ?? undefined, merchantId: searchParams.get("merchantId") ?? undefined, customerId: searchParams.get("customerId") ?? undefined, frequency: searchParams.get("frequency") ?? undefined });
 }
 
 export function writeCursorState(current: URLSearchParams, state: CursorState) {

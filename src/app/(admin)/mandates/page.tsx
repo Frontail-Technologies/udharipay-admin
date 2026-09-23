@@ -1,5 +1,4 @@
-import { MandatesTable } from "@/components/mandates/MandatesTable";
-import { MandatesSummary } from "@/components/mandates/MandatesSummary";
+import { MandatesWorkspace } from "@/features/mandates/components/MandatesWorkspace";
 
 export default function MandatesPage() {
   return (
@@ -9,12 +8,11 @@ export default function MandatesPage() {
           Mandates
         </h1>
         <p className="mt-1 text-[13px] leading-relaxed text-text-secondary">
-          Monitor customer autopay authorizations used to collect Udhaar repayments.
+          View customer payment authorizations and provider attempt history.
         </p>
       </div>
 
-      <MandatesSummary />
-      <MandatesTable />
+      <MandatesWorkspace />
     </div>
   );
 }

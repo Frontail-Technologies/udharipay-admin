@@ -7,7 +7,8 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { PaymentListItem } from "@/api/generated/contracts/payments";
 import { normalizeApiError } from "@/api/http/errors";
 import { usePlanPaymentHistory } from "@/features/payments/hooks/usePayments";
-import { formatPaymentTimestamp, paymentMethodLabels, paymentSourceLabels, paymentStatusTone } from "@/features/payments/utils/metadata";
+import { paymentMethodLabels, paymentSourceLabels, paymentStatusTone } from "@/features/payments/utils/metadata";
+import { formatTimestamp } from "@/shared/utils/date";
 import { DataTable } from "@/components/table/DataTable";
 import { RowActionsMenu } from "@/components/table/RowActionsMenu";
 import { StatusBadge } from "@/components/admin/StatusBadge";
@@ -24,7 +25,7 @@ export function PaymentHistory({ planId }: { planId: string }) {
     { accessorKey: "source", header: "Source", cell: ({ row }) => <span className="text-text-secondary">{paymentSourceLabels[row.original.source]}</span> },
     { accessorKey: "status", header: "Status", cell: ({ row }) => <StatusBadge tone={paymentStatusTone[row.original.status]}>{humanizeSnakeCase(row.original.status)}</StatusBadge> },
     { accessorKey: "provider", header: "Provider", cell: ({ row }) => <span className="text-text-secondary">{row.original.provider ?? "-"}</span> },
-    { accessorKey: "paidAt", header: "Paid At", cell: ({ row }) => <span className="text-[12px] text-text-muted">{formatPaymentTimestamp(row.original.paidAt)}</span> },
+    { accessorKey: "paidAt", header: "Paid At", cell: ({ row }) => <span className="text-[12px] text-text-muted">{formatTimestamp(row.original.paidAt)}</span> },
     { id: "actions", header: "", cell: ({ row }) => <RowActionsMenu actions={[{ label: "View Payment", href: `/payments/${row.original.id}` }]} /> },
   ], []);
 

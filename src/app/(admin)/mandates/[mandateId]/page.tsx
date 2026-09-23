@@ -1,8 +1,6 @@
-import { notFound } from "next/navigation";
-import { getMandateById } from "@/data/admin";
-import { MandateDetailView } from "@/components/mandates/MandateDetailView";
+import { MandateDetailView } from "@/features/mandates/components/MandateDetailView";
 
-const VALID_TABS = ["overview", "attempts", "activity"];
+const VALID_TABS = ["overview", "attempts"];
 
 export default async function MandateDetailPage({
   params,
@@ -13,8 +11,6 @@ export default async function MandateDetailPage({
 }) {
   const { mandateId } = await params;
   const { tab } = await searchParams;
-
-  if (!getMandateById(mandateId)) notFound();
 
   const defaultTab = VALID_TABS.includes(tab ?? "") ? (tab as string) : "overview";
 

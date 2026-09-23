@@ -23,11 +23,6 @@ export const paymentSourceLabels: Record<PaymentSource, string> = {
   system_import: "System Import",
 };
 
-export function formatPaymentTimestamp(value: string | null) {
-  if (!value) return "Not available";
-  return new Date(value).toLocaleString("en-IN", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
-}
-
 export function sumAllocationPaise(values: { amountPaise: string }[]) {
   return values.reduce((total, value) => total + BigInt(value.amountPaise), BigInt(0)).toString();
 }
