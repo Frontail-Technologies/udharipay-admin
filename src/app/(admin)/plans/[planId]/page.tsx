@@ -1,6 +1,6 @@
 import { PlanDetailView } from "@/features/plans/components/PlanDetailView";
 
-const VALID_TABS = ["overview", "schedule"];
+const VALID_TABS = ["overview", "schedule", "payments"];
 
 export default async function PlanDetailPage({
   params,

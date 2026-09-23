@@ -21,7 +21,7 @@ Application code must not import Axios directly. Generated operations use `src/a
 
 Integrated domains use `src/features/<domain>/hooks` for TanStack Query state, query keys, URL-backed list state, cache invalidation, and mutation orchestration. Domain metadata and option sets live under `src/features/<domain>/utils`, while domain UI lives under `src/features/<domain>/components`. Components retain temporary form, dialog, selection, and tab state.
 
-Customer and Plan integrations follow the same ownership structure. `src/features/plans/hooks/usePlans.ts` owns customer-scoped Plan queries, URL state, creation, and invalidation. Installments are rendered directly from Plan detail and are not independently fetched or recalculated.
+Customer, Plan, and Payment integrations follow the same ownership structure. `src/features/plans/hooks/usePlans.ts` owns customer-scoped Plan queries, URL state, creation, and invalidation. `src/features/payments/hooks/usePayments.ts` owns Plan-scoped ledger queries, Payment detail, and cursor state. Installments and Payment allocations are rendered directly from their parent detail contracts.
 
 ## Integration inventory
 
@@ -32,7 +32,7 @@ Customer and Plan integrations follow the same ownership structure. `src/feature
 | `/merchants`, detail | API | `/merchants`, `/merchants/{merchantId}`, `/assignment` | Merchant list/detail/create/update/assignment operations | `useMerchants`, `useMerchant`, Merchant mutations | Integrated for Merchant-owned contracts |
 | `/customers`, detail | API | Merchant-scoped customer list/create and customer detail/update | Customer list/detail/create/update operations | `useCustomers`, `useCustomer`, Customer mutations | Integrated for Customer-owned contracts |
 | `/plans`, detail | API | Customer-scoped plan list/create and plan detail | `listPlans`, `createPlan`, `getPlan` | `usePlans`, `usePlan`, `useCreatePlan` | Integrated for Plan and Installment contracts |
-| Payment panels | Demo data | Plan payment list and payment detail | Payment operations | Payment list/detail hooks | Pending |
+| Payment panels, detail | API | Plan-scoped payment list and payment detail | `listPlanPayments`, `getPayment` | `usePayments`, `usePayment`, `usePlanPaymentHistory` | Integrated for Payment ledger visibility |
 | `/mandates`, detail | Demo data | Customer mandate list/create, mandate detail/attempts | Mandate operations | Mandate monitoring hooks | Pending |
 | `/collections` | Demo data/store | Collection queue and installment follow-ups | Collection operations | Queue/follow-up hooks | Pending |
 | `/kyc`, detail | Demo data/store | KYC queue/detail, upload/view, submit/decision endpoints | KYC operations | KYC review/actions hooks | Pending |
@@ -45,7 +45,7 @@ Customer and Plan integrations follow the same ownership structure. `src/feature
 
 Merchant screens render only fields returned by Merchant endpoints. Customer, plan, collection, KYC, billing, and activity aggregates remain deferred to their domain integration phases because the Merchant contracts do not expose them.
 
-Customer lists require an explicit Merchant context because the backend exposes Merchant-scoped Customer collection routes rather than a global Admin Customer directory. Customer screens do not fan out across Merchants. Plans require an explicit Customer context for the same reason and do not fan out across Customers. Payment, mandate, collection, KYC, and activity sections remain deferred.
+Customer lists require explicit Merchant context, Plans require explicit Customer context, and Payments require explicit Plan context. These screens do not fan out across parent resources. Payment creation and provider checkout remain outside Admin; mandate, collection, KYC, and activity sections remain deferred.
 
 ## Regeneration
 
