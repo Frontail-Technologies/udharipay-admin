@@ -20,6 +20,5 @@ export * from "./aggregates";
 export { DEMO_TODAY } from "./seededRandom";
 export * from "./reports";
 export * from "./events/types";
-export * from "./events/operationalEvents";
 export * from "./subscriptionPlanCatalog";
 export * from "./settings";
