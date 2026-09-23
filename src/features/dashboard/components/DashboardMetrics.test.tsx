@@ -25,11 +25,11 @@ const baseDashboard = {
     { key: "overduePaise", label: "Overdue", value: "20000", type: "money" },
   ]),
   mandatesReport: reportQuery([{ key: "failedCount", label: "Failed or Closed", value: "3", type: "count" }]),
-} as never;
+};
 
 describe("DashboardPrimaryMetrics", () => {
   it("renders the canonical report metric value, not a page-derived total", () => {
-    render(<DashboardPrimaryMetrics dashboard={baseDashboard} />);
+    render(<DashboardPrimaryMetrics dashboard={baseDashboard as never} />);
     expect(screen.getByText("12")).toBeInTheDocument();
     expect(screen.getByText("40")).toBeInTheDocument();
     expect(screen.getByText("₹5,000")).toBeInTheDocument();
@@ -37,14 +37,14 @@ describe("DashboardPrimaryMetrics", () => {
   });
 
   it("shows an independent skeleton for a still-loading source without blanking other cards", () => {
-    const dashboard = { ...baseDashboard, merchantsReport: pendingQuery() } as never;
-    render(<DashboardPrimaryMetrics dashboard={dashboard} />);
+    const dashboard = { ...baseDashboard, merchantsReport: pendingQuery() };
+    render(<DashboardPrimaryMetrics dashboard={dashboard as never} />);
     expect(screen.getByText("40")).toBeInTheDocument();
   });
 
   it("shows an inline error for one failed source without blanking other cards", () => {
-    const dashboard = { ...baseDashboard, merchantsReport: erroredQuery("Unavailable") } as never;
-    render(<DashboardPrimaryMetrics dashboard={dashboard} />);
+    const dashboard = { ...baseDashboard, merchantsReport: erroredQuery("Unavailable") };
+    render(<DashboardPrimaryMetrics dashboard={dashboard as never} />);
     expect(screen.getByText("Unavailable")).toBeInTheDocument();
     expect(screen.getByText("40")).toBeInTheDocument();
   });
@@ -52,7 +52,7 @@ describe("DashboardPrimaryMetrics", () => {
 
 describe("DashboardSecondaryMetrics", () => {
   it("renders Due Today, Overdue and Mandate metrics from their canonical reports", () => {
-    render(<DashboardSecondaryMetrics dashboard={baseDashboard} />);
+    render(<DashboardSecondaryMetrics dashboard={baseDashboard as never} />);
     expect(screen.getByText("₹100")).toBeInTheDocument();
     expect(screen.getByText("₹200")).toBeInTheDocument();
     expect(screen.getByText("3")).toBeInTheDocument();
