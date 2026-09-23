@@ -1,5 +1,4 @@
-import { SubscriptionsTable } from "@/components/subscriptions/SubscriptionsTable";
-import { SubscriptionsSummary } from "@/components/subscriptions/SubscriptionsSummary";
+import { BillingDirectory } from "@/features/billing/components/BillingDirectory";
 
 export default function SubscriptionsPage() {
   return (
@@ -9,12 +8,11 @@ export default function SubscriptionsPage() {
           Subscriptions
         </h1>
         <p className="mt-1 text-[13px] leading-relaxed text-text-secondary">
-          Merchant SaaS billing — activation fees and monthly subscription plans. Separate from customer Udhaar collections.
+          Merchant SaaS billing invoices — activation fees and monthly subscription plans. Separate from customer Udhaar collections.
         </p>
       </div>
 
-      <SubscriptionsSummary />
-      <SubscriptionsTable />
+      <BillingDirectory />
     </div>
   );
 }

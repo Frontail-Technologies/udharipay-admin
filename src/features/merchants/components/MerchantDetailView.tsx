@@ -8,6 +8,7 @@ import { EntityPageHeader } from "@/components/entity/EntityPageHeader";
 import { EntitySummaryGrid } from "@/components/entity/EntitySummaryGrid";
 import { MerchantOverviewTab } from "@/features/merchants/components/MerchantOverviewTab";
 import { SubjectKycSection } from "@/features/kyc/components/SubjectKycSection";
+import { MerchantBillingSection } from "@/features/billing/components/MerchantBillingSection";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -26,6 +27,7 @@ export function MerchantDetailView({ merchantId }: { merchantId: string }) {
     <EntitySummaryGrid items={[{ label: "Owner", value: merchant.ownerName }, { label: "Business Category", value: merchant.businessCategory }, { label: "Location", value: `${merchant.city}, ${merchant.state}` }, { label: "Last Updated", value: formatDate(merchant.updatedAt) }]} />
     <MerchantOverviewTab merchant={merchant} />
     <SubjectKycSection subjectType="merchant" subjectId={merchant.id} />
+    <MerchantBillingSection merchantId={merchant.id} />
   </div>;
 }
 
