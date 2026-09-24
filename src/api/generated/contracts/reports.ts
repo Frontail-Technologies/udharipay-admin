@@ -1,4 +1,4 @@
-import type { CursorPagination, KycSubjectType } from "../common";
+import type { CursorPagination, KycSubjectType, MoneyPaise } from "../common";
 export type ReportKind = typeof ReportKind[keyof typeof ReportKind];
 export const ReportKind = {
     collections: 'collections',
@@ -16,6 +16,22 @@ export const ReportInvoiceType = {
     activation_fee: 'activation_fee',
     subscription: 'subscription',
 } as const;
+export interface PortfolioSummary {
+    referenceDate: string;
+    monthStart: string;
+    outstandingPaise: MoneyPaise;
+    overduePaise: MoneyPaise;
+    dueTodayPaise: MoneyPaise;
+    upcomingPaise: MoneyPaise;
+    customerCount: number;
+    activeCustomerCount: number;
+    merchantCount: number;
+    activeMerchantCount: number;
+    activeMandateCount: number;
+    collectedTodayPaise: MoneyPaise;
+    paymentCountToday: number;
+    collectedMonthPaise: MoneyPaise;
+}
 export type CanonicalReportPeriodTimeZone = typeof CanonicalReportPeriodTimeZone[keyof typeof CanonicalReportPeriodTimeZone];
 export const CanonicalReportPeriodTimeZone = {
     'Asia/Kolkata': 'Asia/Kolkata',
@@ -65,9 +81,15 @@ export type GetReportParams = {
     method?: string;
     subjectType?: KycSubjectType;
     invoiceType?: ReportInvoiceType;
+    order?: GetReportOrder;
     limit?: number;
     cursor?: string;
 };
+export type GetReportOrder = typeof GetReportOrder[keyof typeof GetReportOrder];
+export const GetReportOrder = {
+    asc: 'asc',
+    desc: 'desc',
+} as const;
 export type GetReport200 = {
     data: CanonicalReport;
 };
@@ -87,3 +109,9 @@ export const ExportReportFormat = {
     xlsx: 'xlsx',
     pdf: 'pdf',
 } as const;
+export type GetPortfolioSummaryParams = {
+    merchantId?: string;
+};
+export type GetPortfolioSummary200 = {
+    data: PortfolioSummary;
+};
