@@ -26,8 +26,16 @@ export function isAcceptedKycMimeType(value: string): value is CreateKycUploadUr
   return acceptedKycMimeTypes.includes(value as CreateKycUploadUrlBodyMimeType);
 }
 
+export function buildUploadBody(session: KycUploadSession, file: File): BodyInit {
+  if (session.upload.method !== "POST") return file;
+  const form = new FormData();
+  for (const [key, value] of Object.entries(session.upload.fields ?? {})) form.append(key, value);
+  form.append("file", file);
+  return form;
+}
+
 export async function putPrivateDocument(session: KycUploadSession, file: File) {
-  const response = await fetch(session.upload.url, { method: session.upload.method, headers: session.upload.headers, body: file, credentials: "omit" });
+  const response = await fetch(session.upload.url, { method: session.upload.method, headers: session.upload.headers, body: buildUploadBody(session, file), credentials: "omit" });
   if (!response.ok) throw new Error("Private document upload failed");
 }
 

@@ -121,14 +121,19 @@ export type CreateKycUploadUrlBody = {
 export type CreateKycUploadUrl201DataUploadMethod = typeof CreateKycUploadUrl201DataUploadMethod[keyof typeof CreateKycUploadUrl201DataUploadMethod];
 export const CreateKycUploadUrl201DataUploadMethod = {
     PUT: 'PUT',
+    POST: 'POST',
 } as const;
 export type CreateKycUploadUrl201DataUploadHeaders = {
+    [key: string]: string;
+};
+export type CreateKycUploadUrl201DataUploadFields = {
     [key: string]: string;
 };
 export type CreateKycUploadUrl201DataUpload = {
     url: string;
     method: CreateKycUploadUrl201DataUploadMethod;
     headers: CreateKycUploadUrl201DataUploadHeaders;
+    fields?: CreateKycUploadUrl201DataUploadFields;
     expiresInSeconds: number;
 };
 export type CreateKycUploadUrl201Data = {
