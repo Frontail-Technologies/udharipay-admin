@@ -42,10 +42,41 @@ export interface PlanListItem {
     createdAt: string;
     updatedAt: string;
 }
+export type PlanConsentConsentType = typeof PlanConsentConsentType[keyof typeof PlanConsentConsentType];
+export const PlanConsentConsentType = {
+    plan_agreement: 'plan_agreement',
+} as const;
+export type PlanConsentChannel = typeof PlanConsentChannel[keyof typeof PlanConsentChannel];
+export const PlanConsentChannel = {
+    employee_mobile: 'employee_mobile',
+} as const;
+export interface PlanConsent {
+    consentType: PlanConsentConsentType;
+    consentVersion: string;
+    channel: PlanConsentChannel;
+    acceptedAt: string;
+    capturedByRole: string;
+}
+export type PlanDetailConsentConsentType = typeof PlanDetailConsentConsentType[keyof typeof PlanDetailConsentConsentType];
+export const PlanDetailConsentConsentType = {
+    plan_agreement: 'plan_agreement',
+} as const;
+export type PlanDetailConsentChannel = typeof PlanDetailConsentChannel[keyof typeof PlanDetailConsentChannel];
+export const PlanDetailConsentChannel = {
+    employee_mobile: 'employee_mobile',
+} as const;
+export type PlanDetailConsent = {
+    consentType: PlanDetailConsentConsentType;
+    consentVersion: string;
+    channel: PlanDetailConsentChannel;
+    acceptedAt: string;
+    capturedByRole: string;
+} | null;
 export type PlanDetail = PlanListItem & ({
     completedAt: string | null;
     cancelledAt: string | null;
     installments: Installment[];
+    consent: PlanDetailConsent;
 });
 export type CreatePlanBody = {
     description: string;
@@ -73,4 +104,7 @@ export type ListPlans200 = {
 };
 export type GetPlan200 = {
     data: PlanDetail;
+};
+export type RecordPlanConsent201 = {
+    data: PlanConsent;
 };
