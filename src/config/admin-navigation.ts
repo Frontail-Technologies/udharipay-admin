@@ -12,6 +12,7 @@ import {
   BarChart3,
   Activity,
   Settings,
+  Megaphone,
 } from "lucide-react";
 
 export type AdminNavItem = {
@@ -61,6 +62,7 @@ export const adminNavigation: AdminNavGroup[] = [
   {
     label: "System",
     items: [
+      { label: "Communications", href: "/communications", icon: Megaphone },
       { label: "Events", href: "/events", icon: Activity },
       { label: "Settings", href: "/settings", icon: Settings },
     ],

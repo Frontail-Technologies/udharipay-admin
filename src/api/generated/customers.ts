@@ -1,4 +1,4 @@
-import type { CreateCustomer201, CreateCustomerBody, GetCustomer200, GetCustomerActivation200, ListCustomers200, ListCustomersParams, UpdateCustomer200, UpdateCustomerBody } from "./contracts/customers";
+import type { CreateCustomer201, CreateCustomerBody, GetCustomer200, GetCustomerActivation200, ListCustomerReminders200, ListCustomerRemindersParams, ListCustomers200, ListCustomersParams, UpdateCustomer200, UpdateCustomerBody } from "./contracts/customers";
 import { apiClient, type ApiRequestOptions } from "../http/client";
 export const createCustomer = (merchantId: string, createCustomerBody?: CreateCustomerBody, options?: ApiRequestOptions) => {
     return apiClient<CreateCustomer201>({ url: `/api/v1/merchants/${merchantId}/customers`, method: 'POST',
@@ -23,5 +23,10 @@ export const updateCustomer = (customerId: string, updateCustomerBody?: UpdateCu
 };
 export const getCustomerActivation = (customerId: string, options?: ApiRequestOptions) => {
     return apiClient<GetCustomerActivation200>({ url: `/api/v1/customers/${customerId}/activation`, method: 'GET'
+    }, options);
+};
+export const listCustomerReminders = (customerId: string, params?: ListCustomerRemindersParams, options?: ApiRequestOptions) => {
+    return apiClient<ListCustomerReminders200>({ url: `/api/v1/customers/${customerId}/reminders`, method: 'GET',
+        params
     }, options);
 };

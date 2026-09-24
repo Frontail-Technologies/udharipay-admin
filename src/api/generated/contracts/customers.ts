@@ -37,6 +37,30 @@ export interface CustomerActivation {
     createdAt: string;
     updatedAt: string;
 }
+export type CustomerReminderChannel = typeof CustomerReminderChannel[keyof typeof CustomerReminderChannel];
+export const CustomerReminderChannel = {
+    whatsapp: 'whatsapp',
+} as const;
+export interface CustomerReminder {
+    publicId: string;
+    channel: CustomerReminderChannel;
+    type: string;
+    status: string;
+    templateKey: string;
+    templateVersion: number | null;
+    scheduledFor: string;
+    sentAt: string | null;
+    deliveredAt: string | null;
+    failedAt: string | null;
+    cancelledAt: string | null;
+    failureCode: string | null;
+    failureReason: string | null;
+    attemptCount: number;
+    installmentId: string | null;
+    installmentNumber: number | null;
+    dueDate: string | null;
+    createdAt: string;
+}
 export type CreateCustomerBody = {
     name: string;
     phone: string;
@@ -81,4 +105,15 @@ export type UpdateCustomer200 = {
 };
 export type GetCustomerActivation200 = {
     data: CustomerActivation;
+};
+export type ListCustomerRemindersParams = {
+    limit?: number;
+    cursor?: string;
+};
+export type ListCustomerReminders200Data = {
+    items: CustomerReminder[];
+    pagination: CursorPagination;
+};
+export type ListCustomerReminders200 = {
+    data: ListCustomerReminders200Data;
 };
