@@ -37,11 +37,16 @@ export interface CustomerActivation {
     createdAt: string;
     updatedAt: string;
 }
+export type CustomerPlanFinancialNextDue = {
+    dueDate: string;
+    amountPaise: MoneyPaise;
+} | null;
 export interface CustomerPlanFinancial {
     planId: string;
     collectedPaise: MoneyPaise;
     outstandingPaise: MoneyPaise;
     overduePaise: MoneyPaise;
+    nextDue: CustomerPlanFinancialNextDue;
 }
 export type CustomerFinancialSummaryNextDue = {
     dueDate: string;
