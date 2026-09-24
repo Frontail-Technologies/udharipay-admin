@@ -102,6 +102,24 @@ export type ListPlans200Data = {
 export type ListPlans200 = {
     data: ListPlans200Data;
 };
+export type PreviewPlanScheduleBody = {
+    originalAmountPaise: string;
+    numberOfCollections: number;
+    frequency: PlanFrequency;
+    startDate: string;
+};
+export type PreviewPlanSchedule200DataInstallmentsItem = {
+    installmentNumber: number;
+    dueDate: string;
+    amountPaise: MoneyPaise;
+};
+export type PreviewPlanSchedule200Data = {
+    totalPaise: MoneyPaise;
+    installments: PreviewPlanSchedule200DataInstallmentsItem[];
+};
+export type PreviewPlanSchedule200 = {
+    data: PreviewPlanSchedule200Data;
+};
 export type GetPlan200 = {
     data: PlanDetail;
 };
