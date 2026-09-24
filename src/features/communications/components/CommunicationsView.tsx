@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export function CommunicationsView() {
   return <Tabs defaultValue="templates" className="flex flex-col gap-4">
-    <TabsList><TabsTrigger value="templates">WhatsApp Templates</TabsTrigger><TabsTrigger value="announcements">Announcements</TabsTrigger></TabsList>
+    <div className="max-w-full overflow-x-auto"><TabsList><TabsTrigger value="templates">WhatsApp Templates</TabsTrigger><TabsTrigger value="announcements">Announcements</TabsTrigger></TabsList></div>
     <TabsContent value="templates"><TemplatesPanel /></TabsContent>
     <TabsContent value="announcements"><AnnouncementsPanel /></TabsContent>
   </Tabs>;

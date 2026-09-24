@@ -27,9 +27,9 @@ export const approvalTransitions: Record<TemplateApprovalStatus, TemplateApprova
 };
 
 export const audienceLabels: Record<AnnouncementAudienceType, string> = {
-  merchants: "All merchants",
-  employees: "All employees",
-  both: "Merchants and employees",
+  merchants: "Merchants",
+  employees: "Employees",
+  both: "Merchants & Employees",
   selected_users: "Selected users",
 };
 
