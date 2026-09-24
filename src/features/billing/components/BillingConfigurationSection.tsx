@@ -44,11 +44,10 @@ function ActivationFeeSection() {
     try { await mutation.mutateAsync({ activationFeePaise, customerActivationFeePaise }); setEditing(false); } catch (error) { const result = applyApiFormErrors(error, setError); if (!result.applied) toast.error(result.error.message); }
   };
 
-  return <EditableDetailSection title="Activation Fees" description="One-time fees charged at merchant subscription creation and at customer creation." editAriaLabel="Edit Activation Fee" editing={editing} isSaving={mutation.isPending} onEdit={startEdit} onCancel={() => setEditing(false)} formId="activation-fee-form" className="max-w-xl">
+  return <EditableDetailSection title="Activation Fees" editAriaLabel="Edit Activation Fee" editing={editing} isSaving={mutation.isPending} onEdit={startEdit} onCancel={() => setEditing(false)} formId="activation-fee-form" className="max-w-xl">
     {editing ? <form id="activation-fee-form" onSubmit={handleSubmit(submit)} className="flex flex-col gap-2">
       <FormField label="Activation Fee (₹)" htmlFor="activation-fee-input" error={errors.activationFeeRupees?.message}><Input id="activation-fee-input" inputMode="decimal" placeholder="499.00" {...register("activationFeeRupees", { required: "Activation fee is required" })} /></FormField>
       <FormField label="Customer Activation Fee (₹)" htmlFor="customer-activation-fee-input" error={errors.customerActivationFeeRupees?.message}><Input id="customer-activation-fee-input" inputMode="decimal" placeholder="0" {...register("customerActivationFeeRupees", { required: "Customer activation fee is required" })} /></FormField>
-      <p className="text-[11.5px] text-text-muted">Changes apply to new subscriptions and new customers only. Set the customer fee to 0 to disable it.</p>
     </form> : <><KeyValueRow label="Merchant Activation Fee" value={formatPaiseInr(settings.activationFeePaise)} /><KeyValueRow label="Customer Activation Fee" value={BigInt(settings.customerActivationFeePaise) === BigInt(0) ? "Not charged" : formatPaiseInr(settings.customerActivationFeePaise)} /></>}
   </EditableDetailSection>;
 }

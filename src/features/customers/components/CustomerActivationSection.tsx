@@ -16,7 +16,7 @@ export function CustomerActivationSection({ customerId }: { customerId: string }
   if (query.isPending) return <Skeleton className="h-24 w-full" />;
   if (query.isError) {
     const error = normalizeApiError(query.error);
-    if (error.status === 404) return <DetailSection title="Activation" description="One-time customer activation fee"><p className="text-[13px] text-text-muted">No activation fee was charged for this customer.</p></DetailSection>;
+    if (error.status === 404) return <DetailSection title="Activation"><p className="text-[13px] text-text-muted">No activation fee charged.</p></DetailSection>;
     return <div className="rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-6 text-center text-[13px] text-destructive">{error.message}</div>;
   }
   const activation = query.data.data;

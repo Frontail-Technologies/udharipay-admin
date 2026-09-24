@@ -6,6 +6,7 @@ import {
   activateWhatsAppTemplateVersion,
   createAnnouncement,
   createWhatsAppTemplateVersion,
+  deleteWhatsAppTemplateVersion,
   listAnnouncements,
   listWhatsAppTemplates,
   previewAnnouncement,
@@ -14,7 +15,7 @@ import {
   updateWhatsAppTemplate,
   updateWhatsAppTemplateVersion,
 } from "@/api/generated/communications";
-import { listCustomerReminders } from "@/api/generated/customers";
+import { cancelCustomerReminder, listCustomerReminders } from "@/api/generated/customers";
 import type {
   CreateAnnouncementBody,
   CreateWhatsAppTemplateVersionBody,
@@ -112,4 +113,26 @@ export function useCreateAnnouncement() {
 
 export function useCustomerReminders(customerId: string, params: ListCustomerRemindersParams) {
   return useQuery({ queryKey: communicationKeys.customerReminders(customerId, params), queryFn: ({ signal }) => listCustomerReminders(customerId, params, { signal }) });
+}
+
+export function useDeleteTemplateVersion() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ templateKey, version }: { templateKey: string; version: number }) => deleteWhatsAppTemplateVersion(templateKey, version),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: communicationKeys.templates() });
+      toast.success("Draft deleted");
+    },
+  });
+}
+
+export function useCancelCustomerReminder(customerId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (reminderId: string) => cancelCustomerReminder(customerId, reminderId),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: [...communicationKeys.all, "customer-reminders", customerId] });
+      toast.success("Reminder cancelled");
+    },
+  });
 }

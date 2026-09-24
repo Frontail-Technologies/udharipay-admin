@@ -117,3 +117,9 @@ export type ListCustomerReminders200Data = {
 export type ListCustomerReminders200 = {
     data: ListCustomerReminders200Data;
 };
+export type CancelCustomerReminder200Data = {
+    cancelled: boolean;
+};
+export type CancelCustomerReminder200 = {
+    data: CancelCustomerReminder200Data;
+};

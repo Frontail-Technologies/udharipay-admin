@@ -131,12 +131,19 @@ export type CreateWhatsAppTemplateVersion201 = {
     data: WhatsAppTemplateVersion;
 };
 export type UpdateWhatsAppTemplateVersionBody = {
+    bodyTemplate?: string;
     approvalStatus?: TemplateApprovalStatus;
     providerTemplateName?: string | null;
     providerTemplateId?: string | null;
 };
 export type UpdateWhatsAppTemplateVersion200 = {
     data: WhatsAppTemplateVersion;
+};
+export type DeleteWhatsAppTemplateVersion200Data = {
+    deleted: boolean;
+};
+export type DeleteWhatsAppTemplateVersion200 = {
+    data: DeleteWhatsAppTemplateVersion200Data;
 };
 export type ActivateWhatsAppTemplateVersion200 = {
     data: WhatsAppTemplate;

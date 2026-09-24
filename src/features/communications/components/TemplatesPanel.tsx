@@ -7,9 +7,10 @@ import { toast } from "sonner";
 import { applyApiFormErrors } from "@/api/forms/formErrors";
 import { normalizeApiError } from "@/api/http/errors";
 import { TemplateApprovalStatus, type WhatsAppTemplate, type WhatsAppTemplateVersion } from "@/api/generated/contracts/communications";
-import { useActivateTemplateVersion, useCreateTemplateVersion, usePreviewTemplate, useUpdateTemplateVersion, useUpdateWhatsAppTemplate, useWhatsAppTemplates } from "@/features/communications/hooks/useCommunications";
+import { useActivateTemplateVersion, useCreateTemplateVersion, useDeleteTemplateVersion, usePreviewTemplate, useUpdateTemplateVersion, useUpdateWhatsAppTemplate, useWhatsAppTemplates } from "@/features/communications/hooks/useCommunications";
 import { approvalLabels, approvalTone, approvalTransitions } from "@/features/communications/utils/metadata";
 import { effectiveStatusLabels, effectiveStatusOf, effectiveStatusTone, featuredVersionOf, resolvePreview, templateSchedules } from "@/features/communications/utils/templateSummary";
+import { ConfirmDialog } from "@/components/feedback/ConfirmDialog";
 import { FormField } from "@/components/entity/FormField";
 import { KeyValueRow } from "@/components/entity/KeyValueRow";
 import { StatusBadge } from "@/components/admin/StatusBadge";
@@ -91,7 +92,10 @@ function HistoryRow({ templateKey, version }: { templateKey: string; version: Wh
 function VersionDetail({ templateKey, version }: { templateKey: string; version: WhatsAppTemplateVersion }) {
   const updateMutation = useUpdateTemplateVersion();
   const activateMutation = useActivateTemplateVersion();
-  const busy = updateMutation.isPending || activateMutation.isPending;
+  const deleteMutation = useDeleteTemplateVersion();
+  const [editing, setEditing] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const busy = updateMutation.isPending || activateMutation.isPending || deleteMutation.isPending;
   const move = async (approvalStatus: TemplateApprovalStatus) => {
     try { await updateMutation.mutateAsync({ templateKey, version: version.version, input: { approvalStatus } }); } catch (error) { toast.error(normalizeApiError(error).message); }
   };
@@ -106,8 +110,11 @@ function VersionDetail({ templateKey, version }: { templateKey: string; version:
     <p className="text-[11.5px] text-text-muted">Created {formatTimestamp(version.createdAt)}{version.activatedAt ? ` · Activated ${formatTimestamp(version.activatedAt)}` : ""}</p>
     <div className="flex flex-wrap gap-1.5">
       {approvalTransitions[version.approvalStatus].map((status) => <Button key={status} variant="outline" size="sm" className="h-7 text-[12px]" disabled={busy} onClick={() => void move(status)}>{transitionLabel(status)}</Button>)}
+      {version.approvalStatus === TemplateApprovalStatus.draft && <><Button variant="outline" size="sm" className="h-7 text-[12px]" disabled={busy} onClick={() => setEditing(true)}>Edit Message</Button><Button variant="outline" size="sm" className="h-7 text-[12px] text-error" disabled={busy} onClick={() => setDeleting(true)}>Delete Draft</Button></>}
       {version.approvalStatus === TemplateApprovalStatus.approved && !version.isActive && <Button size="sm" className="h-7 text-[12px]" disabled={busy} onClick={() => void activate()}>Activate</Button>}
     </div>
+    {editing && <EditBodyDialog templateKey={templateKey} version={version} onClose={() => setEditing(false)} />}
+    {deleting && <ConfirmDialog title="Delete this draft?" description={`Version ${version.version} will be removed permanently.`} confirmLabel="Delete Draft" isPending={deleteMutation.isPending} onClose={() => setDeleting(false)} onConfirm={() => { deleteMutation.mutate({ templateKey, version: version.version }, { onSettled: () => setDeleting(false), onError: (error) => toast.error(normalizeApiError(error).message) }); }} />}
   </div>;
 }
 
@@ -149,6 +156,20 @@ function NewVersionDialog({ template, onClose }: { template: WhatsAppTemplate; o
         {preview.data && <p className="whitespace-pre-wrap break-words rounded-lg bg-surface-muted p-3 text-[13px] text-text-primary">{preview.data.data.preview}</p>}
       </form>
       <DialogFooter><Button type="button" variant="outline" disabled={preview.isPending} onClick={() => void runPreview()}>Preview</Button><Button type="button" variant="outline" disabled={mutation.isPending} onClick={onClose}>Cancel</Button><Button type="submit" form="template-version-form" disabled={mutation.isPending}>{mutation.isPending && <Loader2 className="size-4 animate-spin" />}Create Version</Button></DialogFooter>
+    </DialogContent>
+  </Dialog>;
+}
+
+function EditBodyDialog({ templateKey, version, onClose }: { templateKey: string; version: WhatsAppTemplateVersion; onClose: () => void }) {
+  const mutation = useUpdateTemplateVersion();
+  const [body, setBody] = useState(version.bodyTemplate);
+  const save = async () => {
+    try { await mutation.mutateAsync({ templateKey, version: version.version, input: { bodyTemplate: body } }); onClose(); } catch (error) { toast.error(normalizeApiError(error).message); }
+  };
+  return <Dialog open onOpenChange={(open) => { if (!open && !mutation.isPending) onClose(); }}>
+    <DialogContent className="sm:max-w-xl"><DialogHeader><DialogTitle>Edit Version {version.version}</DialogTitle><DialogDescription className="sr-only">Edit the draft message</DialogDescription></DialogHeader>
+      <Textarea aria-label="Message Body" rows={5} value={body} onChange={(event) => setBody(event.target.value)} />
+      <DialogFooter><Button type="button" variant="outline" disabled={mutation.isPending} onClick={onClose}>Cancel</Button><Button type="button" disabled={mutation.isPending || body.trim().length === 0 || body === version.bodyTemplate} onClick={() => void save()}>{mutation.isPending && <Loader2 className="size-4 animate-spin" />}Save</Button></DialogFooter>
     </DialogContent>
   </Dialog>;
 }

@@ -17,6 +17,8 @@ const hooks = vi.hoisted(() => ({
   usePreviewAnnouncement: vi.fn(),
   useCreateAnnouncement: vi.fn(),
   useCustomerReminders: vi.fn(),
+  useDeleteTemplateVersion: vi.fn(),
+  useCancelCustomerReminder: vi.fn(),
 }));
 vi.mock("@/features/communications/hooks/useCommunications", () => hooks);
 
@@ -58,6 +60,8 @@ beforeEach(() => {
   hooks.useUpdateWhatsAppTemplate.mockReturnValue(idle());
   hooks.useCreateTemplateVersion.mockReturnValue(idle());
   hooks.useUpdateTemplateVersion.mockReturnValue(idle());
+  hooks.useDeleteTemplateVersion.mockReturnValue({ isPending: false, mutate: vi.fn() });
+  hooks.useCancelCustomerReminder.mockReturnValue({ isPending: false, mutate: vi.fn() });
   hooks.useActivateTemplateVersion.mockReturnValue(idle());
   hooks.usePreviewTemplate.mockReturnValue({ ...idle(), data: undefined });
   hooks.useAnnouncementRecipients.mockReturnValue({ isPending: false, data: { data: { items: [] } } });
@@ -106,6 +110,34 @@ describe("TemplatesPanel", () => {
     hooks.useWhatsAppTemplates.mockReturnValue({ isPending: false, isError: false, data: { data: { items: [resolved] } } });
     render(<TemplatesPanel />);
     expect(screen.getByText(/Hi Asha Rao/)).toBeTruthy();
+  });
+
+  it("edits a draft message and only offers delete for drafts", async () => {
+    const update = idle();
+    const remove = { isPending: false, mutate: vi.fn() };
+    hooks.useUpdateTemplateVersion.mockReturnValue(update);
+    hooks.useDeleteTemplateVersion.mockReturnValue(remove);
+    render(<TemplatesPanel />);
+    fireEvent.click(screen.getByRole("button", { name: "Edit" }));
+    expect(screen.queryByRole("button", { name: "Delete Draft" })).toBeNull();
+    fireEvent.click(screen.getByRole("button", { name: "Version 1" }));
+    expect(screen.getAllByRole("button", { name: "Delete Draft" })).toHaveLength(1);
+    fireEvent.click(screen.getByRole("button", { name: "Edit Message" }));
+    fireEvent.change(screen.getByLabelText("Message Body"), { target: { value: "Hi again" } });
+    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    await waitFor(() => expect(update.mutateAsync).toHaveBeenCalledWith({ templateKey: "payment_due_today", version: 1, input: { bodyTemplate: "Hi again" } }));
+  });
+
+  it("confirms before deleting a draft", () => {
+    const remove = { isPending: false, mutate: vi.fn() };
+    hooks.useDeleteTemplateVersion.mockReturnValue(remove);
+    render(<TemplatesPanel />);
+    fireEvent.click(screen.getByRole("button", { name: "Edit" }));
+    fireEvent.click(screen.getByRole("button", { name: "Version 1" }));
+    fireEvent.click(screen.getByRole("button", { name: "Delete Draft" }));
+    expect(remove.mutate).not.toHaveBeenCalled();
+    fireEvent.click(screen.getAllByRole("button", { name: "Delete Draft" }).at(-1)!);
+    expect(remove.mutate).toHaveBeenCalledWith({ templateKey: "payment_due_today", version: 1 }, expect.any(Object));
   });
 
   it("derives an Active status from the active version", () => {
@@ -190,9 +222,22 @@ describe("CustomerRemindersSection", () => {
     expect(screen.getByText(/payment_overdue v2/)).toBeTruthy();
   });
 
+  it("offers cancel only for pending reminders and confirms first", () => {
+    const cancel = { isPending: false, mutate: vi.fn() };
+    hooks.useCancelCustomerReminder.mockReturnValue(cancel);
+    const base = { channel: "whatsapp", type: "payment.overdue", templateKey: "payment_overdue", templateVersion: null, scheduledFor: "2026-09-22T08:30:00.000Z", sentAt: null, deliveredAt: null, failedAt: null, cancelledAt: null, failureCode: null, failureReason: null, attemptCount: 0, installmentId: null, installmentNumber: 1, dueDate: null, createdAt: "2026-09-22T08:30:00.000Z" };
+    hooks.useCustomerReminders.mockReturnValue({ isPending: false, isError: false, data: { data: { items: [{ ...base, publicId: "REM-000000000001", status: "pending" }, { ...base, publicId: "REM-000000000002", status: "sent" }], pagination: { nextCursor: null } } } });
+    render(<CustomerRemindersSection customerId="customer-id" />);
+    expect(screen.getAllByRole("button", { name: "Cancel" })).toHaveLength(1);
+    fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
+    expect(cancel.mutate).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole("button", { name: "Cancel Reminder" }));
+    expect(cancel.mutate).toHaveBeenCalledWith("REM-000000000001", expect.any(Object));
+  });
+
   it("renders an empty state", () => {
     hooks.useCustomerReminders.mockReturnValue({ isPending: false, isError: false, data: { data: { items: [], pagination: { nextCursor: null } } } });
     render(<CustomerRemindersSection customerId="customer-id" />);
-    expect(screen.getByText("No reminders have been scheduled for this customer.")).toBeTruthy();
+    expect(screen.getByText("No reminders yet.")).toBeTruthy();
   });
 });

@@ -1,4 +1,4 @@
-import type { ActivateWhatsAppTemplateVersion200, CreateAnnouncement201, CreateAnnouncementBody, CreateWhatsAppTemplateVersion201, CreateWhatsAppTemplateVersionBody, GetAnnouncement200, GetWhatsAppTemplate200, ListAnnouncements200, ListAnnouncementsParams, ListWhatsAppTemplates200, PreviewAnnouncement200, PreviewAnnouncementBody, PreviewWhatsAppTemplate200, PreviewWhatsAppTemplateBody, SearchAnnouncementRecipients200, SearchAnnouncementRecipientsParams, UpdateWhatsAppTemplate200, UpdateWhatsAppTemplateBody, UpdateWhatsAppTemplateVersion200, UpdateWhatsAppTemplateVersionBody } from "./contracts/communications";
+import type { ActivateWhatsAppTemplateVersion200, CreateAnnouncement201, CreateAnnouncementBody, CreateWhatsAppTemplateVersion201, CreateWhatsAppTemplateVersionBody, DeleteWhatsAppTemplateVersion200, GetAnnouncement200, GetWhatsAppTemplate200, ListAnnouncements200, ListAnnouncementsParams, ListWhatsAppTemplates200, PreviewAnnouncement200, PreviewAnnouncementBody, PreviewWhatsAppTemplate200, PreviewWhatsAppTemplateBody, SearchAnnouncementRecipients200, SearchAnnouncementRecipientsParams, UpdateWhatsAppTemplate200, UpdateWhatsAppTemplateBody, UpdateWhatsAppTemplateVersion200, UpdateWhatsAppTemplateVersionBody } from "./contracts/communications";
 import { apiClient, type ApiRequestOptions } from "../http/client";
 export const listWhatsAppTemplates = (options?: ApiRequestOptions) => {
     return apiClient<ListWhatsAppTemplates200>({ url: `/api/v1/admin/communications/templates`, method: 'GET'
@@ -30,6 +30,10 @@ export const updateWhatsAppTemplateVersion = (templateKey: string, version: numb
     return apiClient<UpdateWhatsAppTemplateVersion200>({ url: `/api/v1/admin/communications/templates/${templateKey}/versions/${version}`, method: 'PATCH',
         headers: { 'Content-Type': 'application/json', },
         data: updateWhatsAppTemplateVersionBody
+    }, options);
+};
+export const deleteWhatsAppTemplateVersion = (templateKey: string, version: number, options?: ApiRequestOptions) => {
+    return apiClient<DeleteWhatsAppTemplateVersion200>({ url: `/api/v1/admin/communications/templates/${templateKey}/versions/${version}`, method: 'DELETE'
     }, options);
 };
 export const activateWhatsAppTemplateVersion = (templateKey: string, version: number, options?: ApiRequestOptions) => {

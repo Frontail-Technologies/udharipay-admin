@@ -20,10 +20,10 @@ export const approvalLabels: Record<TemplateApprovalStatus, string> = {
 
 export const approvalTransitions: Record<TemplateApprovalStatus, TemplateApprovalStatus[]> = {
   draft: ["pending_approval", "disabled"],
-  pending_approval: ["approved", "rejected", "draft"],
+  pending_approval: ["approved", "rejected", "disabled"],
   approved: ["disabled"],
   rejected: ["draft", "disabled"],
-  disabled: ["draft"],
+  disabled: [],
 };
 
 export const audienceLabels: Record<AnnouncementAudienceType, string> = {
