@@ -16,6 +16,8 @@ export const KycDocumentType = {
     cancelled_cheque: 'cancelled_cheque',
     identity_proof: 'identity_proof',
     address_proof: 'address_proof',
+    customer_photo: 'customer_photo',
+    employee_photo: 'employee_photo',
 } as const;
 export type KycDocumentStatus = typeof KycDocumentStatus[keyof typeof KycDocumentStatus];
 export const KycDocumentStatus = {

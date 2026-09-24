@@ -32,6 +32,7 @@ export interface FollowUp {
     type: FollowUpType;
     note: string | null;
     promisedDate: string | null;
+    promisedAmountPaise: MoneyPaise | null;
     nextFollowUpAt: string | null;
     createdAt: string;
     updatedAt: string;
@@ -93,6 +94,7 @@ export type CreateFollowUpBody = {
     type: FollowUpType;
     note?: string | null;
     promisedDate?: string | null;
+    promisedAmountPaise?: string | null;
     nextFollowUpAt?: string | null;
 };
 export type CreateFollowUp201 = {

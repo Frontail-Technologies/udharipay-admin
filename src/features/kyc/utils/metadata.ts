@@ -35,10 +35,12 @@ export const kycDocumentLabels = {
   cancelled_cheque: "Cancelled Cheque",
   identity_proof: "Identity Proof",
   address_proof: "Address Proof",
+  customer_photo: "Customer Photo",
+  employee_photo: "Employee Photo",
 } satisfies Record<keyof typeof KycDocumentType, string>;
 
 export const kycDocumentPolicy: Record<KycSubjectType, { type: keyof typeof KycDocumentType; required: boolean }[]> = {
   merchant: [{ type: "pan", required: true }, { type: "business_registration", required: true }, { type: "shop_photo", required: true }, { type: "cancelled_cheque", required: true }, { type: "other_business_proof", required: false }],
-  customer: [{ type: "identity_proof", required: true }, { type: "address_proof", required: false }],
-  employee: [{ type: "identity_proof", required: true }, { type: "address_proof", required: false }],
+  customer: [{ type: "identity_proof", required: true }, { type: "address_proof", required: false }, { type: "customer_photo", required: false }],
+  employee: [{ type: "identity_proof", required: true }, { type: "address_proof", required: false }, { type: "pan", required: false }, { type: "employee_photo", required: false }],
 };

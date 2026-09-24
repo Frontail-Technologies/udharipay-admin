@@ -7,6 +7,8 @@ export const ReportKind = {
     customers: 'customers',
     merchants: 'merchants',
     employees: 'employees',
+    plans: 'plans',
+    merchant_performance: 'merchant_performance',
     mandates: 'mandates',
     kyc: 'kyc',
     billing: 'billing',
@@ -31,6 +33,12 @@ export interface PortfolioSummary {
     collectedTodayPaise: MoneyPaise;
     paymentCountToday: number;
     collectedMonthPaise: MoneyPaise;
+    collectedYesterdayPaise: MoneyPaise;
+    collectedTodayChangeBasisPoints: number | null;
+    installmentsPaidMonth: number;
+    installmentsDueMonth: number;
+    installmentsOverdue: number;
+    failedPaymentsMonth: number;
 }
 export type CanonicalReportPeriodTimeZone = typeof CanonicalReportPeriodTimeZone[keyof typeof CanonicalReportPeriodTimeZone];
 export const CanonicalReportPeriodTimeZone = {
@@ -72,6 +80,21 @@ export interface CanonicalReport {
     rows: CanonicalReportRowsItem[];
     pagination: CursorPagination;
 }
+export type AgingBucket = typeof AgingBucket[keyof typeof AgingBucket];
+export const AgingBucket = {
+    current: 'current',
+    '1-3': '1-3',
+    '4-7': '4-7',
+    '8-15': '8-15',
+    '15+': '15+',
+} as const;
+export type MerchantPerformanceSort = typeof MerchantPerformanceSort[keyof typeof MerchantPerformanceSort];
+export const MerchantPerformanceSort = {
+    collected: 'collected',
+    outstanding: 'outstanding',
+    overdue: 'overdue',
+    collection_rate: 'collection_rate',
+} as const;
 export type GetReportParams = {
     dateFrom?: string;
     dateTo?: string;
@@ -82,6 +105,9 @@ export type GetReportParams = {
     subjectType?: KycSubjectType;
     invoiceType?: ReportInvoiceType;
     order?: GetReportOrder;
+    bucket?: AgingBucket;
+    search?: string;
+    sort?: MerchantPerformanceSort;
     limit?: number;
     cursor?: string;
 };
@@ -102,6 +128,8 @@ export type ExportReportParams = {
     method?: string;
     subjectType?: KycSubjectType;
     invoiceType?: ReportInvoiceType;
+    bucket?: AgingBucket;
+    search?: string;
     format: ExportReportFormat;
 };
 export type ExportReportFormat = typeof ExportReportFormat[keyof typeof ExportReportFormat];
@@ -114,4 +142,58 @@ export type GetPortfolioSummaryParams = {
 };
 export type GetPortfolioSummary200 = {
     data: PortfolioSummary;
+};
+export type ListDashboardActivityParams = {
+    limit?: number;
+    merchantId?: string;
+};
+export type ListDashboardActivity200DataItemsItemType = typeof ListDashboardActivity200DataItemsItemType[keyof typeof ListDashboardActivity200DataItemsItemType];
+export const ListDashboardActivity200DataItemsItemType = {
+    merchant_added: 'merchant_added',
+    payment_collected: 'payment_collected',
+    payment_failed: 'payment_failed',
+    mandate_created: 'mandate_created',
+    debit_failed: 'debit_failed',
+} as const;
+export type ListDashboardActivity200DataItemsItem = {
+    type: ListDashboardActivity200DataItemsItemType;
+    occurredAt: string;
+    subject: string;
+    amountPaise: MoneyPaise | null;
+    entityType: string;
+    entityId: string;
+};
+export type ListDashboardActivity200Data = {
+    items: ListDashboardActivity200DataItemsItem[];
+};
+export type ListDashboardActivity200 = {
+    data: ListDashboardActivity200Data;
+};
+export type GetPortfolioInsightsParams = {
+    merchantId?: string;
+};
+export type GetPortfolioInsights200DataBestCollectionRate = {
+    merchantId: string;
+    businessName: string;
+    value: string;
+} | null;
+export type GetPortfolioInsights200DataHighestOutstanding = {
+    merchantId: string;
+    businessName: string;
+    value: string;
+} | null;
+export type GetPortfolioInsights200DataHighestOverdue = {
+    merchantId: string;
+    businessName: string;
+    value: string;
+} | null;
+export type GetPortfolioInsights200Data = {
+    periodFrom: string;
+    periodTo: string;
+    bestCollectionRate: GetPortfolioInsights200DataBestCollectionRate;
+    highestOutstanding: GetPortfolioInsights200DataHighestOutstanding;
+    highestOverdue: GetPortfolioInsights200DataHighestOverdue;
+};
+export type GetPortfolioInsights200 = {
+    data: GetPortfolioInsights200Data;
 };

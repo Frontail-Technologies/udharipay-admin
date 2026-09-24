@@ -26,7 +26,7 @@ const employee: Employee = {
   email: "nikita@example.test",
   phone: "+919000000001",
   status: "active",
-  branch: "Mumbai",
+  branch: "Mumbai", address: null,
   createdAt: "2026-09-20T00:00:00.000Z",
   updatedAt: "2026-09-20T00:00:00.000Z",
 };

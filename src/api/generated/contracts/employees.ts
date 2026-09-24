@@ -1,4 +1,4 @@
-import type { CursorPagination, UserStatus } from "../common";
+import type { CursorPagination, IdentityDocumentType, IdentityProfile, UserStatus } from "../common";
 export interface Employee {
     id: string;
     publicId: string;
@@ -7,6 +7,7 @@ export interface Employee {
     phone: string | null;
     status: UserStatus;
     branch: string | null;
+    address: string | null;
     createdAt: string;
     updatedAt: string;
 }
@@ -17,6 +18,7 @@ export type CreateEmployeeBody = {
     initialPassword: string;
     status?: UserStatus;
     branch?: string;
+    address?: string;
 };
 export type CreateEmployee201 = {
     data: Employee;
@@ -43,7 +45,19 @@ export type UpdateEmployeeBody = {
     phone?: string;
     status?: UserStatus;
     branch?: string | null;
+    address?: string | null;
 };
 export type UpdateEmployee200 = {
     data: Employee;
+};
+export type GetEmployeeIdentity200 = {
+    data: IdentityProfile;
+};
+export type SetEmployeeIdentityBody = {
+    pan?: string;
+    idType?: IdentityDocumentType | null;
+    idReference?: string;
+};
+export type SetEmployeeIdentity200 = {
+    data: IdentityProfile;
 };

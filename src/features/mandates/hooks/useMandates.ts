@@ -4,7 +4,8 @@ import { useMemo } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { getMandate, listCustomerMandates, listMandateAttempts } from "@/api/generated/mandates";
-import { MandateStatus, type ListCustomerMandatesParams, type ListMandateAttemptsParams } from "@/api/generated/contracts/mandates";
+import { MandateStatus } from "@/api/generated/common";
+import type { ListCustomerMandatesParams, ListMandateAttemptsParams } from "@/api/generated/contracts/mandates";
 import { readCursorState, writeCursorState, type CursorState } from "@/shared/utils/url";
 
 const PAGE_SIZE = 25;

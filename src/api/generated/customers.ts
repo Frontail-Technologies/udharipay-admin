@@ -1,4 +1,4 @@
-import type { CancelCustomerReminder200, CreateCustomer201, CreateCustomerBody, GetCustomer200, GetCustomerActivation200, GetCustomerFinancialSummary200, ListCustomerReminders200, ListCustomerRemindersParams, ListCustomers200, ListCustomersParams, UpdateCustomer200, UpdateCustomerBody } from "./contracts/customers";
+import type { CancelCustomerReminder200, CreateCustomer201, CreateCustomerBody, GetCustomer200, GetCustomerActivation200, GetCustomerFinancialSummary200, GetCustomerIdentity200, ListCustomerActivity200, ListCustomerActivityParams, ListCustomerReminders200, ListCustomerRemindersParams, ListCustomers200, ListCustomersParams, SetCustomerIdentity200, SetCustomerIdentityBody, UpdateCustomer200, UpdateCustomerBody } from "./contracts/customers";
 import { apiClient, type ApiRequestOptions } from "../http/client";
 export const createCustomer = (merchantId: string, createCustomerBody?: CreateCustomerBody, options?: ApiRequestOptions) => {
     return apiClient<CreateCustomer201>({ url: `/api/v1/merchants/${merchantId}/customers`, method: 'POST',
@@ -23,6 +23,21 @@ export const updateCustomer = (customerId: string, updateCustomerBody?: UpdateCu
 };
 export const getCustomerFinancialSummary = (customerId: string, options?: ApiRequestOptions) => {
     return apiClient<GetCustomerFinancialSummary200>({ url: `/api/v1/customers/${customerId}/summary`, method: 'GET'
+    }, options);
+};
+export const listCustomerActivity = (customerId: string, params?: ListCustomerActivityParams, options?: ApiRequestOptions) => {
+    return apiClient<ListCustomerActivity200>({ url: `/api/v1/customers/${customerId}/activity`, method: 'GET',
+        params
+    }, options);
+};
+export const getCustomerIdentity = (customerId: string, options?: ApiRequestOptions) => {
+    return apiClient<GetCustomerIdentity200>({ url: `/api/v1/customers/${customerId}/identity`, method: 'GET'
+    }, options);
+};
+export const setCustomerIdentity = (customerId: string, setCustomerIdentityBody?: SetCustomerIdentityBody, options?: ApiRequestOptions) => {
+    return apiClient<SetCustomerIdentity200>({ url: `/api/v1/customers/${customerId}/identity`, method: 'PUT',
+        headers: { 'Content-Type': 'application/json', },
+        data: setCustomerIdentityBody
     }, options);
 };
 export const getCustomerActivation = (customerId: string, options?: ApiRequestOptions) => {

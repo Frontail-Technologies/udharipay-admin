@@ -32,7 +32,7 @@ export const followUp: FollowUp = {
   employeeId: null,
   type: "will_pay",
   note: "Will pay tomorrow",
-  promisedDate: "2026-08-31T00:00:00.000Z",
+  promisedDate: "2026-08-31T00:00:00.000Z", promisedAmountPaise: null,
   nextFollowUpAt: "2026-08-31T06:30:00.000Z",
   createdAt: "2026-08-30T08:30:00.000Z",
   updatedAt: "2026-08-30T08:30:00.000Z",

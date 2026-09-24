@@ -1,4 +1,5 @@
-import { PlanFrequency, PlanStatus, type InstallmentDisplayState, type PlanFrequency as PlanFrequencyType, type PlanStatus as PlanStatusType } from "@/api/generated/contracts/plans";
+import { PlanFrequency, type PlanFrequency as PlanFrequencyType } from "@/api/generated/common";
+import { PlanStatus, type InstallmentDisplayState, type PlanStatus as PlanStatusType } from "@/api/generated/contracts/plans";
 import type { StatusBadgeTone } from "@/components/admin/StatusBadge";
 
 export const planStatusTone: Record<PlanStatusType, StatusBadgeTone> = {

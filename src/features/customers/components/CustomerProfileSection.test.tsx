@@ -8,7 +8,7 @@ const mutation = vi.hoisted(() => ({ isPending: false, mutateAsync: vi.fn() }));
 vi.mock("@/features/customers/hooks/useCustomers", () => ({ useUpdateCustomer: () => mutation }));
 vi.mock("sonner", () => ({ toast: { error: vi.fn() } }));
 
-const customer: Customer = { id: "customer-id", publicId: "CUS-1001", merchantId: "merchant-id", name: "Rahul Verma", phone: "+919000000001", alternatePhone: "+919000000002", address: "12 Market Road", city: "Jaipur", state: "Rajasthan", pincode: "302001", status: "active", createdAt: "2026-09-20T00:00:00.000Z", updatedAt: "2026-09-20T00:00:00.000Z" };
+const customer: Customer = { id: "customer-id", publicId: "CUS-1001", merchantId: "merchant-id", name: "Rahul Verma", phone: "+919000000001", alternatePhone: "+919000000002", address: "12 Market Road", city: "Jaipur", state: "Rajasthan", pincode: "302001", notes: null, status: "active", createdAt: "2026-09-20T00:00:00.000Z", updatedAt: "2026-09-20T00:00:00.000Z" };
 
 beforeEach(() => {
   vi.clearAllMocks();

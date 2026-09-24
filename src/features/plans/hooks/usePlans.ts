@@ -5,7 +5,8 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { createPlan, getPlan, listPlans } from "@/api/generated/plans";
-import { PlanFrequency, PlanStatus, type CreatePlanBody, type ListPlansParams } from "@/api/generated/contracts/plans";
+import { PlanFrequency } from "@/api/generated/common";
+import { PlanStatus, type CreatePlanBody, type ListPlansParams } from "@/api/generated/contracts/plans";
 import { readCursorState, writeCursorState, type CursorState } from "@/shared/utils/url";
 
 const PAGE_SIZE = 25;

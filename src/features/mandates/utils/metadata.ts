@@ -1,4 +1,5 @@
-import type { MandateAttemptStatus, MandateMethod, MandateStatus } from "@/api/generated/contracts/mandates";
+import type { MandateMethod, MandateStatus } from "@/api/generated/common";
+import type { MandateAttemptStatus } from "@/api/generated/contracts/mandates";
 import type { StatusBadgeTone } from "@/components/admin/StatusBadge";
 
 export const mandateStatusTone: Record<MandateStatus, StatusBadgeTone> = {

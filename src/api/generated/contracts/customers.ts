@@ -1,4 +1,4 @@
-import type { CursorPagination, MoneyPaise } from "../common";
+import type { CursorPagination, IdentityDocumentType, IdentityProfile, MandateStatus, MoneyPaise } from "../common";
 export type CustomerStatus = typeof CustomerStatus[keyof typeof CustomerStatus];
 export const CustomerStatus = {
     active: 'active',
@@ -16,10 +16,21 @@ export interface Customer {
     city: string;
     state: string;
     pincode: string;
+    notes: string | null;
     status: CustomerStatus;
     createdAt: string;
     updatedAt: string;
 }
+export type CustomerListItemNextDue = {
+    dueDate: string;
+    amountPaise: MoneyPaise;
+} | null;
+export type CustomerListItem = Customer & ({
+    outstandingPaise: MoneyPaise;
+    overduePaise: MoneyPaise;
+    nextDue: CustomerListItemNextDue;
+    mandateStatus: MandateStatus | null;
+});
 export type CustomerActivationStatus = typeof CustomerActivationStatus[keyof typeof CustomerActivationStatus];
 export const CustomerActivationStatus = {
     pending: 'pending',
@@ -86,6 +97,12 @@ export interface CustomerReminder {
     dueDate: string | null;
     createdAt: string;
 }
+export type CustomerListView = typeof CustomerListView[keyof typeof CustomerListView];
+export const CustomerListView = {
+    due: 'due',
+    overdue: 'overdue',
+    mandate_pending: 'mandate_pending',
+} as const;
 export type CreateCustomerBody = {
     name: string;
     phone: string;
@@ -94,6 +111,7 @@ export type CreateCustomerBody = {
     city: string;
     state: string;
     pincode: string;
+    notes?: string | null;
     status?: CustomerStatus;
 };
 export type CreateCustomer201 = {
@@ -103,10 +121,11 @@ export type ListCustomersParams = {
     limit?: number;
     cursor?: string;
     status?: CustomerStatus;
+    view?: CustomerListView;
     search?: string;
 };
 export type ListCustomers200Data = {
-    items: Customer[];
+    items: CustomerListItem[];
     pagination: CursorPagination;
 };
 export type ListCustomers200 = {
@@ -123,6 +142,7 @@ export type UpdateCustomerBody = {
     city?: string;
     state?: string;
     pincode?: string;
+    notes?: string | null;
     status?: CustomerStatus;
 };
 export type UpdateCustomer200 = {
@@ -130,6 +150,45 @@ export type UpdateCustomer200 = {
 };
 export type GetCustomerFinancialSummary200 = {
     data: CustomerFinancialSummary;
+};
+export type ListCustomerActivityParams = {
+    limit?: number;
+    before?: string;
+};
+export type ListCustomerActivity200DataItemsItemType = typeof ListCustomerActivity200DataItemsItemType[keyof typeof ListCustomerActivity200DataItemsItemType];
+export const ListCustomerActivity200DataItemsItemType = {
+    payment: 'payment',
+    follow_up: 'follow_up',
+} as const;
+export type ListCustomerActivity200DataItemsItem = {
+    type: ListCustomerActivity200DataItemsItemType;
+    entityId: string;
+    occurredAt: string;
+    amountPaise: MoneyPaise | null;
+    status: string;
+    note: string | null;
+    planId: string;
+};
+export type ListCustomerActivity200DataPagination = {
+    nextBefore: string | null;
+};
+export type ListCustomerActivity200Data = {
+    items: ListCustomerActivity200DataItemsItem[];
+    pagination: ListCustomerActivity200DataPagination;
+};
+export type ListCustomerActivity200 = {
+    data: ListCustomerActivity200Data;
+};
+export type GetCustomerIdentity200 = {
+    data: IdentityProfile;
+};
+export type SetCustomerIdentityBody = {
+    pan?: string;
+    idType?: IdentityDocumentType | null;
+    idReference?: string;
+};
+export type SetCustomerIdentity200 = {
+    data: IdentityProfile;
 };
 export type GetCustomerActivation200 = {
     data: CustomerActivation;

@@ -37,6 +37,46 @@ export type Merchant = MerchantListItem & ({
     updatedAt: string;
     accounts?: MerchantAccountsItem[];
 });
+export type MerchantBankAccountVerificationStatus = typeof MerchantBankAccountVerificationStatus[keyof typeof MerchantBankAccountVerificationStatus];
+export const MerchantBankAccountVerificationStatus = {
+    unverified: 'unverified',
+    verified: 'verified',
+    rejected: 'rejected',
+} as const;
+export type BankAccountType = typeof BankAccountType[keyof typeof BankAccountType];
+export const BankAccountType = {
+    savings: 'savings',
+    current: 'current',
+} as const;
+export interface MerchantBankAccount {
+    merchantId: string;
+    accountHolderName: string;
+    accountNumberMasked: string | null;
+    ifsc: string;
+    bankName: string;
+    accountType: BankAccountType;
+    verificationStatus: MerchantBankAccountVerificationStatus;
+    verifiedAt: string | null;
+    updatedAt: string;
+}
+export type MerchantAgreementEvidence = {
+    filename: string;
+    mimeType: string | null;
+    sizeBytes: number | null;
+    confirmedAt: string | null;
+} | null;
+export interface MerchantAgreement {
+    agreementVersion: string;
+    channel: string;
+    acceptedAt: string;
+    capturedByRole: string;
+    evidence: MerchantAgreementEvidence;
+}
+export type BankVerificationDecision = typeof BankVerificationDecision[keyof typeof BankVerificationDecision];
+export const BankVerificationDecision = {
+    verified: 'verified',
+    rejected: 'rejected',
+} as const;
 export type CreateMerchantBody = {
     businessName: string;
     ownerName: string;
@@ -97,4 +137,110 @@ export type ProvisionMerchantAccountBody = {
 };
 export type ProvisionMerchantAccount201 = {
     data: Merchant;
+};
+export type GetMerchantBankAccount200DataBankAccount = MerchantBankAccount & ({
+    [key: string]: unknown;
+} | null);
+export type GetMerchantBankAccount200Data = {
+    bankAccount: GetMerchantBankAccount200DataBankAccount;
+};
+export type GetMerchantBankAccount200 = {
+    data: GetMerchantBankAccount200Data;
+};
+export type SetMerchantBankAccountBody = {
+    accountHolderName: string;
+    accountNumber: string;
+    ifsc: string;
+    bankName: string;
+    accountType: BankAccountType;
+};
+export type SetMerchantBankAccount200DataBankAccount = MerchantBankAccount & ({
+    [key: string]: unknown;
+} | null);
+export type SetMerchantBankAccount200Data = {
+    bankAccount: SetMerchantBankAccount200DataBankAccount;
+};
+export type SetMerchantBankAccount200 = {
+    data: SetMerchantBankAccount200Data;
+};
+export type DecideMerchantBankAccountBody = {
+    decision: BankVerificationDecision;
+};
+export type DecideMerchantBankAccount200DataBankAccount = MerchantBankAccount & ({
+    [key: string]: unknown;
+} | null);
+export type DecideMerchantBankAccount200Data = {
+    bankAccount: DecideMerchantBankAccount200DataBankAccount;
+};
+export type DecideMerchantBankAccount200 = {
+    data: DecideMerchantBankAccount200Data;
+};
+export type GetMerchantAgreement200DataAgreement = MerchantAgreement & ({
+    [key: string]: unknown;
+} | null);
+export type GetMerchantAgreement200Data = {
+    agreement: GetMerchantAgreement200DataAgreement;
+};
+export type GetMerchantAgreement200 = {
+    data: GetMerchantAgreement200Data;
+};
+export type RecordMerchantAgreement201DataAgreement = MerchantAgreement & ({
+    [key: string]: unknown;
+} | null);
+export type RecordMerchantAgreement201Data = {
+    agreement: RecordMerchantAgreement201DataAgreement;
+};
+export type RecordMerchantAgreement201 = {
+    data: RecordMerchantAgreement201Data;
+};
+export type CreateMerchantAgreementEvidenceUploadBodyMimeType = typeof CreateMerchantAgreementEvidenceUploadBodyMimeType[keyof typeof CreateMerchantAgreementEvidenceUploadBodyMimeType];
+export const CreateMerchantAgreementEvidenceUploadBodyMimeType = {
+    'application/pdf': 'application/pdf',
+    'image/jpeg': 'image/jpeg',
+    'image/png': 'image/png',
+} as const;
+export type CreateMerchantAgreementEvidenceUploadBody = {
+    filename: string;
+    mimeType: CreateMerchantAgreementEvidenceUploadBodyMimeType;
+    sizeBytes: number;
+};
+export type CreateMerchantAgreementEvidenceUpload201DataUploadMethod = typeof CreateMerchantAgreementEvidenceUpload201DataUploadMethod[keyof typeof CreateMerchantAgreementEvidenceUpload201DataUploadMethod];
+export const CreateMerchantAgreementEvidenceUpload201DataUploadMethod = {
+    PUT: 'PUT',
+    POST: 'POST',
+} as const;
+export type CreateMerchantAgreementEvidenceUpload201DataUploadHeaders = {
+    [key: string]: string;
+};
+export type CreateMerchantAgreementEvidenceUpload201DataUploadFields = {
+    [key: string]: string;
+};
+export type CreateMerchantAgreementEvidenceUpload201DataUpload = {
+    url: string;
+    method: CreateMerchantAgreementEvidenceUpload201DataUploadMethod;
+    headers: CreateMerchantAgreementEvidenceUpload201DataUploadHeaders;
+    fields?: CreateMerchantAgreementEvidenceUpload201DataUploadFields;
+    expiresInSeconds: number;
+};
+export type CreateMerchantAgreementEvidenceUpload201Data = {
+    upload: CreateMerchantAgreementEvidenceUpload201DataUpload;
+};
+export type CreateMerchantAgreementEvidenceUpload201 = {
+    data: CreateMerchantAgreementEvidenceUpload201Data;
+};
+export type ConfirmMerchantAgreementEvidence200DataAgreement = MerchantAgreement & ({
+    [key: string]: unknown;
+} | null);
+export type ConfirmMerchantAgreementEvidence200Data = {
+    agreement: ConfirmMerchantAgreementEvidence200DataAgreement;
+};
+export type ConfirmMerchantAgreementEvidence200 = {
+    data: ConfirmMerchantAgreementEvidence200Data;
+};
+export type CreateMerchantAgreementEvidenceViewUrl200Data = {
+    url: string;
+    expiresInSeconds: number;
+};
+export type CreateMerchantAgreementEvidenceViewUrl200 = {
+    data: CreateMerchantAgreementEvidenceViewUrl200Data;
 };

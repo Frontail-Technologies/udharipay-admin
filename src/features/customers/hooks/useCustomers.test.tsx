@@ -15,7 +15,7 @@ vi.mock("@/api/generated/customers", () => api);
 vi.mock("@/shared/hooks/useConfirm", () => ({ useConfirm: () => confirm }));
 vi.mock("sonner", () => ({ toast }));
 
-const customer: Customer = { id: "8d25b5aa-34e1-4c47-93b2-97bb946e1f71", publicId: "CUS-1001", merchantId: "9d25b5aa-34e1-4c47-93b2-97bb946e1f72", name: "Rahul Verma", phone: "+919000000001", alternatePhone: "+919000000002", address: "12 Market Road", city: "Jaipur", state: "Rajasthan", pincode: "302001", status: "active", createdAt: "2026-09-20T00:00:00.000Z", updatedAt: "2026-09-20T00:00:00.000Z" };
+const customer: Customer = { id: "8d25b5aa-34e1-4c47-93b2-97bb946e1f71", publicId: "CUS-1001", merchantId: "9d25b5aa-34e1-4c47-93b2-97bb946e1f72", name: "Rahul Verma", phone: "+919000000001", alternatePhone: "+919000000002", address: "12 Market Road", city: "Jaipur", state: "Rajasthan", pincode: "302001", notes: null, status: "active", createdAt: "2026-09-20T00:00:00.000Z", updatedAt: "2026-09-20T00:00:00.000Z" };
 
 function setup() {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } });

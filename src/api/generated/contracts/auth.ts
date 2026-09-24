@@ -1,4 +1,4 @@
-import type { UserStatus } from "../common";
+import type { IdentityDocumentType, UserStatus } from "../common";
 export type UserRole = typeof UserRole[keyof typeof UserRole];
 export const UserRole = {
     admin: 'admin',
@@ -10,12 +10,20 @@ export interface SafeUser {
     role: UserRole;
     status: UserStatus;
 }
+export type SessionContextEmployeeIdentity = {
+    panMasked: string | null;
+    idType: IdentityDocumentType | null;
+    idReferenceMasked: string | null;
+    updatedAt: string | null;
+};
 export type SessionContextEmployee = {
     publicId: string;
     name: string;
     email: string | null;
     phone: string | null;
     branch: string | null;
+    address: string | null;
+    identity: SessionContextEmployeeIdentity;
     joinedAt: string;
     assignedMerchantCount: number;
 } | null;

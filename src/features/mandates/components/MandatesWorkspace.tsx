@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { MandateStatus } from "@/api/generated/contracts/mandates";
+import { MandateStatus } from "@/api/generated/common";
 import { normalizeApiError } from "@/api/http/errors";
 import { useMandateDirectory } from "@/features/mandates/hooks/useMandates";
 import { MerchantSelector } from "@/features/customers/components/MerchantSelector";

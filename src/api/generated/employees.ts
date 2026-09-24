@@ -1,4 +1,4 @@
-import type { CreateEmployee201, CreateEmployeeBody, GetEmployee200, ListEmployees200, ListEmployeesParams, UpdateEmployee200, UpdateEmployeeBody } from "./contracts/employees";
+import type { CreateEmployee201, CreateEmployeeBody, GetEmployee200, GetEmployeeIdentity200, ListEmployees200, ListEmployeesParams, SetEmployeeIdentity200, SetEmployeeIdentityBody, UpdateEmployee200, UpdateEmployeeBody } from "./contracts/employees";
 import { apiClient, type ApiRequestOptions } from "../http/client";
 export const createEmployee = (createEmployeeBody?: CreateEmployeeBody, options?: ApiRequestOptions) => {
     return apiClient<CreateEmployee201>({ url: `/api/v1/employees`, method: 'POST',
@@ -19,5 +19,15 @@ export const updateEmployee = (employeeId: string, updateEmployeeBody?: UpdateEm
     return apiClient<UpdateEmployee200>({ url: `/api/v1/employees/${employeeId}`, method: 'PATCH',
         headers: { 'Content-Type': 'application/json', },
         data: updateEmployeeBody
+    }, options);
+};
+export const getEmployeeIdentity = (employeeId: string, options?: ApiRequestOptions) => {
+    return apiClient<GetEmployeeIdentity200>({ url: `/api/v1/employees/${employeeId}/identity`, method: 'GET'
+    }, options);
+};
+export const setEmployeeIdentity = (employeeId: string, setEmployeeIdentityBody?: SetEmployeeIdentityBody, options?: ApiRequestOptions) => {
+    return apiClient<SetEmployeeIdentity200>({ url: `/api/v1/employees/${employeeId}/identity`, method: 'PUT',
+        headers: { 'Content-Type': 'application/json', },
+        data: setEmployeeIdentityBody
     }, options);
 };

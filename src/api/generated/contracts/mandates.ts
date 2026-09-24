@@ -1,19 +1,4 @@
-import type { CursorPagination, MoneyPaise } from "../common";
-export type MandateMethod = typeof MandateMethod[keyof typeof MandateMethod];
-export const MandateMethod = {
-    upi_autopay: 'upi_autopay',
-    enach: 'enach',
-} as const;
-export type MandateStatus = typeof MandateStatus[keyof typeof MandateStatus];
-export const MandateStatus = {
-    pending: 'pending',
-    authorization_pending: 'authorization_pending',
-    active: 'active',
-    paused: 'paused',
-    failed: 'failed',
-    cancelled: 'cancelled',
-    expired: 'expired',
-} as const;
+import type { CursorPagination, MandateMethod, MandateStatus, MoneyPaise, PlanFrequency } from "../common";
 export type MandateAttemptStatus = typeof MandateAttemptStatus[keyof typeof MandateAttemptStatus];
 export const MandateAttemptStatus = {
     pending: 'pending',
@@ -39,6 +24,16 @@ export interface Mandate {
     createdAt: string;
     updatedAt: string;
 }
+export type MandateDetailPlanTerms = {
+    frequency: PlanFrequency;
+    numberOfCollections: number;
+    firstDueDate: string;
+    installmentAmountPaise: MoneyPaise;
+    originalAmountPaise: MoneyPaise;
+} | null;
+export type MandateDetail = Mandate & {
+    planTerms: MandateDetailPlanTerms;
+};
 export interface MandateAttempt {
     id: string;
     mandateId: string;
@@ -50,9 +45,62 @@ export interface MandateAttempt {
     providerReference: string | null;
     failureCode: string | null;
     failureReason: string | null;
+    retryStatus: string | null;
+    nextRetryAt: string | null;
     attemptedAt: string;
     createdAt: string;
     updatedAt: string;
+}
+export type MandateAuthorizationSessionStatus = typeof MandateAuthorizationSessionStatus[keyof typeof MandateAuthorizationSessionStatus];
+export const MandateAuthorizationSessionStatus = {
+    created: 'created',
+    authorized: 'authorized',
+    failed: 'failed',
+    expired: 'expired',
+} as const;
+export interface MandateAuthorizationSession {
+    status: MandateAuthorizationSessionStatus;
+    mandateStatus: MandateStatus;
+    authorizationUrl: string | null;
+    expiresAt: string;
+    authorizedAt: string | null;
+    failureReason: string | null;
+}
+export type MandateAttemptContextMandate = {
+    id: string;
+    publicId: string;
+    method: MandateMethod;
+    status: MandateStatus;
+};
+export type MandateAttemptContextCustomer = {
+    id: string;
+    name: string;
+    phone: string;
+};
+export type MandateAttemptContextMerchant = {
+    id: string;
+    businessName: string;
+};
+export type MandateAttemptContextInstallment = {
+    id: string;
+    installmentNumber: number;
+    dueDate: string;
+} | null;
+export interface MandateAttemptContext {
+    id: string;
+    status: MandateAttemptStatus;
+    amountPaise: MoneyPaise | null;
+    failureCode: string | null;
+    failureReason: string | null;
+    providerReference: string | null;
+    retryStatus: string | null;
+    nextRetryAt: string | null;
+    attemptedAt: string;
+    mandate: MandateAttemptContextMandate;
+    customer: MandateAttemptContextCustomer;
+    merchant: MandateAttemptContextMerchant;
+    planId: string | null;
+    installment: MandateAttemptContextInstallment;
 }
 export type CreateMandateBody = {
     method: MandateMethod;
@@ -78,7 +126,7 @@ export type ListCustomerMandates200 = {
     data: ListCustomerMandates200Data;
 };
 export type GetMandate200 = {
-    data: Mandate;
+    data: MandateDetail;
 };
 export type ListMandateAttemptsParams = {
     limit?: number;
@@ -90,4 +138,45 @@ export type ListMandateAttempts200Data = {
 };
 export type ListMandateAttempts200 = {
     data: ListMandateAttempts200Data;
+};
+export type RequestMandateAuthorization201 = {
+    data: MandateAuthorizationSession;
+};
+export type GetMandateAuthorization200 = {
+    data: MandateAuthorizationSession;
+};
+export type GetMandateHistory200DataItemsItem = {
+    type: string;
+    occurredAt: string;
+    amountPaise: MoneyPaise | null;
+    note: string | null;
+};
+export type GetMandateHistory200Data = {
+    items: GetMandateHistory200DataItemsItem[];
+};
+export type GetMandateHistory200 = {
+    data: GetMandateHistory200Data;
+};
+export type ListMandateAttemptContextsParams = {
+    limit?: number;
+    cursor?: string;
+    status?: ListMandateAttemptContextsStatus;
+};
+export type ListMandateAttemptContextsStatus = typeof ListMandateAttemptContextsStatus[keyof typeof ListMandateAttemptContextsStatus];
+export const ListMandateAttemptContextsStatus = {
+    pending: 'pending',
+    submitted: 'submitted',
+    successful: 'successful',
+    failed: 'failed',
+    cancelled: 'cancelled',
+} as const;
+export type ListMandateAttemptContexts200Data = {
+    items: MandateAttemptContext[];
+    pagination: CursorPagination;
+};
+export type ListMandateAttemptContexts200 = {
+    data: ListMandateAttemptContexts200Data;
+};
+export type GetMandateAttemptContext200 = {
+    data: MandateAttemptContext;
 };

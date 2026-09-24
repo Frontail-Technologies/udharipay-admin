@@ -1,7 +1,8 @@
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { PlanFrequency, PlanStatus } from "@/api/generated/contracts/plans";
+import { PlanFrequency } from "@/api/generated/common";
+import { PlanStatus } from "@/api/generated/contracts/plans";
 import { normalizeApiError } from "@/api/http/errors";
 import { usePlanDirectory } from "@/features/plans/hooks/usePlans";
 import { planFrequencyLabels } from "@/features/plans/utils/metadata";
