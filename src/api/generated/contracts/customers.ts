@@ -37,6 +37,26 @@ export interface CustomerActivation {
     createdAt: string;
     updatedAt: string;
 }
+export interface CustomerPlanFinancial {
+    planId: string;
+    collectedPaise: MoneyPaise;
+    outstandingPaise: MoneyPaise;
+    overduePaise: MoneyPaise;
+}
+export type CustomerFinancialSummaryNextDue = {
+    dueDate: string;
+    amountPaise: MoneyPaise;
+} | null;
+export interface CustomerFinancialSummary {
+    customerId: string;
+    activePlanCount: number;
+    activePlansOriginalAmountPaise: MoneyPaise;
+    collectedPaise: MoneyPaise;
+    outstandingPaise: MoneyPaise;
+    overduePaise: MoneyPaise;
+    nextDue: CustomerFinancialSummaryNextDue;
+    plans: CustomerPlanFinancial[];
+}
 export type CustomerReminderChannel = typeof CustomerReminderChannel[keyof typeof CustomerReminderChannel];
 export const CustomerReminderChannel = {
     whatsapp: 'whatsapp',
@@ -102,6 +122,9 @@ export type UpdateCustomerBody = {
 };
 export type UpdateCustomer200 = {
     data: Customer;
+};
+export type GetCustomerFinancialSummary200 = {
+    data: CustomerFinancialSummary;
 };
 export type GetCustomerActivation200 = {
     data: CustomerActivation;
