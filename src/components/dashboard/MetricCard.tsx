@@ -39,9 +39,9 @@ export function MetricCard({
           <Icon className="size-4" />
         </span>
       </div>
-      <p className="text-[26px] font-semibold leading-tight tracking-tight text-text-primary">
+      <div className="text-[26px] font-semibold leading-tight tracking-tight text-text-primary">
         {value}
-      </p>
+      </div>
       {trend && TrendIcon && (
         <div className="flex items-center gap-1 text-[12px] leading-4">
           <span className={cn("flex shrink-0 items-center gap-0.5 font-medium", trend.className)}>
@@ -79,7 +79,7 @@ export function SecondaryMetricCard({
       </span>
       <div className="min-w-0">
         <p className="truncate text-[11.5px] leading-4 text-text-muted">{label}</p>
-        <p className="truncate text-[15px] font-semibold leading-5 text-text-primary">{value}</p>
+        <div className="truncate text-[15px] font-semibold leading-5 text-text-primary">{value}</div>
       </div>
     </div>
   );

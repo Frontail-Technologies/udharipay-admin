@@ -22,7 +22,7 @@ beforeEach(() => {
   settingsMutation.mutateAsync.mockResolvedValue({});
   planMutation.isPending = false;
   planMutation.mutateAsync.mockResolvedValue({});
-  useBillingSettings.mockReturnValue({ isPending: false, isError: false, data: { data: { activationFeePaise: "49900", updatedAt: "2026-09-22T08:30:00.000Z" } } });
+  useBillingSettings.mockReturnValue({ isPending: false, isError: false, data: { data: { activationFeePaise: "49900", customerActivationFeePaise: "0", updatedAt: "2026-09-22T08:30:00.000Z" } } });
   useBillingPlans.mockReturnValue({ isPending: false, isError: false, data: { data: { items: [standard] } } });
 });
 
@@ -37,8 +37,9 @@ describe("BillingConfigurationSection", () => {
     render(<BillingConfigurationSection />);
     fireEvent.click(screen.getByRole("button", { name: "Edit Activation Fee" }));
     fireEvent.change(screen.getByLabelText("Activation Fee (₹)"), { target: { value: "599.50" } });
+    fireEvent.change(screen.getByLabelText("Customer Activation Fee (₹)"), { target: { value: "0" } });
     fireEvent.click(screen.getByRole("button", { name: "Save Changes" }));
-    await waitFor(() => expect(settingsMutation.mutateAsync).toHaveBeenCalledWith({ activationFeePaise: "59950" }));
+    await waitFor(() => expect(settingsMutation.mutateAsync).toHaveBeenCalledWith({ activationFeePaise: "59950", customerActivationFeePaise: "0" }));
   });
 
   it("submits a plan price edit as a precise paise string", async () => {

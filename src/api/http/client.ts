@@ -39,7 +39,7 @@ httpClient.interceptors.response.use(
       await refreshPromise;
       return await httpClient.request(config);
     } catch (refreshError) {
-      if (typeof window !== "undefined") window.dispatchEvent(new Event("udharipay:session-expired"));
+      if (typeof window !== "undefined" && !path.includes("/api/v1/auth/me")) window.dispatchEvent(new Event("udharipay:session-expired"));
       throw normalizeApiError(refreshError);
     }
   },

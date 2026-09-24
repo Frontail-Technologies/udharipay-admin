@@ -4,7 +4,7 @@ import { useDeferredValue, useMemo } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { createCustomer, getCustomer, listCustomers, updateCustomer } from "@/api/generated/customers";
+import { createCustomer, getCustomer, getCustomerActivation, listCustomers, updateCustomer } from "@/api/generated/customers";
 import { CustomerStatus } from "@/api/generated/contracts/customers";
 import type { CreateCustomerBody, Customer, CustomerStatus as CustomerStatusType, ListCustomersParams, UpdateCustomerBody } from "@/api/generated/contracts/customers";
 import { normalizeApiError } from "@/api/http/errors";
@@ -20,7 +20,12 @@ export const customerKeys = {
   list: (merchantId: string, params: ListCustomersParams) => [...customerKeys.merchantLists(merchantId), params] as const,
   details: () => [...customerKeys.all, "detail"] as const,
   detail: (customerId: string) => [...customerKeys.details(), customerId] as const,
+  activation: (customerId: string) => [...customerKeys.detail(customerId), "activation"] as const,
 };
+
+export function useCustomerActivation(customerId: string) {
+  return useQuery({ queryKey: customerKeys.activation(customerId), queryFn: ({ signal }) => getCustomerActivation(customerId, { signal }), retry: false });
+}
 
 export function useCustomers(merchantId: string | undefined, params: ListCustomersParams) {
   return useQuery({

@@ -31,7 +31,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    const onExpired = () => { void clearSession(); };
+    const onExpired = () => {
+      if (queryClient.getQueryState(authKeys.session)?.status === "error") return;
+      void clearSession();
+    };
     window.addEventListener("udharipay:session-expired", onExpired);
     return () => window.removeEventListener("udharipay:session-expired", onExpired);
   });

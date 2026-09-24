@@ -65,6 +65,7 @@ export interface MerchantSubscription {
 }
 export interface BillingSettings {
     activationFeePaise: MoneyPaise;
+    customerActivationFeePaise: MoneyPaise;
     updatedAt: string;
 }
 export interface BillingPlan {
@@ -120,6 +121,7 @@ export type GetBillingSettings200 = {
 };
 export type UpdateBillingSettingsBody = {
     activationFeePaise?: string;
+    customerActivationFeePaise?: string;
 };
 export type UpdateBillingSettings200 = {
     data: BillingSettings;

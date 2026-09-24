@@ -1,4 +1,4 @@
-import type { CursorPagination } from "../common";
+import type { CursorPagination, MoneyPaise } from "../common";
 export type CustomerStatus = typeof CustomerStatus[keyof typeof CustomerStatus];
 export const CustomerStatus = {
     active: 'active',
@@ -17,6 +17,23 @@ export interface Customer {
     state: string;
     pincode: string;
     status: CustomerStatus;
+    createdAt: string;
+    updatedAt: string;
+}
+export type CustomerActivationStatus = typeof CustomerActivationStatus[keyof typeof CustomerActivationStatus];
+export const CustomerActivationStatus = {
+    pending: 'pending',
+    paid: 'paid',
+    void: 'void',
+} as const;
+export interface CustomerActivation {
+    id: string;
+    publicId: string;
+    customerId: string;
+    amountPaise: MoneyPaise;
+    status: CustomerActivationStatus;
+    dueDate: string;
+    paidAt: string | null;
     createdAt: string;
     updatedAt: string;
 }
@@ -61,4 +78,7 @@ export type UpdateCustomerBody = {
 };
 export type UpdateCustomer200 = {
     data: Customer;
+};
+export type GetCustomerActivation200 = {
+    data: CustomerActivation;
 };

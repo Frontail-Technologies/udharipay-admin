@@ -23,28 +23,33 @@ export function BillingConfigurationSection() {
   </div>;
 }
 
+type FeeValues = { activationFeeRupees: string; customerActivationFeeRupees: string };
+
 function ActivationFeeSection() {
   const query = useBillingSettings();
   const mutation = useUpdateBillingSettings();
   const [editing, setEditing] = useState(false);
-  const { register, handleSubmit, reset, setError, formState: { errors } } = useForm<{ activationFeeRupees: string }>({ defaultValues: { activationFeeRupees: "" } });
+  const { register, handleSubmit, reset, setError, formState: { errors } } = useForm<FeeValues>({ defaultValues: { activationFeeRupees: "", customerActivationFeeRupees: "" } });
 
   if (query.isPending) return <Skeleton className="h-24 w-full max-w-xl" />;
   if (query.isError) return <div className="max-w-xl rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-6 text-center text-[13px] text-destructive">{normalizeApiError(query.error).message}</div>;
 
   const settings = query.data.data;
-  const startEdit = () => { reset({ activationFeeRupees: rupeesFromPaise(settings.activationFeePaise) }); setEditing(true); };
-  const submit = async (values: { activationFeeRupees: string }) => {
+  const startEdit = () => { reset({ activationFeeRupees: rupeesFromPaise(settings.activationFeePaise), customerActivationFeeRupees: rupeesFromPaise(settings.customerActivationFeePaise) }); setEditing(true); };
+  const submit = async (values: FeeValues) => {
     const activationFeePaise = rupeesToPaise(values.activationFeeRupees);
     if (!activationFeePaise) { setError("activationFeeRupees", { message: "Enter a valid amount with up to two decimal places" }); return; }
-    try { await mutation.mutateAsync({ activationFeePaise }); setEditing(false); } catch (error) { const result = applyApiFormErrors(error, setError); if (!result.applied) toast.error(result.error.message); }
+    const customerActivationFeePaise = rupeesToPaise(values.customerActivationFeeRupees);
+    if (!customerActivationFeePaise) { setError("customerActivationFeeRupees", { message: "Enter a valid amount with up to two decimal places (0 disables the fee)" }); return; }
+    try { await mutation.mutateAsync({ activationFeePaise, customerActivationFeePaise }); setEditing(false); } catch (error) { const result = applyApiFormErrors(error, setError); if (!result.applied) toast.error(result.error.message); }
   };
 
-  return <EditableDetailSection title="Activation Fee" description="One-time fee charged when a merchant's subscription is created." editAriaLabel="Edit Activation Fee" editing={editing} isSaving={mutation.isPending} onEdit={startEdit} onCancel={() => setEditing(false)} formId="activation-fee-form" className="max-w-xl">
+  return <EditableDetailSection title="Activation Fees" description="One-time fees charged at merchant subscription creation and at customer creation." editAriaLabel="Edit Activation Fee" editing={editing} isSaving={mutation.isPending} onEdit={startEdit} onCancel={() => setEditing(false)} formId="activation-fee-form" className="max-w-xl">
     {editing ? <form id="activation-fee-form" onSubmit={handleSubmit(submit)} className="flex flex-col gap-2">
       <FormField label="Activation Fee (₹)" htmlFor="activation-fee-input" error={errors.activationFeeRupees?.message}><Input id="activation-fee-input" inputMode="decimal" placeholder="499.00" {...register("activationFeeRupees", { required: "Activation fee is required" })} /></FormField>
-      <p className="text-[11.5px] text-text-muted">Changes apply to new subscriptions only.</p>
-    </form> : <KeyValueRow label="Current Activation Fee" value={formatPaiseInr(settings.activationFeePaise)} />}
+      <FormField label="Customer Activation Fee (₹)" htmlFor="customer-activation-fee-input" error={errors.customerActivationFeeRupees?.message}><Input id="customer-activation-fee-input" inputMode="decimal" placeholder="0" {...register("customerActivationFeeRupees", { required: "Customer activation fee is required" })} /></FormField>
+      <p className="text-[11.5px] text-text-muted">Changes apply to new subscriptions and new customers only. Set the customer fee to 0 to disable it.</p>
+    </form> : <><KeyValueRow label="Merchant Activation Fee" value={formatPaiseInr(settings.activationFeePaise)} /><KeyValueRow label="Customer Activation Fee" value={BigInt(settings.customerActivationFeePaise) === BigInt(0) ? "Not charged" : formatPaiseInr(settings.customerActivationFeePaise)} /></>}
   </EditableDetailSection>;
 }
 
