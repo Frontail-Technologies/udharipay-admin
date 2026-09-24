@@ -10,6 +10,15 @@ export interface SafeUser {
     role: UserRole;
     status: UserStatus;
 }
+export type SessionContextEmployee = {
+    publicId: string;
+    name: string;
+    email: string | null;
+    phone: string | null;
+    branch: string | null;
+    joinedAt: string;
+    assignedMerchantCount: number;
+} | null;
 export type SessionContextMerchantMembershipsItem = {
     merchantId: string;
     status: string;
@@ -17,6 +26,7 @@ export type SessionContextMerchantMembershipsItem = {
 export interface SessionContext {
     user: SafeUser;
     employeeId?: string | null;
+    employee?: SessionContextEmployee;
     merchantMemberships?: SessionContextMerchantMembershipsItem[];
 }
 export type AdminLoginBody = {
