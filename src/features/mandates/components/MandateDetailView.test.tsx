@@ -18,4 +18,13 @@ describe("MandateDetailView", () => {
     expect(screen.getAllByText("₹9,00,71,99,25,47,409.93").length).toBeGreaterThan(0);
     expect(screen.queryByRole("button", { name: /activate|pause|cancel|retry|execute|charge|collect|delete|mark successful/i })).not.toBeInTheDocument();
   });
+
+  it("shows the Razorpay provider and safe reference without any cancellation control", () => {
+    useMandate.mockReturnValue({ isPending: false, isError: false, data: { data: { ...mandate, provider: "razorpay", providerReference: "inv_ABC123", status: "active" } } });
+    render(<MandateDetailView mandateId={mandate.id} defaultTab="overview" />);
+    expect(screen.getAllByText("eNACH / Bank AutoPay").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("razorpay").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("inv_ABC123").length).toBeGreaterThan(0);
+    expect(screen.queryByRole("button", { name: /cancel|force|revoke/i })).not.toBeInTheDocument();
+  });
 });

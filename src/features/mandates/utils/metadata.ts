@@ -22,5 +22,5 @@ export const mandateAttemptStatusTone: Record<MandateAttemptStatus, StatusBadgeT
 
 export const mandateMethodLabels: Record<MandateMethod, string> = {
   upi_autopay: "UPI AutoPay",
-  enach: "eNACH",
+  enach: "eNACH / Bank AutoPay",
 };

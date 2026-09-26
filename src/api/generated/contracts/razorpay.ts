@@ -56,8 +56,22 @@ export type ReceiveRazorpayWebhookBodyPayloadPaymentEntity = {
 export type ReceiveRazorpayWebhookBodyPayloadPayment = {
     entity: ReceiveRazorpayWebhookBodyPayloadPaymentEntity;
 };
+export type ReceiveRazorpayWebhookBodyPayloadTokenEntity = {
+    [key: string]: unknown;
+};
+export type ReceiveRazorpayWebhookBodyPayloadToken = {
+    entity: ReceiveRazorpayWebhookBodyPayloadTokenEntity;
+};
+export type ReceiveRazorpayWebhookBodyPayloadInvoiceEntity = {
+    [key: string]: unknown;
+};
+export type ReceiveRazorpayWebhookBodyPayloadInvoice = {
+    entity: ReceiveRazorpayWebhookBodyPayloadInvoiceEntity;
+};
 export type ReceiveRazorpayWebhookBodyPayload = {
     payment?: ReceiveRazorpayWebhookBodyPayloadPayment;
+    token?: ReceiveRazorpayWebhookBodyPayloadToken;
+    invoice?: ReceiveRazorpayWebhookBodyPayloadInvoice;
     [key: string]: unknown;
 };
 export type ReceiveRazorpayWebhookBody = {
