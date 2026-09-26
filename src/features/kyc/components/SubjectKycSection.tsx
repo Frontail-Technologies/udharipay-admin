@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { FileText, Loader2, Trash2 } from "lucide-react";
 import type { KycSubjectType } from "@/api/generated/common";
-import type { KycDocumentType } from "@/api/generated/contracts/kyc";
+import type { KycDocumentType } from "@/api/generated/common";
 import { normalizeApiError } from "@/api/http/errors";
 import { KycUploadBatchError, useSaveAndSubmitKyc, useSubjectKyc } from "@/features/kyc/hooks/useKyc";
 import { kycDocumentPolicy, kycDocumentLabels, kycStatusLabels, kycStatusTones } from "@/features/kyc/utils/metadata";

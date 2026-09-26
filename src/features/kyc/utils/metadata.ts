@@ -1,4 +1,4 @@
-import { KycDocumentType, type KycDocumentStatus, type KycStatus } from "@/api/generated/contracts/kyc";
+import type { KycDocumentType, KycDocumentStatus, KycStatus } from "@/api/generated/common";
 import type { KycSubjectType } from "@/api/generated/common";
 import type { StatusBadgeTone } from "@/components/admin/StatusBadge";
 

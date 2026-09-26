@@ -2,7 +2,7 @@
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { KycSubjectType } from "@/api/generated/common";
-import { KycStatus } from "@/api/generated/contracts/kyc";
+import { KycStatus } from "@/api/generated/common";
 import { normalizeApiError } from "@/api/http/errors";
 import { useKycDirectory } from "@/features/kyc/hooks/useKyc";
 import { kycStatusLabels, kycSubjectLabels } from "@/features/kyc/utils/metadata";

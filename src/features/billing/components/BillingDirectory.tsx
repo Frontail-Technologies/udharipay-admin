@@ -1,7 +1,8 @@
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { SubscriptionInvoiceStatus, SubscriptionInvoiceType } from "@/api/generated/contracts/billing";
+import { SubscriptionInvoiceType } from "@/api/generated/contracts/billing";
+import { SubscriptionInvoiceStatus } from "@/api/generated/common";
 import { normalizeApiError } from "@/api/http/errors";
 import { useBillingDirectory } from "@/features/billing/hooks/useBilling";
 import { invoiceTypeLabels } from "@/features/billing/utils/metadata";

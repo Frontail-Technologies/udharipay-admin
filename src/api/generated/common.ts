@@ -35,6 +35,40 @@ export const KycSubjectType = {
     customer: 'customer',
     employee: 'employee',
 } as const;
+export type KycStatus = typeof KycStatus[keyof typeof KycStatus];
+export const KycStatus = {
+    pending: 'pending',
+    in_review: 'in_review',
+    approved: 'approved',
+    resubmission_required: 'resubmission_required',
+    rejected: 'rejected',
+} as const;
+export type KycDocumentType = typeof KycDocumentType[keyof typeof KycDocumentType];
+export const KycDocumentType = {
+    pan: 'pan',
+    business_registration: 'business_registration',
+    shop_photo: 'shop_photo',
+    other_business_proof: 'other_business_proof',
+    cancelled_cheque: 'cancelled_cheque',
+    identity_proof: 'identity_proof',
+    address_proof: 'address_proof',
+    customer_photo: 'customer_photo',
+    employee_photo: 'employee_photo',
+} as const;
+export type KycDocumentStatus = typeof KycDocumentStatus[keyof typeof KycDocumentStatus];
+export const KycDocumentStatus = {
+    pending: 'pending',
+    uploaded: 'uploaded',
+    verified: 'verified',
+    rejected: 'rejected',
+} as const;
+export type SubscriptionInvoiceStatus = typeof SubscriptionInvoiceStatus[keyof typeof SubscriptionInvoiceStatus];
+export const SubscriptionInvoiceStatus = {
+    pending: 'pending',
+    paid: 'paid',
+    failed: 'failed',
+    void: 'void',
+} as const;
 export type ApiErrorError = {
     code: string;
     message: string;

@@ -1,4 +1,4 @@
-import type { CursorPagination } from "../common";
+import type { CursorPagination, KycDocumentStatus, KycDocumentType, KycStatus, MoneyPaise, SubscriptionInvoiceStatus } from "../common";
 export type MerchantStatus = typeof MerchantStatus[keyof typeof MerchantStatus];
 export const MerchantStatus = {
     draft: 'draft',
@@ -22,6 +22,33 @@ export interface MerchantListItem {
     status: MerchantStatus;
     createdAt: string;
 }
+export type MerchantApplicationState = typeof MerchantApplicationState[keyof typeof MerchantApplicationState];
+export const MerchantApplicationState = {
+    draft: 'draft',
+    under_review: 'under_review',
+    resubmission_required: 'resubmission_required',
+    activation_fee_pending: 'activation_fee_pending',
+    activation_fee_paid: 'activation_fee_paid',
+    subscription_setup_pending: 'subscription_setup_pending',
+    active: 'active',
+    rejected: 'rejected',
+} as const;
+export type MerchantOnboardingStep = typeof MerchantOnboardingStep[keyof typeof MerchantOnboardingStep];
+export const MerchantOnboardingStep = {
+    business_documents: 'business_documents',
+    bank_details: 'bank_details',
+    review_verify: 'review_verify',
+    plan_activation_fee: 'plan_activation_fee',
+    autopay_setup: 'autopay_setup',
+    activated: 'activated',
+} as const;
+export interface MerchantApplicationSummary {
+    state: MerchantApplicationState;
+    nextStep: MerchantOnboardingStep;
+}
+export type MerchantListEntry = MerchantListItem & {
+    application: MerchantApplicationSummary;
+};
 export type MerchantAccountsItem = {
     userId: string;
     email: string | null;
@@ -72,6 +99,56 @@ export interface MerchantAgreement {
     capturedByRole: string;
     evidence: MerchantAgreementEvidence;
 }
+export type MerchantApplicationApplication = MerchantApplicationSummary & {
+    createdAt: string;
+    updatedAt: string;
+};
+export type MerchantApplicationKycDocumentsItem = {
+    id: string;
+    documentType: KycDocumentType;
+    status: KycDocumentStatus;
+    originalFilename: string;
+    confirmedAt: string | null;
+};
+export type MerchantApplicationKyc = {
+    status: KycStatus;
+    submittedAt: string | null;
+    reviewedAt: string | null;
+    decisionReason: string | null;
+    documents: MerchantApplicationKycDocumentsItem[];
+} | null;
+export type MerchantApplicationActivationPayment = {
+    status: string;
+    amountPaise: MoneyPaise;
+    method: string | null;
+    reference: string | null;
+    attemptedAt: string;
+} | null;
+export type MerchantApplicationActivation = {
+    amountPaise: MoneyPaise;
+    status: SubscriptionInvoiceStatus;
+    dueDate: string;
+    paidAt: string | null;
+    payment: MerchantApplicationActivationPayment;
+} | null;
+export type MerchantApplicationSubscription = {
+    planCode: string;
+    planName: string;
+    monthlyAmountPaise: MoneyPaise;
+    status: string;
+    autoPayStatus: string;
+    nextBillingDate: string | null;
+    currentPeriodEnd: string;
+} | null;
+export interface MerchantApplication {
+    merchant: Merchant;
+    application: MerchantApplicationApplication;
+    kyc: MerchantApplicationKyc;
+    bank: MerchantBankAccount | null;
+    agreement: MerchantAgreement | null;
+    activation: MerchantApplicationActivation;
+    subscription: MerchantApplicationSubscription;
+}
 export type BankVerificationDecision = typeof BankVerificationDecision[keyof typeof BankVerificationDecision];
 export const BankVerificationDecision = {
     verified: 'verified',
@@ -100,7 +177,7 @@ export type ListMerchantsParams = {
     search?: string;
 };
 export type ListMerchants200Data = {
-    items: MerchantListItem[];
+    items: MerchantListEntry[];
     pagination: CursorPagination;
 };
 export type ListMerchants200 = {
@@ -137,6 +214,9 @@ export type ProvisionMerchantAccountBody = {
 };
 export type ProvisionMerchantAccount201 = {
     data: Merchant;
+};
+export type GetMerchantApplication200 = {
+    data: MerchantApplication;
 };
 export type GetMerchantBankAccount200Data = {
     bankAccount: MerchantBankAccount | null;

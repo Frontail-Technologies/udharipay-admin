@@ -5,7 +5,8 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { createMerchantSubscription, getBillingSettings, getMerchantSubscription, getSubscriptionInvoice, listBillingInvoices, listBillingPlans, listMerchantInvoices, updateBillingPlan, updateBillingSettings } from "@/api/generated/billing";
-import { SubscriptionInvoiceStatus, SubscriptionInvoiceType, type CreateMerchantSubscriptionBody, type ListBillingInvoicesParams, type ListMerchantInvoicesParams, type UpdateBillingPlanBody, type UpdateBillingSettingsBody } from "@/api/generated/contracts/billing";
+import { SubscriptionInvoiceType, type CreateMerchantSubscriptionBody, type ListBillingInvoicesParams, type ListMerchantInvoicesParams, type UpdateBillingPlanBody, type UpdateBillingSettingsBody } from "@/api/generated/contracts/billing";
+import { SubscriptionInvoiceStatus } from "@/api/generated/common";
 import { readCursorState, writeCursorState, type CursorState } from "@/shared/utils/url";
 
 const PAGE_SIZE = 25;

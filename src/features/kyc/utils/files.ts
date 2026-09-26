@@ -1,4 +1,5 @@
-import type { KycDocument, KycDocumentType, CreateKycUploadUrl201DataUpload, CreateKycUploadUrlBodyMimeType } from "@/api/generated/contracts/kyc";
+import type { KycDocument, CreateKycUploadUrl201DataUpload, CreateKycUploadUrlBodyMimeType } from "@/api/generated/contracts/kyc";
+import type { KycDocumentType } from "@/api/generated/common";
 
 export const acceptedKycMimeTypes = ["application/pdf", "image/jpeg", "image/png"] as const;
 export const maxKycFileSizeBytes = 10 * 1024 * 1024;

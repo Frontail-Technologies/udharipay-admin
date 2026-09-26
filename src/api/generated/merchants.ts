@@ -1,4 +1,4 @@
-import type { AssignMerchant200, AssignMerchantBody, ConfirmMerchantAgreementEvidence200, CreateMerchant201, CreateMerchantAgreementEvidenceUpload201, CreateMerchantAgreementEvidenceUploadBody, CreateMerchantAgreementEvidenceViewUrl200, CreateMerchantBody, DecideMerchantBankAccount200, DecideMerchantBankAccountBody, GetMerchant200, GetMerchantAgreement200, GetMerchantBankAccount200, ListMerchants200, ListMerchantsParams, ProvisionMerchantAccount201, ProvisionMerchantAccountBody, RecordMerchantAgreement201, SetMerchantBankAccount200, SetMerchantBankAccountBody, UpdateMerchant200, UpdateMerchantBody } from "./contracts/merchants";
+import type { AssignMerchant200, AssignMerchantBody, ConfirmMerchantAgreementEvidence200, CreateMerchant201, CreateMerchantAgreementEvidenceUpload201, CreateMerchantAgreementEvidenceUploadBody, CreateMerchantAgreementEvidenceViewUrl200, CreateMerchantBody, DecideMerchantBankAccount200, DecideMerchantBankAccountBody, GetMerchant200, GetMerchantAgreement200, GetMerchantApplication200, GetMerchantBankAccount200, ListMerchants200, ListMerchantsParams, ProvisionMerchantAccount201, ProvisionMerchantAccountBody, RecordMerchantAgreement201, SetMerchantBankAccount200, SetMerchantBankAccountBody, UpdateMerchant200, UpdateMerchantBody } from "./contracts/merchants";
 import { apiClient, type ApiRequestOptions } from "../http/client";
 export const createMerchant = (createMerchantBody?: CreateMerchantBody, options?: ApiRequestOptions) => {
     return apiClient<CreateMerchant201>({ url: `/api/v1/merchants`, method: 'POST',
@@ -31,6 +31,10 @@ export const provisionMerchantAccount = (merchantId: string, provisionMerchantAc
     return apiClient<ProvisionMerchantAccount201>({ url: `/api/v1/merchants/${merchantId}/account`, method: 'POST',
         headers: { 'Content-Type': 'application/json', },
         data: provisionMerchantAccountBody
+    }, options);
+};
+export const getMerchantApplication = (merchantId: string, options?: ApiRequestOptions) => {
+    return apiClient<GetMerchantApplication200>({ url: `/api/v1/merchants/${merchantId}/application`, method: 'GET'
     }, options);
 };
 export const getMerchantBankAccount = (merchantId: string, options?: ApiRequestOptions) => {

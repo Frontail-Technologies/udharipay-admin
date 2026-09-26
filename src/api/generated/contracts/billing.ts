@@ -1,4 +1,4 @@
-import type { CursorPagination, MandateMethod, MoneyPaise } from "../common";
+import type { CursorPagination, MandateMethod, MoneyPaise, SubscriptionInvoiceStatus } from "../common";
 export type SubscriptionStatus = typeof SubscriptionStatus[keyof typeof SubscriptionStatus];
 export const SubscriptionStatus = {
     trialing: 'trialing',
@@ -20,13 +20,6 @@ export const SubscriptionInvoiceType = {
     activation_fee: 'activation_fee',
     subscription: 'subscription',
     addon: 'addon',
-} as const;
-export type SubscriptionInvoiceStatus = typeof SubscriptionInvoiceStatus[keyof typeof SubscriptionInvoiceStatus];
-export const SubscriptionInvoiceStatus = {
-    pending: 'pending',
-    paid: 'paid',
-    failed: 'failed',
-    void: 'void',
 } as const;
 export interface SubscriptionInvoice {
     id: string;
