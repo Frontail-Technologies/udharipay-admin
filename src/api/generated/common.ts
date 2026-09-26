@@ -43,7 +43,7 @@ export type ApiErrorError = {
 export interface ApiError {
     error: ApiErrorError;
 }
-export type IdentityDocumentType = typeof IdentityDocumentType[keyof typeof IdentityDocumentType] | null;
+export type IdentityDocumentType = typeof IdentityDocumentType[keyof typeof IdentityDocumentType];
 export const IdentityDocumentType = {
     aadhaar: 'aadhaar',
     pan: 'pan',

@@ -55,7 +55,7 @@ export type GetEmployeeIdentity200 = {
 };
 export type SetEmployeeIdentityBody = {
     pan?: string;
-    idType?: IdentityDocumentType | null;
+    idType?: IdentityDocumentType;
     idReference?: string;
 };
 export type SetEmployeeIdentity200 = {

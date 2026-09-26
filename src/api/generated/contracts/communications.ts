@@ -18,15 +18,12 @@ export interface WhatsAppTemplateVersion {
     createdAt: string;
     activatedAt: string | null;
 }
-export type WhatsAppTemplateActiveVersion = WhatsAppTemplateVersion & ({
-    [key: string]: unknown;
-} | null);
 export interface WhatsAppTemplate {
     templateKey: string;
     displayName: string;
     description: string | null;
     isEnabled: boolean;
-    activeVersion: WhatsAppTemplateActiveVersion;
+    activeVersion: WhatsAppTemplateVersion | null;
     versions: WhatsAppTemplateVersion[];
     allowedVariables: string[];
     updatedAt: string;

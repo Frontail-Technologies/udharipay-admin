@@ -138,11 +138,8 @@ export type ProvisionMerchantAccountBody = {
 export type ProvisionMerchantAccount201 = {
     data: Merchant;
 };
-export type GetMerchantBankAccount200DataBankAccount = MerchantBankAccount & ({
-    [key: string]: unknown;
-} | null);
 export type GetMerchantBankAccount200Data = {
-    bankAccount: GetMerchantBankAccount200DataBankAccount;
+    bankAccount: MerchantBankAccount | null;
 };
 export type GetMerchantBankAccount200 = {
     data: GetMerchantBankAccount200Data;
@@ -154,11 +151,8 @@ export type SetMerchantBankAccountBody = {
     bankName: string;
     accountType: BankAccountType;
 };
-export type SetMerchantBankAccount200DataBankAccount = MerchantBankAccount & ({
-    [key: string]: unknown;
-} | null);
 export type SetMerchantBankAccount200Data = {
-    bankAccount: SetMerchantBankAccount200DataBankAccount;
+    bankAccount: MerchantBankAccount | null;
 };
 export type SetMerchantBankAccount200 = {
     data: SetMerchantBankAccount200Data;
@@ -166,29 +160,20 @@ export type SetMerchantBankAccount200 = {
 export type DecideMerchantBankAccountBody = {
     decision: BankVerificationDecision;
 };
-export type DecideMerchantBankAccount200DataBankAccount = MerchantBankAccount & ({
-    [key: string]: unknown;
-} | null);
 export type DecideMerchantBankAccount200Data = {
-    bankAccount: DecideMerchantBankAccount200DataBankAccount;
+    bankAccount: MerchantBankAccount | null;
 };
 export type DecideMerchantBankAccount200 = {
     data: DecideMerchantBankAccount200Data;
 };
-export type GetMerchantAgreement200DataAgreement = MerchantAgreement & ({
-    [key: string]: unknown;
-} | null);
 export type GetMerchantAgreement200Data = {
-    agreement: GetMerchantAgreement200DataAgreement;
+    agreement: MerchantAgreement | null;
 };
 export type GetMerchantAgreement200 = {
     data: GetMerchantAgreement200Data;
 };
-export type RecordMerchantAgreement201DataAgreement = MerchantAgreement & ({
-    [key: string]: unknown;
-} | null);
 export type RecordMerchantAgreement201Data = {
-    agreement: RecordMerchantAgreement201DataAgreement;
+    agreement: MerchantAgreement | null;
 };
 export type RecordMerchantAgreement201 = {
     data: RecordMerchantAgreement201Data;
@@ -228,11 +213,8 @@ export type CreateMerchantAgreementEvidenceUpload201Data = {
 export type CreateMerchantAgreementEvidenceUpload201 = {
     data: CreateMerchantAgreementEvidenceUpload201Data;
 };
-export type ConfirmMerchantAgreementEvidence200DataAgreement = MerchantAgreement & ({
-    [key: string]: unknown;
-} | null);
 export type ConfirmMerchantAgreementEvidence200Data = {
-    agreement: ConfirmMerchantAgreementEvidence200DataAgreement;
+    agreement: MerchantAgreement | null;
 };
 export type ConfirmMerchantAgreementEvidence200 = {
     data: ConfirmMerchantAgreementEvidence200Data;

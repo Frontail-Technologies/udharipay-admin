@@ -44,9 +44,6 @@ export interface SubscriptionInvoice {
     createdAt: string;
     updatedAt: string;
 }
-export type MerchantSubscriptionActivationInvoice = SubscriptionInvoice & ({
-    [key: string]: unknown;
-} | null);
 export type MerchantSubscriptionLatestPayment = {
     status: string;
     amountPaise: MoneyPaise;
@@ -66,7 +63,7 @@ export interface MerchantSubscription {
     currentPeriodEnd: string;
     nextBillingDate: string | null;
     autoPayStatus: SubscriptionAutopayStatus;
-    activationInvoice: MerchantSubscriptionActivationInvoice;
+    activationInvoice: SubscriptionInvoice | null;
     latestPayment: MerchantSubscriptionLatestPayment;
     createdAt: string;
     updatedAt: string;
@@ -170,20 +167,14 @@ export const RequestSubscriptionAutopayBodyMethod = {
 export type RequestSubscriptionAutopayBody = {
     method: RequestSubscriptionAutopayBodyMethod;
 };
-export type RequestSubscriptionAutopay201DataAutopay = SubscriptionAutopay & ({
-    [key: string]: unknown;
-} | null);
 export type RequestSubscriptionAutopay201Data = {
-    autopay: RequestSubscriptionAutopay201DataAutopay;
+    autopay: SubscriptionAutopay | null;
 };
 export type RequestSubscriptionAutopay201 = {
     data: RequestSubscriptionAutopay201Data;
 };
-export type GetSubscriptionAutopay200DataAutopay = SubscriptionAutopay & ({
-    [key: string]: unknown;
-} | null);
 export type GetSubscriptionAutopay200Data = {
-    autopay: GetSubscriptionAutopay200DataAutopay;
+    autopay: SubscriptionAutopay | null;
 };
 export type GetSubscriptionAutopay200 = {
     data: GetSubscriptionAutopay200Data;

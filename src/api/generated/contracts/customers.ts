@@ -184,7 +184,7 @@ export type GetCustomerIdentity200 = {
 };
 export type SetCustomerIdentityBody = {
     pan?: string;
-    idType?: IdentityDocumentType | null;
+    idType?: IdentityDocumentType;
     idReference?: string;
 };
 export type SetCustomerIdentity200 = {
