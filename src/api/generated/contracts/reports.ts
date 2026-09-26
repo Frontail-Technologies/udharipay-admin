@@ -39,6 +39,8 @@ export interface PortfolioSummary {
     installmentsDueMonth: number;
     installmentsOverdue: number;
     failedPaymentsMonth: number;
+    newMerchantsMonth: number;
+    openInstallmentCount: number;
 }
 export type CanonicalReportPeriodTimeZone = typeof CanonicalReportPeriodTimeZone[keyof typeof CanonicalReportPeriodTimeZone];
 export const CanonicalReportPeriodTimeZone = {
