@@ -21,31 +21,33 @@ Application code must not import Axios directly. Generated operations use `src/a
 
 Integrated domains use `src/features/<domain>/hooks` for TanStack Query state, query keys, URL-backed list state, cache invalidation, and mutation orchestration. Domain metadata and option sets live under `src/features/<domain>/utils`, while domain UI lives under `src/features/<domain>/components`. Components retain temporary form, dialog, selection, and tab state.
 
-Integrated Customer, Plan, Payment, and Mandate domains follow the same ownership structure. Mandate hooks own customer-scoped lists, detail, attempt history, and cursor state. Mandate attempts remain provider execution evidence and are never treated as canonical Payments.
+Customer, Plan, Payment, and Mandate domains follow the same ownership structure. Mandate hooks own customer-scoped lists, detail, attempt history, and cursor state. Mandate attempts remain provider execution evidence and are never treated as canonical Payments.
 
 ## Integration inventory
 
-| Page/domain | Current source | Backend endpoint(s) | Generated operation(s) | Feature hook / mutation | Status |
-| --- | --- | --- | --- | --- | --- |
-| `/dashboard` | Demo aggregates | Existing report endpoints can supply cards; no dashboard API added | `getReport` | Future dashboard composition hook | Pending |
-| `/employees`, detail | API | `/employees`, `/employees/{employeeId}` | Employee list/detail/create/update | `useEmployees`, `useEmployee`, Employee mutations | Integrated |
-| `/merchants`, detail | API | `/merchants`, `/merchants/{merchantId}`, `/assignment` | Merchant list/detail/create/update/assignment operations | `useMerchants`, `useMerchant`, Merchant mutations | Integrated for Merchant-owned contracts |
-| `/customers`, detail | API | Merchant-scoped customer list/create and customer detail/update | Customer list/detail/create/update operations | `useCustomers`, `useCustomer`, Customer mutations | Integrated for Customer-owned contracts |
-| `/plans`, detail | API | Customer-scoped plan list/create and plan detail | `listPlans`, `createPlan`, `getPlan` | `usePlans`, `usePlan`, `useCreatePlan` | Integrated for Plan and Installment contracts |
-| Payment panels, detail | API | Plan-scoped payment list and payment detail | `listPlanPayments`, `getPayment` | `usePayments`, `usePayment`, `usePlanPaymentHistory` | Integrated for Payment ledger visibility |
-| `/mandates`, detail | API | Customer-scoped mandate list, detail, and attempts | `listCustomerMandates`, `getMandate`, `listMandateAttempts` | `useMandates`, `useMandate`, `useMandateAttempts` | Integrated for read-only Mandate visibility |
-| `/collections` | API | Canonical collection queue and installment follow-ups | `listCollectionQueue`, `listFollowUps`, `createFollowUp` | `useCollectionDirectory`, `useFollowUpHistory`, `useCreateFollowUp` | Integrated for queue and follow-up operations |
-| `/kyc`, detail | API | KYC queue/detail, private document upload/view, submit and decision workflows | KYC operations | `useKycDirectory`, `useSubjectKyc`, upload and decision hooks | Integrated for KYC review and private documents |
-| `/subscriptions`, detail | Demo data | Merchant subscription and invoice endpoints | Billing operations | Subscription/invoice hooks | Pending |
-| `/reports` | Demo report modules | Report data and binary export | `useGetReport`, `exportReport` | Report filters/export hook | Pending |
-| `/events` | Demo audit/event stores | `/audit-events`, `/audit-events/{auditEventId}` | Audit operations | Audit list/detail hooks | Pending |
-| `/settings` | Local Admin settings store | No matching backend settings API | None | Keep local until a real contract exists | Backend gap |
-| `/login` and protected layout | API | Admin login, refresh, `/auth/me`, logout | Generated Auth hooks | `AuthProvider`, `AdminAuthGuard` | Integrated |
-| Razorpay provider routes | Not used by Admin | Order, verify, webhook | Generated Razorpay operations | None; checkout is outside Admin scope | Documented only |
+| Page/domain | Backend endpoint(s) | Generated operation(s) | Feature hook / mutation | Status |
+| --- | --- | --- | --- | --- |
+| `/dashboard` | Report endpoints + collection queue + KYC queue + billing invoices + audit events | `getReport`, `listCollectionQueue`, `listKycReviews`, `listBillingInvoices`, `listAuditEvents` | `useDashboard` (composes `useReport` + attention queries + activity query) | Integrated |
+| `/employees`, detail | `/employees`, `/employees/{employeeId}` | Employee list/detail/create/update | `useEmployees`, `useEmployee`, Employee mutations | Integrated |
+| `/merchants`, detail | `/merchants`, `/merchants/{merchantId}`, assignment and provisioning | Merchant list/detail/create/update/assignment/provision | `useMerchants`, `useMerchant`, Merchant mutations | Integrated |
+| `/customers`, detail | Merchant-scoped customer list/create and customer detail/update | Customer list/detail/create/update | `useCustomers`, `useCustomer`, Customer mutations | Integrated |
+| `/plans`, detail | Customer-scoped plan list/create and plan detail | `listPlans`, `createPlan`, `getPlan` | `usePlans`, `usePlan`, `useCreatePlan` | Integrated |
+| `/payments/[paymentId]` detail | Plan-scoped payment list and payment detail | `listPlanPayments`, `getPayment` | `usePayments`, `usePayment`, `usePlanPaymentHistory` | Integrated (detail-only; no global payment list endpoint exists — see backend gaps) |
+| `/mandates`, detail | Customer-scoped mandate list, detail, and attempts | `listCustomerMandates`, `getMandate`, `listMandateAttempts` | `useMandates`, `useMandate`, `useMandateAttempts` | Integrated |
+| `/collections` | Canonical collection queue and installment follow-ups | `listCollectionQueue`, `listFollowUps`, `createFollowUp` | `useCollectionDirectory`, `useFollowUpHistory`, `useCreateFollowUp` | Integrated |
+| `/kyc`, detail | KYC queue/detail, private document upload/view, submit and decision workflows | KYC list/detail/create/upload/confirm/submit/approve/reject/resubmission | `useKycDirectory`, `useSubjectKyc`, upload and decision hooks | Integrated |
+| `/subscriptions`, detail | `/billing/invoices`, `/billing/invoices/{invoiceId}`, merchant subscription and invoice endpoints | `listBillingInvoices`, `getSubscriptionInvoice`, `getMerchantSubscription`, `listMerchantInvoices`, `createMerchantSubscription`, `getBillingSettings`, `listBillingPlans`, `updateBillingPlan`, `updateBillingSettings` | `useBillingDirectory`, `useMerchantSubscription`, billing mutations | Integrated |
+| `/reports` | `/reports/{kind}` report data and binary export | `getReport`, `exportReport` | `useReportDirectory`, `useReport`, export hooks | Integrated |
+| `/communications` | WhatsApp templates and announcement endpoints | Template and announcement CRUD, preview, recipient search, customer reminders | `useWhatsAppTemplates`, `useAnnouncements`, `useCreateAnnouncement`, template/reminder mutations | Integrated |
+| `/events` | `/audit-events`, `/audit-events/{auditEventId}` | `listAuditEvents`, `getAuditEvent` | `useAuditDirectory`, `useAuditEvent` | Integrated |
+| `/settings` | No matching backend settings API | None | Keep local until a real contract exists | Backend gap |
+| `/login` and protected layout | Admin login, refresh, `/auth/me`, logout | Generated Auth operations | `AuthProvider`, `AdminAuthGuard` | Integrated |
+| Razorpay provider routes | Not used by Admin | Order, verify, webhook | Generated Razorpay operations | Not applicable (checkout is outside Admin scope) |
 
-Merchant screens render only fields returned by Merchant endpoints. Customer, plan, collection, KYC, billing, and activity aggregates remain deferred to their domain integration phases because the Merchant contracts do not expose them.
+## Backend gaps
 
-Customer lists require explicit Merchant context, Plans and Mandates require explicit Customer context, and Payments require explicit Plan context. These screens do not fan out across parent resources. Mandate provider authorization and lifecycle mutations remain deferred; collection, KYC, and activity sections remain deferred.
+- **Global payment list**: no `GET /payments` endpoint exists. Payments are only accessible scoped to a plan (`listPlanPayments`). A standalone `/payments` list page and nav entry are intentionally absent — the detail view at `/payments/[paymentId]` is reached via Plan detail → Payment History tab. If a global payment list endpoint is added to the backend, add a `/payments` route and nav entry at that time.
+- **Settings**: no backend settings API. Admin settings remain local until a real contract exists.
 
 ## Regeneration
 

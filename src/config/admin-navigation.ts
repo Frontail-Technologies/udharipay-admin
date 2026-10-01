@@ -37,26 +37,31 @@ export const adminNavigation: AdminNavGroup[] = [
     items: [
       { label: "Merchants", href: "/merchants", icon: Store },
       { label: "Customers", href: "/customers", icon: Users },
-      { label: "Employees", href: "/employees", icon: UserCog },
       { label: "Udhaar Plans", href: "/plans", icon: Wallet },
       { label: "Collections", href: "/collections", icon: Landmark },
-    ],
-  },
-  {
-    label: "Payments",
-    items: [
       { label: "Mandates", href: "/mandates", icon: CreditCard },
-      { label: "Subscriptions", href: "/subscriptions", icon: RefreshCcw },
     ],
   },
   {
-    label: "Compliance",
+    label: "Access",
+    items: [
+      { label: "Employees", href: "/employees", icon: UserCog },
+    ],
+  },
+  {
+    label: "Review",
     items: [
       { label: "KYC & Verification", href: "/kyc", icon: ShieldCheck },
     ],
   },
   {
-    label: "Insights",
+    label: "Billing",
+    items: [
+      { label: "Subscriptions", href: "/subscriptions", icon: RefreshCcw },
+    ],
+  },
+  {
+    label: "Reports",
     items: [{ label: "Reports", href: "/reports", icon: BarChart3 }],
   },
   {
