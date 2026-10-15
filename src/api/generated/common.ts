@@ -51,6 +51,7 @@ export const KycDocumentType = {
     other_business_proof: 'other_business_proof',
     cancelled_cheque: 'cancelled_cheque',
     identity_proof: 'identity_proof',
+    identity_proof_back: 'identity_proof_back',
     address_proof: 'address_proof',
     customer_photo: 'customer_photo',
     employee_photo: 'employee_photo',

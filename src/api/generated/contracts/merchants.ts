@@ -7,7 +7,6 @@ export const MerchantStatus = {
     payment_due: 'payment_due',
     grace: 'grace',
     restricted: 'restricted',
-    suspended: 'suspended',
 } as const;
 export interface MerchantListItem {
     id: string;

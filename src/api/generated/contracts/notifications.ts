@@ -59,6 +59,12 @@ export type ReadAllNotifications200 = {
 export type ReadNotification200 = {
     data: Notification;
 };
+export type DeleteNotification200Data = {
+    deleted: number;
+};
+export type DeleteNotification200 = {
+    data: DeleteNotification200Data;
+};
 export type RegisterPushDeviceBodyPlatform = typeof RegisterPushDeviceBodyPlatform[keyof typeof RegisterPushDeviceBodyPlatform];
 export const RegisterPushDeviceBodyPlatform = {
     ios: 'ios',

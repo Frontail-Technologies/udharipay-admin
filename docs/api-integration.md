@@ -32,7 +32,8 @@ Customer, Plan, Payment, and Mandate domains follow the same ownership structure
 | `/merchants`, detail | `/merchants`, `/merchants/{merchantId}`, assignment and provisioning | Merchant list/detail/create/update/assignment/provision | `useMerchants`, `useMerchant`, Merchant mutations | Integrated |
 | `/customers`, detail | Merchant-scoped customer list/create and customer detail/update | Customer list/detail/create/update | `useCustomers`, `useCustomer`, Customer mutations | Integrated |
 | `/plans`, detail | Customer-scoped plan list/create and plan detail | `listPlans`, `createPlan`, `getPlan` | `usePlans`, `usePlan`, `useCreatePlan` | Integrated |
-| `/payments/[paymentId]` detail | Plan-scoped payment list and payment detail | `listPlanPayments`, `getPayment` | `usePayments`, `usePayment`, `usePlanPaymentHistory` | Integrated (detail-only; no global payment list endpoint exists — see backend gaps) |
+| `/payments` | Global payment list (UNION of customer_collection + activation_fee + merchant_subscription) | `listAllPayments` | `useGlobalPaymentsDirectory`, `useAllPayments` | Integrated |
+| `/payments/[paymentId]` detail | Plan-scoped payment list and payment detail | `listPlanPayments`, `getPayment` | `usePayments`, `usePayment`, `usePlanPaymentHistory` | Integrated |
 | `/mandates`, detail | Customer-scoped mandate list, detail, and attempts | `listCustomerMandates`, `getMandate`, `listMandateAttempts` | `useMandates`, `useMandate`, `useMandateAttempts` | Integrated |
 | `/collections` | Canonical collection queue and installment follow-ups | `listCollectionQueue`, `listFollowUps`, `createFollowUp` | `useCollectionDirectory`, `useFollowUpHistory`, `useCreateFollowUp` | Integrated |
 | `/kyc`, detail | KYC queue/detail, private document upload/view, submit and decision workflows | KYC list/detail/create/upload/confirm/submit/approve/reject/resubmission | `useKycDirectory`, `useSubjectKyc`, upload and decision hooks | Integrated |
@@ -41,12 +42,16 @@ Customer, Plan, Payment, and Mandate domains follow the same ownership structure
 | `/communications` | WhatsApp templates and announcement endpoints | Template and announcement CRUD, preview, recipient search, customer reminders | `useWhatsAppTemplates`, `useAnnouncements`, `useCreateAnnouncement`, template/reminder mutations | Integrated |
 | `/events` | `/audit-events`, `/audit-events/{auditEventId}` | `listAuditEvents`, `getAuditEvent` | `useAuditDirectory`, `useAuditEvent` | Integrated |
 | `/settings` | No matching backend settings API | None | Keep local until a real contract exists | Backend gap |
+| `/master-data` | Master data CRUD: business categories, bank account types, customer ID types, mandate methods, countries | `listBusinessCategories`, `listBankAccountTypes`, `listCustomerIdTypes`, `listMandateMethods`, `listCountries`, and patch operations | `useBusinessCategories`, `useBankAccountTypes`, `useCustomerIdTypes`, `useMandateMethods`, `useCountries`, and update mutations | Integrated |
 | `/login` and protected layout | Admin login, refresh, `/auth/me`, logout | Generated Auth operations | `AuthProvider`, `AdminAuthGuard` | Integrated |
 | Razorpay provider routes | Not used by Admin | Order, verify, webhook | Generated Razorpay operations | Not applicable (checkout is outside Admin scope) |
 
+## Geography Master Data
+
+The `/master-data` feature uses the backend-managed Country -> State -> City hierarchy. States and cities are filtered by their parent selectors; city creation/update is admin-only, while normal reads return active records.
+
 ## Backend gaps
 
-- **Global payment list**: no `GET /payments` endpoint exists. Payments are only accessible scoped to a plan (`listPlanPayments`). A standalone `/payments` list page and nav entry are intentionally absent — the detail view at `/payments/[paymentId]` is reached via Plan detail → Payment History tab. If a global payment list endpoint is added to the backend, add a `/payments` route and nav entry at that time.
 - **Settings**: no backend settings API. Admin settings remain local until a real contract exists.
 
 ## Regeneration

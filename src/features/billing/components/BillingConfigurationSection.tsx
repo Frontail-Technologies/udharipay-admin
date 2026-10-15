@@ -17,7 +17,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { formatPaiseInr, rupeesToPaise } from "@/lib/format";
 
 export function BillingConfigurationSection() {
-  return <div className="flex flex-col gap-4">
+  return <div className="grid gap-5 lg:grid-cols-2 lg:items-start">
     <ActivationFeeSection />
     <BillingPlansSection />
   </div>;
@@ -31,8 +31,8 @@ function ActivationFeeSection() {
   const [editing, setEditing] = useState(false);
   const { register, handleSubmit, reset, setError, formState: { errors } } = useForm<FeeValues>({ defaultValues: { activationFeeRupees: "", customerActivationFeeRupees: "" } });
 
-  if (query.isPending) return <Skeleton className="h-24 w-full max-w-xl" />;
-  if (query.isError) return <div className="max-w-xl rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-6 text-center text-[13px] text-destructive">{normalizeApiError(query.error).message}</div>;
+  if (query.isPending) return <Skeleton className="h-24 w-full" />;
+  if (query.isError) return <div className="rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-6 text-center text-[13px] text-destructive">{normalizeApiError(query.error).message}</div>;
 
   const settings = query.data.data;
   const startEdit = () => { reset({ activationFeeRupees: rupeesFromPaise(settings.activationFeePaise), customerActivationFeeRupees: rupeesFromPaise(settings.customerActivationFeePaise) }); setEditing(true); };
@@ -44,7 +44,7 @@ function ActivationFeeSection() {
     try { await mutation.mutateAsync({ activationFeePaise, customerActivationFeePaise }); setEditing(false); } catch (error) { const result = applyApiFormErrors(error, setError); if (!result.applied) toast.error(result.error.message); }
   };
 
-  return <EditableDetailSection title="Activation Fees" editAriaLabel="Edit Activation Fee" editing={editing} isSaving={mutation.isPending} onEdit={startEdit} onCancel={() => setEditing(false)} formId="activation-fee-form" className="max-w-xl">
+  return <EditableDetailSection title="Activation Fees" editAriaLabel="Edit Activation Fee" editing={editing} isSaving={mutation.isPending} onEdit={startEdit} onCancel={() => setEditing(false)} formId="activation-fee-form">
     {editing ? <form id="activation-fee-form" onSubmit={handleSubmit(submit)} className="flex flex-col gap-2">
       <FormField label="Activation Fee (₹)" htmlFor="activation-fee-input" error={errors.activationFeeRupees?.message}><Input id="activation-fee-input" inputMode="decimal" placeholder="499.00" {...register("activationFeeRupees", { required: "Activation fee is required" })} /></FormField>
       <FormField label="Customer Activation Fee (₹)" htmlFor="customer-activation-fee-input" error={errors.customerActivationFeeRupees?.message}><Input id="customer-activation-fee-input" inputMode="decimal" placeholder="0" {...register("customerActivationFeeRupees", { required: "Customer activation fee is required" })} /></FormField>
@@ -54,11 +54,11 @@ function ActivationFeeSection() {
 
 function BillingPlansSection() {
   const query = useBillingPlans();
-  if (query.isPending) return <Skeleton className="h-52 w-full max-w-xl" />;
-  if (query.isError) return <div className="max-w-xl rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-6 text-center text-[13px] text-destructive">{normalizeApiError(query.error).message}</div>;
+  if (query.isPending) return <Skeleton className="h-52 w-full" />;
+  if (query.isError) return <div className="rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-6 text-center text-[13px] text-destructive">{normalizeApiError(query.error).message}</div>;
 
   const plans = query.data.data.items;
-  return <div className="flex max-w-xl flex-col gap-3">
+  return <div className="flex flex-col gap-3">
     <h3 className="text-[13.5px] font-semibold text-text-primary">Subscription Plans</h3>
     {plans.map((plan) => <BillingPlanCard key={plan.code} plan={plan} />)}
   </div>;

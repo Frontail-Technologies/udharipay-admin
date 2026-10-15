@@ -1,4 +1,4 @@
-import type { GetUnreadNotificationCount200, ListNotifications200, ListNotificationsParams, ReadAllNotifications200, ReadNotification200, RegisterPushDevice201, RegisterPushDeviceBody, UnregisterPushDevice200 } from "./contracts/notifications";
+import type { DeleteNotification200, GetUnreadNotificationCount200, ListNotifications200, ListNotificationsParams, ReadAllNotifications200, ReadNotification200, RegisterPushDevice201, RegisterPushDeviceBody, UnregisterPushDevice200 } from "./contracts/notifications";
 import { apiClient, type ApiRequestOptions } from "../http/client";
 export const listNotifications = (params?: ListNotificationsParams, options?: ApiRequestOptions) => {
     return apiClient<ListNotifications200>({ url: `/api/v1/notifications`, method: 'GET',
@@ -15,6 +15,10 @@ export const readAllNotifications = (options?: ApiRequestOptions) => {
 };
 export const readNotification = (notificationId: string, options?: ApiRequestOptions) => {
     return apiClient<ReadNotification200>({ url: `/api/v1/notifications/${notificationId}/read`, method: 'PATCH'
+    }, options);
+};
+export const deleteNotification = (notificationId: string, options?: ApiRequestOptions) => {
+    return apiClient<DeleteNotification200>({ url: `/api/v1/notifications/${notificationId}`, method: 'DELETE'
     }, options);
 };
 export const registerPushDevice = (registerPushDeviceBody?: RegisterPushDeviceBody, options?: ApiRequestOptions) => {

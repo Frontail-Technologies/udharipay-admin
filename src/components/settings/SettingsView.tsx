@@ -5,7 +5,7 @@ import { SystemInfoSection } from "@/components/settings/SystemInfoSection";
 
 export function SettingsView() {
   return (
-    <div className="mx-auto flex max-w-3xl min-w-0 flex-col gap-5">
+    <div className="flex w-full min-w-0 flex-col gap-5">
       <div className="min-w-0">
         <h1 className="text-[24px] font-semibold tracking-tight text-text-primary">Settings</h1>
         <p className="mt-1 text-[13px] leading-relaxed text-text-secondary">Platform and admin configuration.</p>

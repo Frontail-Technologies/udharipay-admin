@@ -33,7 +33,8 @@ export const kycDocumentLabels = {
   shop_photo: "Shop Photo",
   other_business_proof: "Other Business Proof",
   cancelled_cheque: "Cancelled Cheque",
-  identity_proof: "Identity Proof",
+  identity_proof: "Identity Proof (Front)",
+  identity_proof_back: "Identity Proof (Back)",
   address_proof: "Address Proof",
   customer_photo: "Customer Photo",
   employee_photo: "Employee Photo",
@@ -41,6 +42,6 @@ export const kycDocumentLabels = {
 
 export const kycDocumentPolicy: Record<KycSubjectType, { type: keyof typeof KycDocumentType; required: boolean }[]> = {
   merchant: [{ type: "pan", required: true }, { type: "business_registration", required: true }, { type: "shop_photo", required: true }, { type: "cancelled_cheque", required: true }, { type: "other_business_proof", required: false }],
-  customer: [{ type: "identity_proof", required: true }, { type: "address_proof", required: false }, { type: "customer_photo", required: false }],
-  employee: [{ type: "identity_proof", required: true }, { type: "address_proof", required: false }, { type: "pan", required: false }, { type: "employee_photo", required: false }],
+  customer: [{ type: "identity_proof", required: true }, { type: "identity_proof_back", required: false }, { type: "address_proof", required: false }, { type: "customer_photo", required: false }],
+  employee: [{ type: "identity_proof", required: true }, { type: "identity_proof_back", required: false }, { type: "address_proof", required: false }, { type: "pan", required: false }, { type: "employee_photo", required: false }],
 };

@@ -13,6 +13,8 @@ Statuses:
 | `/login` | Admin Login | DONE |
 | `(admin)` layout | AdminAuthGuard + AdminShell | DONE |
 
+Master Data includes Geography tabs for Countries, States, and Cities. State and City forms use parent IDs and active/inactive status controls.
+
 ## Overview
 
 | Route | Screen | Status |
@@ -33,7 +35,7 @@ Statuses:
 | `/collections` | Collections — collection queue with due/overdue/timing state, follow-up history, add follow-up | DONE |
 | `/mandates` | Mandate List — server-side search + customer/merchant/method/status filter, cursor pagination | DONE |
 | `/mandates/[mandateId]` | Mandate Detail — method, status, provider reference, attempt history | DONE |
-| `/payments` list | Global Payment List | GAP — backend has no `GET /payments` endpoint; payments are plan-scoped only |
+| `/payments` | Global Payment List — type + status filters, cursor pagination, row routing to detail or subscription | DONE |
 
 ## Access
 
@@ -70,9 +72,14 @@ Statuses:
 | `/events` | Events / Audit Log — server-side actor + action + entity + date-range filters, cursor pagination, detail sheet | DONE |
 | `/settings` | Settings — billing configuration (activation fee, subscription plans, grace period), system info | DONE (local; no backend settings API yet) |
 
+## Configuration
+
+| Route | Screen | Status |
+|---|---|---|
+| `/master-data` | Master Data — tabbed management of Business Categories, Bank Account Types, Customer ID Types, Mandate Methods, Countries; inline name/sortOrder/active editing; code is read-only | DONE |
+
 ## Notes
 
 - All implemented screens use real TanStack Query hooks against the generated API client. No demo data, mock stores, or legacy fixtures exist in any production code path (enforced by `structuralFixtureAudit.test.ts`).
 - Admin `SessionContext` exposes only `SafeUser` (id, role, status) — no name field. The "Good morning, Admin" greeting is intentional.
 - The global search bar in AdminTopbar is a visual placeholder with no current wiring; no global search backend endpoint exists yet.
-- Master Data management (business categories, geography, KYC types, mandate methods) is intentionally deferred to the next phase. The backend and admin both lack master-data CRUD endpoints today.

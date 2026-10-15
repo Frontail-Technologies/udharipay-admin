@@ -48,6 +48,28 @@ export type PaymentDetailAllocationsItem = {
 export type PaymentDetail = PaymentListItem & {
     allocations: PaymentDetailAllocationsItem[];
 };
+export type GlobalPaymentType = typeof GlobalPaymentType[keyof typeof GlobalPaymentType];
+export const GlobalPaymentType = {
+    customer_collection: 'customer_collection',
+    merchant_activation_fee: 'merchant_activation_fee',
+    merchant_subscription: 'merchant_subscription',
+} as const;
+export interface GlobalPaymentListItem {
+    id: string;
+    type: GlobalPaymentType;
+    amountPaise: MoneyPaise;
+    status: string;
+    merchantId: string;
+    customerId: string | null;
+    planId: string | null;
+    subscriptionId: string | null;
+    method: string | null;
+    source: string;
+    provider: string | null;
+    providerReference: string | null;
+    paidAt: string | null;
+    createdAt: string;
+}
 export type ListPlanPaymentsParams = {
     limit?: number;
     cursor?: string;
@@ -61,4 +83,27 @@ export type ListPlanPayments200 = {
 };
 export type GetPayment200 = {
     data: PaymentDetail;
+};
+export type ListAllPaymentsParams = {
+    limit?: number;
+    cursor?: string;
+    type?: ListAllPaymentsType;
+    status?: string;
+    merchantId?: string;
+    customerId?: string;
+    from?: string;
+    to?: string;
+};
+export type ListAllPaymentsType = typeof ListAllPaymentsType[keyof typeof ListAllPaymentsType];
+export const ListAllPaymentsType = {
+    customer_collection: 'customer_collection',
+    merchant_activation_fee: 'merchant_activation_fee',
+    merchant_subscription: 'merchant_subscription',
+} as const;
+export type ListAllPayments200Data = {
+    items: GlobalPaymentListItem[];
+    pagination: CursorPagination;
+};
+export type ListAllPayments200 = {
+    data: ListAllPayments200Data;
 };

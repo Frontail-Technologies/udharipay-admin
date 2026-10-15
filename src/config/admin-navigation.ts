@@ -13,6 +13,8 @@ import {
   Activity,
   Settings,
   Megaphone,
+  Receipt,
+  Database,
 } from "lucide-react";
 
 export type AdminNavItem = {
@@ -40,6 +42,7 @@ export const adminNavigation: AdminNavGroup[] = [
       { label: "Udhaar Plans", href: "/plans", icon: Wallet },
       { label: "Collections", href: "/collections", icon: Landmark },
       { label: "Mandates", href: "/mandates", icon: CreditCard },
+      { label: "Payments", href: "/payments", icon: Receipt },
     ],
   },
   {
@@ -70,6 +73,12 @@ export const adminNavigation: AdminNavGroup[] = [
       { label: "Communications", href: "/communications", icon: Megaphone },
       { label: "Events", href: "/events", icon: Activity },
       { label: "Settings", href: "/settings", icon: Settings },
+    ],
+  },
+  {
+    label: "Configuration",
+    items: [
+      { label: "Master Data", href: "/master-data", icon: Database },
     ],
   },
 ];
