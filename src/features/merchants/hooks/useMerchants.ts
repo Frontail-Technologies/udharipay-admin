@@ -102,11 +102,11 @@ export function useChangeMerchantStatus() {
   const update = useUpdateMerchant();
   const changeStatus = async (merchant: Merchant, status: MerchantStatus) => {
     if (merchant.status === status || update.isPending) return false;
-    if (status === "restricted" || status === "suspended") {
+    if (status === "restricted") {
       const approved = await confirm({
-        title: status === "suspended" ? "Suspend merchant?" : "Restrict merchant?",
+        title: "Restrict merchant?",
         description: `${merchant.businessName} will move to ${status} status. Merchant account status remains separate.`,
-        confirmLabel: status === "suspended" ? "Suspend" : "Restrict",
+        confirmLabel: "Restrict",
         destructive: true,
       });
       if (!approved) return false;

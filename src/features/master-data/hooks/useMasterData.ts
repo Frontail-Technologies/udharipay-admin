@@ -5,7 +5,6 @@ import { toast } from "sonner";
 import {
   listBankAccountTypes,
   listBusinessCategories,
-  listCities,
   listCountries,
   listCustomerIdTypes,
   listMandateMethods,
@@ -16,9 +15,7 @@ import {
   updateCustomerIdType,
   updateMandateMethod,
   updateState,
-  createCity,
   createState,
-  updateCity,
 } from "@/api/generated/master-data";
 import type {
   UpdateBankAccountTypeBody,
@@ -27,16 +24,13 @@ import type {
   UpdateCustomerIdTypeBody,
   UpdateMandateMethodBody,
   UpdateStateBody,
-  CreateCityBody,
   CreateStateBody,
-  UpdateCityBody,
 } from "@/api/generated/contracts/master-data";
 
 export const masterDataKeys = {
   all: ["master-data"] as const,
   countries: () => [...masterDataKeys.all, "countries"] as const,
   states: (countryId: string) => [...masterDataKeys.all, "states", countryId] as const,
-  cities: (stateId: string) => [...masterDataKeys.all, "cities", stateId] as const,
   businessCategories: () => [...masterDataKeys.all, "business-categories"] as const,
   bankAccountTypes: () => [...masterDataKeys.all, "bank-account-types"] as const,
   customerIdTypes: () => [...masterDataKeys.all, "customer-id-types"] as const,
@@ -57,14 +51,6 @@ export function useStates(countryId: string) {
     queryKey: masterDataKeys.states(countryId),
     queryFn: ({ signal }) => listStates(countryId, { ...ALL_PARAMS, signal }),
     enabled: Boolean(countryId),
-  });
-}
-
-export function useCities(stateId: string) {
-  return useQuery({
-    queryKey: masterDataKeys.cities(stateId),
-    queryFn: ({ signal }) => listCities(stateId, { ...ALL_PARAMS, signal }),
-    enabled: Boolean(stateId),
   });
 }
 
@@ -123,22 +109,6 @@ export function useCreateState() {
   return useMutation({
     mutationFn: (body: CreateStateBody) => createState(body),
     onSuccess: async (_, body) => { await queryClient.invalidateQueries({ queryKey: masterDataKeys.states(body.countryId) }); toast.success("State created"); }
-  });
-}
-
-export function useCreateCity() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (body: CreateCityBody) => createCity(body),
-    onSuccess: async (_, body) => { await queryClient.invalidateQueries({ queryKey: masterDataKeys.cities(body.stateId) }); toast.success("City created"); }
-  });
-}
-
-export function useUpdateCity() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: ({ id, body }: { id: string; body: UpdateCityBody }) => updateCity(id, body),
-    onSuccess: async () => { await queryClient.invalidateQueries({ queryKey: masterDataKeys.all }); toast.success("City updated"); }
   });
 }
 

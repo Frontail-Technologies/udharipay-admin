@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { EntityTabs } from "@/components/entity/EntityTabs";
 import { MasterDataTable } from "./MasterDataTable";
-import { CitiesPanel, StatesPanel } from "./GeographyPanel";
+import { StatesPanel } from "./GeographyPanel";
 import {
   useBankAccountTypes,
   useBusinessCategories,
@@ -25,7 +25,6 @@ const TABS = [
   { value: "mandate-methods", label: "Mandate Methods" },
   { value: "countries", label: "Countries" },
   { value: "states", label: "States" },
-  { value: "cities", label: "Cities" },
 ];
 
 export function MasterDataView() {
@@ -88,7 +87,6 @@ export function MasterDataView() {
       />
     ),
     "states": <StatesPanel />,
-    "cities": <CitiesPanel />,
   };
 
   return (

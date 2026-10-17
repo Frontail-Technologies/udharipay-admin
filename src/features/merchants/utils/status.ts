@@ -8,5 +8,4 @@ export const merchantStatusTone: Record<MerchantStatus, StatusBadgeTone> = {
   payment_due: "warning",
   grace: "warning",
   restricted: "error",
-  suspended: "error",
 };

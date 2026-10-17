@@ -112,7 +112,7 @@ describe("Merchant API hooks", () => {
     confirm.mockResolvedValueOnce(false).mockResolvedValueOnce(true);
     const { wrapper } = setup();
     const { result } = renderHook(() => useChangeMerchantStatus(), { wrapper });
-    await act(() => result.current.changeStatus(merchant, "suspended"));
+    await act(() => result.current.changeStatus(merchant, "restricted"));
     expect(api.updateMerchant).not.toHaveBeenCalled();
     await act(() => result.current.changeStatus(merchant, "restricted"));
     expect(api.updateMerchant).toHaveBeenCalledWith(merchant.id, { status: "restricted" });
