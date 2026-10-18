@@ -136,6 +136,9 @@
   --sidebar-accent-foreground: var(--primary);
   --sidebar-border: var(--border-strong); /* the sidebar's right edge is a major structural boundary — use the stronger border */
   --sidebar-ring: var(--primary);
+  --login-visual: #121015;
+  --login-grid: rgba(255, 255, 255, 0.055);
+  --login-accent: #c04be6;
 }
 
 .dark {
@@ -195,6 +198,9 @@
   --sidebar-accent-foreground: var(--primary);
   --sidebar-border: var(--border);
   --sidebar-ring: var(--primary);
+  --login-visual: #0d0c10;
+  --login-grid: rgba(255, 255, 255, 0.06);
+  --login-accent: #c04be6;
 }
 
 @layer base {
