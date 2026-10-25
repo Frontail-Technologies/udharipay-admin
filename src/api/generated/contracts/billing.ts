@@ -44,12 +44,20 @@ export type MerchantSubscriptionLatestPayment = {
     reference: string | null;
     attemptedAt: string;
 } | null;
+export const SubscriptionTermMonths = { NUMBER_1: 1,
+    NUMBER_3: 3,
+    NUMBER_6: 6,
+    NUMBER_12: 12,
+} as const;
+export type SubscriptionTermMonths = typeof SubscriptionTermMonths[keyof typeof SubscriptionTermMonths];
 export interface MerchantSubscription {
     id: string;
     merchantId: string;
     planCode: string;
     planName: string;
     monthlyAmountPaise: MoneyPaise;
+    termMonths: SubscriptionTermMonths;
+    termEndDate: string;
     status: SubscriptionStatus;
     entitlement: boolean;
     currentPeriodStart: string;
@@ -115,6 +123,7 @@ export interface SubscriptionDirectoryItem {
 export type CreateMerchantSubscriptionBody = {
     planCode: string;
     startsOn: string;
+    termMonths?: SubscriptionTermMonths;
 };
 export type CreateMerchantSubscription201 = {
     data: MerchantSubscription;

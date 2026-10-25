@@ -21,7 +21,7 @@ describe("CreateSubscriptionDialog", () => {
   it("only offers active canonical plans, never an inactive one", () => {
     render(<CreateSubscriptionDialog merchantId="merchant-id" />);
     fireEvent.click(screen.getByRole("button", { name: "Create Subscription" }));
-    const trigger = screen.getByRole("combobox");
+    const trigger = screen.getByLabelText("Plan");
     expect(trigger.textContent).toContain("Standard");
     expect(trigger.textContent).toContain("₹3,499");
     expect(trigger.textContent).not.toContain("Legacy");
@@ -34,7 +34,7 @@ describe("CreateSubscriptionDialog", () => {
     const dialog = screen.getByRole("dialog");
     const submitButton = within(dialog).getByText("Create Subscription", { selector: "button" });
     fireEvent.click(submitButton);
-    await waitFor(() => expect(mutation.mutateAsync).toHaveBeenCalledWith({ merchantId: "merchant-id", input: { planCode: "standard", startsOn: "2026-02-01" } }));
+    await waitFor(() => expect(mutation.mutateAsync).toHaveBeenCalledWith({ merchantId: "merchant-id", input: { planCode: "standard", startsOn: "2026-02-01", termMonths: 1 } }));
   });
 
   it("blocks creation and explains when no active plan exists", () => {

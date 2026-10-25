@@ -30,6 +30,8 @@ export function MerchantBillingSection({ merchantId }: { merchantId: string }) {
       <div className="grid gap-x-6 sm:grid-cols-2">
         <KeyValueRow label="Plan" value={subscription.planName} />
         <KeyValueRow label="Monthly Amount" value={formatPaiseInr(subscription.monthlyAmountPaise)} />
+        <KeyValueRow label="Duration" value={`${subscription.termMonths} month${subscription.termMonths === 1 ? "" : "s"}`} />
+        <KeyValueRow label="Term End" value={formatDate(subscription.termEndDate)} />
         <KeyValueRow label="Entitlement" value={subscription.entitlement ? "Active" : "Not Entitled"} />
         <KeyValueRow label="Auto-Pay" value={<StatusBadge tone={autoPayStatusTone[subscription.autoPayStatus]}>{humanizeSnakeCase(subscription.autoPayStatus)}</StatusBadge>} />
         <KeyValueRow label="Current Period" value={`${formatDate(subscription.currentPeriodStart)} - ${formatDate(subscription.currentPeriodEnd)}`} />
