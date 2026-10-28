@@ -50,6 +50,12 @@ export const SubscriptionTermMonths = { NUMBER_1: 1,
     NUMBER_12: 12,
 } as const;
 export type SubscriptionTermMonths = typeof SubscriptionTermMonths[keyof typeof SubscriptionTermMonths];
+export const SubscriptionBillingCycleMonths = { NUMBER_1: 1,
+    NUMBER_3: 3,
+    NUMBER_6: 6,
+    NUMBER_12: 12,
+} as const;
+export type SubscriptionBillingCycleMonths = typeof SubscriptionBillingCycleMonths[keyof typeof SubscriptionBillingCycleMonths];
 export interface MerchantSubscription {
     id: string;
     merchantId: string;
@@ -57,6 +63,8 @@ export interface MerchantSubscription {
     planName: string;
     monthlyAmountPaise: MoneyPaise;
     termMonths: SubscriptionTermMonths;
+    billingCycleMonths: SubscriptionBillingCycleMonths;
+    cycleAmountPaise: MoneyPaise;
     termEndDate: string;
     status: SubscriptionStatus;
     entitlement: boolean;
@@ -124,6 +132,7 @@ export type CreateMerchantSubscriptionBody = {
     planCode: string;
     startsOn: string;
     termMonths?: SubscriptionTermMonths;
+    billingCycleMonths?: SubscriptionBillingCycleMonths;
 };
 export type CreateMerchantSubscription201 = {
     data: MerchantSubscription;

@@ -2,7 +2,7 @@
 
 import { normalizeApiError } from "@/api/http/errors";
 import { useMerchantSubscription } from "@/features/billing/hooks/useBilling";
-import { autoPayStatusTone, invoiceOperationalStatusTone, invoiceTypeLabels, subscriptionStatusTone } from "@/features/billing/utils/metadata";
+import { invoiceOperationalStatusTone, invoiceTypeLabels, subscriptionStatusTone } from "@/features/billing/utils/metadata";
 import { CreateSubscriptionDialog } from "@/features/billing/components/CreateSubscriptionDialog";
 import { MerchantInvoiceHistory } from "@/features/billing/components/MerchantInvoiceHistory";
 import { DetailSection } from "@/components/entity/DetailSection";
@@ -30,10 +30,9 @@ export function MerchantBillingSection({ merchantId }: { merchantId: string }) {
       <div className="grid gap-x-6 sm:grid-cols-2">
         <KeyValueRow label="Plan" value={subscription.planName} />
         <KeyValueRow label="Monthly Amount" value={formatPaiseInr(subscription.monthlyAmountPaise)} />
-        <KeyValueRow label="Duration" value={`${subscription.termMonths} month${subscription.termMonths === 1 ? "" : "s"}`} />
+        <KeyValueRow label="Billing cycle" value={subscription.billingCycleMonths === 1 ? "Monthly" : `Every ${subscription.billingCycleMonths} months`} />
         <KeyValueRow label="Term End" value={formatDate(subscription.termEndDate)} />
         <KeyValueRow label="Entitlement" value={subscription.entitlement ? "Active" : "Not Entitled"} />
-        <KeyValueRow label="Auto-Pay" value={<StatusBadge tone={autoPayStatusTone[subscription.autoPayStatus]}>{humanizeSnakeCase(subscription.autoPayStatus)}</StatusBadge>} />
         <KeyValueRow label="Current Period" value={`${formatDate(subscription.currentPeriodStart)} - ${formatDate(subscription.currentPeriodEnd)}`} />
         <KeyValueRow label="Next Billing Date" value={subscription.nextBillingDate ? formatDate(subscription.nextBillingDate) : "-"} />
       </div>

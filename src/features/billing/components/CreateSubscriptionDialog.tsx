@@ -31,7 +31,7 @@ export function CreateSubscriptionDialog({ merchantId }: { merchantId: string })
 
   const setDialogOpen = (next: boolean) => { if (mutation.isPending) return; setOpen(next); if (!next) reset(defaultValues); };
   const submit = async (values: CreateSubscriptionValues) => {
-    const input: CreateMerchantSubscriptionBody = { planCode: values.planCode, startsOn: values.startsOn, termMonths: values.termMonths };
+    const input: CreateMerchantSubscriptionBody = { planCode: values.planCode, startsOn: values.startsOn, termMonths: values.termMonths, billingCycleMonths: values.termMonths };
     try { await mutation.mutateAsync({ merchantId, input }); reset(defaultValues); setOpen(false); } catch (error) { const result = applyApiFormErrors(error, setError); if (!result.applied) toast.error(result.error.message); }
   };
 
@@ -43,7 +43,7 @@ export function CreateSubscriptionDialog({ merchantId }: { merchantId: string })
         : activePlans.length === 0 ? <p className="text-[13px] text-text-muted">No active billing plans are available. Activate a plan before creating a subscription.</p>
         : <form id="create-subscription-form" className="grid gap-3" onSubmit={handleSubmit(submit)}>
           <FormField label="Plan" htmlFor="subscription-plan" error={errors.planCode?.message}><Controller control={control} name="planCode" render={({ field }) => <Select value={field.value} onValueChange={field.onChange}><SelectTrigger id="subscription-plan" className="w-full"><SelectValue /></SelectTrigger><SelectContent>{activePlans.map((plan) => <SelectItem key={plan.code} value={plan.code}>{plan.name} — {formatPaiseInr(plan.monthlyAmountPaise)}/mo</SelectItem>)}</SelectContent></Select>} /></FormField>
-          <FormField label="Duration" htmlFor="subscription-duration" error={errors.termMonths?.message}><Controller control={control} name="termMonths" render={({ field }) => <Select value={String(field.value)} onValueChange={(value) => field.onChange(Number(value) as SubscriptionTermMonths)}><SelectTrigger id="subscription-duration" className="w-full"><SelectValue /></SelectTrigger><SelectContent>{[1, 3, 6, 12].map((months) => <SelectItem key={months} value={String(months)}>{months} month{months === 1 ? "" : "s"}</SelectItem>)}</SelectContent></Select>} /></FormField>
+          <FormField label="Billing cycle" htmlFor="subscription-duration" error={errors.termMonths?.message}><Controller control={control} name="termMonths" render={({ field }) => <Select value={String(field.value)} onValueChange={(value) => field.onChange(Number(value) as SubscriptionTermMonths)}><SelectTrigger id="subscription-duration" className="w-full"><SelectValue /></SelectTrigger><SelectContent>{[1, 3, 6, 12].map((months) => <SelectItem key={months} value={String(months)}>{months === 1 ? "Monthly" : `Every ${months} months`}</SelectItem>)}</SelectContent></Select>} /></FormField>
           <FormField label="Start Date" htmlFor="subscription-starts-on" error={errors.startsOn?.message}><Input id="subscription-starts-on" type="date" {...register("startsOn", { required: "Start date is required" })} /></FormField>
         </form>}
       <DialogFooter><Button type="button" variant="outline" disabled={mutation.isPending} onClick={() => setDialogOpen(false)}>Cancel</Button><Button type="submit" form="create-subscription-form" disabled={mutation.isPending || activePlans.length === 0 || plansQuery.isPending}>{mutation.isPending && <Loader2 className="size-4 animate-spin" />}Create Subscription</Button></DialogFooter>

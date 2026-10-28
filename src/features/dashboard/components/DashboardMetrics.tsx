@@ -1,7 +1,7 @@
 "use client";
 
 import type { LucideIcon } from "lucide-react";
-import { AlertTriangle, Banknote, CalendarClock, CreditCard, Store, Users, Wallet } from "lucide-react";
+import { AlertTriangle, IndianRupee, CalendarClock, CreditCard, Store, Users, Wallet } from "lucide-react";
 import { normalizeApiError } from "@/api/http/errors";
 import { formatReportValue } from "@/features/reports/utils/report-values";
 import { findMetric } from "@/features/dashboard/utils/metrics";
@@ -25,7 +25,7 @@ export function DashboardPrimaryMetrics({ dashboard }: { dashboard: ReturnType<t
     { label: "New Active Merchants", icon: Store, query: dashboard.merchantsReport, metricKey: "activeCount" },
     { label: "New Active Customers", icon: Users, query: dashboard.customersReport, metricKey: "activeCount" },
     { label: "Outstanding", icon: Wallet, query: dashboard.collectionsReport, metricKey: "outstandingPaise" },
-    { label: "Collected", icon: Banknote, query: dashboard.collectionsReport, metricKey: "collectedPaise" },
+    { label: "Collected", icon: IndianRupee, query: dashboard.collectionsReport, metricKey: "collectedPaise" },
   ];
   return <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 xl:grid-cols-4">
     {cards.map((card) => <MetricCard key={card.label} label={card.label} icon={card.icon} value={<CardValue query={card.query} metricKey={card.metricKey} />} />)}

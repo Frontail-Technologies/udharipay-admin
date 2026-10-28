@@ -34,7 +34,7 @@ describe("CreateSubscriptionDialog", () => {
     const dialog = screen.getByRole("dialog");
     const submitButton = within(dialog).getByText("Create Subscription", { selector: "button" });
     fireEvent.click(submitButton);
-    await waitFor(() => expect(mutation.mutateAsync).toHaveBeenCalledWith({ merchantId: "merchant-id", input: { planCode: "standard", startsOn: "2026-02-01", termMonths: 1 } }));
+    await waitFor(() => expect(mutation.mutateAsync).toHaveBeenCalledWith({ merchantId: "merchant-id", input: { planCode: "standard", startsOn: "2026-02-01", termMonths: 1, billingCycleMonths: 1 } }));
   });
 
   it("blocks creation and explains when no active plan exists", () => {
