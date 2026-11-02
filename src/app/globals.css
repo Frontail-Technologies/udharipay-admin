@@ -132,7 +132,7 @@
   --chart-3: var(--warning);
   --chart-4: var(--error);
   --chart-5: var(--text-muted);
-  --sidebar: #ffffff; /* white column on the off-white page */
+  --sidebar: var(--background); /* the sidebar sits on the page; the active item is the white surface */
   --sidebar-foreground: var(--text-primary);
   --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: var(--primary-foreground);

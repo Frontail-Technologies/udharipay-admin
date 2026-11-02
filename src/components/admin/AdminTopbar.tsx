@@ -4,7 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Bell, HelpCircle, Menu, Search } from "lucide-react";
 import { adminNavigation } from "@/config/admin-navigation";
-import { Input } from "@/components/ui/input";
+import { useCallback, useState } from "react";
+import { CommandPalette, useCommandPaletteShortcut } from "@/components/admin/CommandPalette";
+import { ThemeToggle } from "@/components/admin/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -31,6 +33,9 @@ function useActiveLabel() {
 export function AdminTopbar({ onOpenMobileNav }: { onOpenMobileNav: () => void }) {
   const activeLabel = useActiveLabel();
   const { logout, session } = useAuth();
+  const [paletteOpen, setPaletteOpen] = useState(false);
+  const openPalette = useCallback(() => setPaletteOpen(true), []);
+  useCommandPaletteShortcut(openPalette);
 
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center gap-2 bg-background/85 px-4 backdrop-blur supports-backdrop-filter:bg-background/70 sm:gap-3 sm:px-5 lg:gap-4 lg:px-6">
@@ -54,23 +59,24 @@ export function AdminTopbar({ onOpenMobileNav }: { onOpenMobileNav: () => void }
         </ol>
       </nav>
 
-      <div className="ml-auto hidden min-w-0 w-full max-w-sm items-center sm:flex">
-        <div className="relative w-full">
-          <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-text-muted" />
-          <Input
-            type="search"
-            placeholder="Search merchants, customers, plans…"
-            aria-label="Global search"
-            className="h-9 rounded-full bg-surface pl-8 text-[13px] shadow-[0_1px_2px_rgb(23_19_28/0.04)]"
-          />
-        </div>
-      </div>
+      {/* The search box opens the command palette (also ⌘K / Ctrl+K). */}
+      <button
+        type="button"
+        onClick={() => setPaletteOpen(true)}
+        aria-label="Search (Ctrl+K)"
+        className="ml-auto hidden h-9 w-full max-w-sm min-w-0 items-center gap-2 rounded-full bg-surface px-3 text-[13px] text-text-muted shadow-[0_1px_2px_rgb(23_19_28/0.04)] transition-colors hover:text-text-secondary sm:flex"
+      >
+        <Search className="size-4 shrink-0" />
+        <span className="truncate">Search merchants, employees, pages…</span>
+        <kbd className="ml-auto rounded-md bg-surface-muted px-1.5 py-0.5 text-[11px] font-medium">⌘K</kbd>
+      </button>
 
       <div className="ml-auto flex shrink-0 items-center gap-1 sm:ml-0">
         <Button
           variant="ghost"
           size="icon"
           aria-label="Search"
+          onClick={() => setPaletteOpen(true)}
           className="size-9 text-text-secondary sm:hidden"
         >
           <Search className="size-4.5" />
@@ -98,6 +104,8 @@ export function AdminTopbar({ onOpenMobileNav }: { onOpenMobileNav: () => void }
           <TooltipContent>Help</TooltipContent>
         </Tooltip>
 
+        <ThemeToggle />
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button
@@ -114,6 +122,7 @@ export function AdminTopbar({ onOpenMobileNav }: { onOpenMobileNav: () => void }
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+      <CommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} />
     </header>
   );
 }

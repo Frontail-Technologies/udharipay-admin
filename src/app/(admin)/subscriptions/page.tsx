@@ -1,16 +1,10 @@
+import { PageHeader } from "@/components/admin/PageHeader";
 import { BillingDirectory } from "@/features/billing/components/BillingDirectory";
 
 export default function SubscriptionsPage() {
   return (
     <div className="mx-auto flex max-w-7xl min-w-0 flex-col gap-5">
-      <div className="min-w-0">
-        <h1 className="text-[24px] font-semibold tracking-tight text-text-primary">
-          Subscriptions
-        </h1>
-        <p className="mt-1 text-[13px] leading-relaxed text-text-secondary">
-          Merchant SaaS billing invoices — activation fees and monthly subscription plans. Separate from customer Udhaar collections.
-        </p>
-      </div>
+      <PageHeader title="Subscriptions" description="Merchant SaaS billing invoices — activation fees and monthly subscription plans. Separate from customer Udhaar collections." />
 
       <BillingDirectory />
     </div>

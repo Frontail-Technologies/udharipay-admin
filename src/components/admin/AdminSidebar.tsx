@@ -17,7 +17,7 @@ export function AdminSidebar({
   return (
     <aside
       className={cn(
-        "hidden md:flex h-dvh sticky top-0 shrink-0 flex-col bg-sidebar-background shadow-[1px_0_0_var(--border)] transition-[width] duration-150 ease-out",
+        "hidden md:flex h-dvh sticky top-0 shrink-0 flex-col bg-background transition-[width] duration-200 ease-out",
         collapsed ? "w-16" : "w-60",
       )}
     >
@@ -48,7 +48,7 @@ export function AdminSidebar({
       <div className="shrink-0 p-2">
         <div
           className={cn(
-            "flex items-center gap-2.5 rounded-xl bg-surface-muted px-2.5 py-2",
+            "flex items-center gap-2.5 rounded-2xl bg-surface px-2.5 py-2 shadow-[var(--shadow-soft)]",
             collapsed && "justify-center px-0",
           )}
         >

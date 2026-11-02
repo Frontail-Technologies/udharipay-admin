@@ -41,10 +41,30 @@ export function DashboardPrimaryMetrics({ dashboard }: { dashboard: ReturnType<t
         <span>Collected</span>
         <span className="font-semibold text-white"><CardValue query={dashboard.collectionsReport} metricKey="collectedPaise" /></span>
       </div>
+      <CollectionRing query={dashboard.collectionsReport} />
     </div>
     <MetricCard label="New merchants" icon={Store} value={<CardValue query={dashboard.merchantsReport} metricKey="activeCount" />} />
     <MetricCard label="New customers" icon={Users} value={<CardValue query={dashboard.customersReport} metricKey="activeCount" />} />
   </div>;
+}
+
+// The period's collection rate (collected ÷ due, straight from the report) as a ring in the hero's corner.
+function CollectionRing({ query }: { query: ReportQuery }) {
+  const metric = query.isPending || query.isError ? null : findMetric(query.data.data.metrics, "collectionRateBasisPoints");
+  if (!metric || typeof metric.value !== "string") return null;
+  const ratio = Math.max(0, Math.min(1, Number(metric.value) / 10_000));
+  const radius = 34;
+  const length = 2 * Math.PI * radius;
+  return (
+    <div className="absolute top-5 right-5 hidden flex-col items-center gap-1 sm:flex">
+      <svg viewBox="0 0 84 84" className="size-21 -rotate-90" aria-hidden>
+        <circle cx="42" cy="42" r={radius} fill="none" stroke="rgb(255 255 255 / 0.18)" strokeWidth="8" />
+        <circle cx="42" cy="42" r={radius} fill="none" stroke="white" strokeWidth="8" strokeLinecap="round" strokeDasharray={`${length * ratio} ${length}`} />
+      </svg>
+      <span className="absolute top-[30px] text-[15px] font-semibold">{formatReportValue(metric.value, metric.type)}</span>
+      <span className="text-[11px] text-white/75">of due collected</span>
+    </div>
+  );
 }
 
 export function DashboardSecondaryMetrics({ dashboard }: { dashboard: ReturnType<typeof useDashboard> }) {

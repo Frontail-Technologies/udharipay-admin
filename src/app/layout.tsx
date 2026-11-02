@@ -22,6 +22,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${manrope.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex h-dvh flex-col overflow-hidden bg-background text-foreground">
