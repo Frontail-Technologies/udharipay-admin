@@ -29,6 +29,7 @@ export const MerchantApplicationState = {
     activation_fee_pending: 'activation_fee_pending',
     activation_fee_paid: 'activation_fee_paid',
     subscription_setup_pending: 'subscription_setup_pending',
+    agreement_pending: 'agreement_pending',
     active: 'active',
     rejected: 'rejected',
 } as const;
@@ -39,6 +40,7 @@ export const MerchantOnboardingStep = {
     review_verify: 'review_verify',
     plan_activation_fee: 'plan_activation_fee',
     autopay_setup: 'autopay_setup',
+    agreement: 'agreement',
     activated: 'activated',
 } as const;
 export interface MerchantApplicationSummary {
