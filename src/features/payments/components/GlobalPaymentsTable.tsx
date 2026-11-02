@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -55,9 +57,17 @@ export function GlobalPaymentsTable() {
       },
     },
     {
-      accessorKey: "merchantId",
+      accessorKey: "merchantName",
       header: "Merchant",
-      cell: ({ row }) => <span className="font-mono text-[11.5px] text-text-muted">{row.original.merchantId.slice(0, 8)}…</span>,
+      // The merchant by name (linked), with the paying customer underneath for collections.
+      cell: ({ row }) => (
+        <div className="min-w-0">
+          <Link href={`/merchants/${row.original.merchantId}`} onClick={(event) => event.stopPropagation()} className="block truncate font-medium text-text-primary hover:text-primary">
+            {row.original.merchantName ?? "Unknown merchant"}
+          </Link>
+          {row.original.customerName ? <p className="truncate text-[11.5px] text-text-muted">{row.original.customerName}</p> : null}
+        </div>
+      ),
     },
     {
       accessorKey: "method",

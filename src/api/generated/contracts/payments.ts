@@ -60,7 +60,9 @@ export interface GlobalPaymentListItem {
     amountPaise: MoneyPaise;
     status: string;
     merchantId: string;
+    merchantName: string | null;
     customerId: string | null;
+    customerName: string | null;
     planId: string | null;
     subscriptionId: string | null;
     method: string | null;
