@@ -44,10 +44,10 @@ export function AdminNavList({
                     "flex items-center gap-2.5 rounded-xl px-3 py-2 text-[13px] font-medium transition-colors",
                     collapsed && "justify-center px-0",
                     isActive
-                      ? "bg-surface font-semibold text-text-primary shadow-[var(--shadow-soft)] [&>svg]:text-primary"
+                      ? "bg-sidebar-accent font-semibold text-sidebar-accent-foreground [&>svg]:text-primary"
                       : item.disabled
                         ? "text-text-muted/70 cursor-not-allowed"
-                        : "text-text-secondary hover:bg-surface/60 hover:text-text-primary",
+                        : "text-text-secondary hover:bg-surface-hover hover:text-text-primary",
                   )}
                 >
                   <Icon className="size-4.25 shrink-0" />

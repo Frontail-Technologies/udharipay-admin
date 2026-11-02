@@ -38,7 +38,7 @@ export function AdminTopbar({ onOpenMobileNav }: { onOpenMobileNav: () => void }
   useCommandPaletteShortcut(openPalette);
 
   return (
-    <header className="sticky top-0 z-10 flex h-16 items-center gap-2 bg-background/85 px-4 backdrop-blur supports-backdrop-filter:bg-background/70 sm:gap-3 sm:px-5 lg:gap-4 lg:px-6">
+    <header className="sticky top-0 z-10 flex h-16 items-center gap-2 border-b border-sidebar-border bg-sidebar px-4 sm:gap-3 sm:px-5 lg:gap-4 lg:px-6">
       <Button
         variant="ghost"
         size="icon"
@@ -64,11 +64,11 @@ export function AdminTopbar({ onOpenMobileNav }: { onOpenMobileNav: () => void }
         type="button"
         onClick={() => setPaletteOpen(true)}
         aria-label="Search (Ctrl+K)"
-        className="ml-auto hidden h-9 w-full max-w-sm min-w-0 items-center gap-2 rounded-full bg-surface px-3 text-[13px] text-text-muted shadow-[0_1px_2px_rgb(23_19_28/0.04)] transition-colors hover:text-text-secondary sm:flex"
+        className="ml-auto hidden h-9 w-full max-w-sm min-w-0 items-center gap-2 rounded-full bg-surface-muted px-3 text-[13px] text-text-muted transition-colors hover:text-text-secondary sm:flex"
       >
         <Search className="size-4 shrink-0" />
         <span className="truncate">Search merchants, employees, pages…</span>
-        <kbd className="ml-auto rounded-md bg-surface-muted px-1.5 py-0.5 text-[11px] font-medium">⌘K</kbd>
+        <kbd className="ml-auto rounded-md bg-surface px-1.5 py-0.5 text-[11px] font-medium">⌘K</kbd>
       </button>
 
       <div className="ml-auto flex shrink-0 items-center gap-1 sm:ml-0">

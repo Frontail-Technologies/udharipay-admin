@@ -110,7 +110,7 @@
   --info: #2563eb;
   --info-foreground: #ffffff;
 
-  --table-header: var(--surface-muted);
+  --table-header: #efe9f4; /* distinctly tinted so the header row never blends into the white card or the page */
   --table-hover: var(--surface-hover);
 
   --foreground: var(--text-primary);
@@ -132,13 +132,13 @@
   --chart-3: var(--warning);
   --chart-4: var(--error);
   --chart-5: var(--text-muted);
-  --sidebar: var(--background); /* the sidebar sits on the page; the active item is the white surface */
+  --sidebar: var(--surface); /* sidebar + top bar are white chrome framing the tinted page */
   --sidebar-foreground: var(--text-primary);
   --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: var(--primary-foreground);
   --sidebar-accent: var(--primary-muted);
   --sidebar-accent-foreground: var(--primary);
-  --sidebar-border: transparent; /* the sidebar is set apart by its tone, not a line */
+  --sidebar-border: var(--border);
   --sidebar-ring: var(--primary);
   --login-visual: #121015;
   --login-grid: rgba(255, 255, 255, 0.055);
@@ -174,7 +174,7 @@
   --info: #3b82f6;
   --info-foreground: #0f0e13;
 
-  --table-header: #1a1820;
+  --table-header: #25222e;
   --table-hover: #201d28;
 
   --foreground: var(--text-primary);
@@ -196,13 +196,13 @@
   --chart-3: var(--warning);
   --chart-4: var(--error);
   --chart-5: var(--text-muted);
-  --sidebar: #15131a;
+  --sidebar: #17151d;
   --sidebar-foreground: var(--text-primary);
   --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: var(--primary-foreground);
   --sidebar-accent: var(--primary-muted);
   --sidebar-accent-foreground: var(--primary);
-  --sidebar-border: transparent;
+  --sidebar-border: var(--border);
   --sidebar-ring: var(--primary);
   --login-visual: #0d0c10;
   --login-grid: rgba(255, 255, 255, 0.06);

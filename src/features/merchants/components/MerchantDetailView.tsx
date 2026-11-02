@@ -21,7 +21,7 @@ export function MerchantDetailView({ merchantId }: { merchantId: string }) {
   if (query.isError) return <div className="rounded-xl bg-destructive/[0.06] px-4 py-8 text-center text-[13px] text-destructive">{normalizeApiError(query.error).message}</div>;
 
   const merchant = query.data.data;
-  return <div className="mx-auto flex max-w-6xl min-w-0 flex-col gap-5">
+  return <div className="flex w-full min-w-0 flex-col gap-5">
     <EntityPageHeader backHref="/merchants" avatarLabel={initialsFromName(merchant.businessName)} title={merchant.businessName} meta={`${merchant.publicId} · ${merchant.ownerName} · ${merchant.city}, ${merchant.state}`} badges={<StatusBadge tone={merchantStatusTone[merchant.status]}>Business {humanizeSnakeCase(merchant.status)}</StatusBadge>} actions={<Select value={merchant.status} disabled={statusChange.isPending} onValueChange={(value) => void statusChange.changeStatus(merchant, parseStatus(value))}><SelectTrigger className="h-8 w-36 text-[12.5px]" aria-label="Change merchant status"><SelectValue /></SelectTrigger><SelectContent>{Object.values(MerchantStatus).map((status) => <SelectItem key={status} value={status}>{humanizeSnakeCase(status)}</SelectItem>)}</SelectContent></Select>} />
     <MerchantOverviewTab merchant={merchant} />
     <SubjectKycSection subjectType="merchant" subjectId={merchant.id} />
@@ -30,7 +30,7 @@ export function MerchantDetailView({ merchantId }: { merchantId: string }) {
 }
 
 function MerchantDetailSkeleton() {
-  return <div className="mx-auto flex max-w-6xl flex-col gap-5"><Skeleton className="h-24 w-full" /><Skeleton className="h-24 w-full" /><div className="grid gap-4 lg:grid-cols-2"><Skeleton className="h-52" /><Skeleton className="h-52" /></div></div>;
+  return <div className="flex w-full flex-col gap-5"><Skeleton className="h-24 w-full" /><Skeleton className="h-24 w-full" /><div className="grid gap-4 lg:grid-cols-2"><Skeleton className="h-52" /><Skeleton className="h-52" /></div></div>;
 }
 
 function parseStatus(value: string): MerchantStatusType {

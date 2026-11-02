@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { useDashboard } from "@/features/dashboard/hooks/useDashboard";
 import { dashboardPeriodOptions, type DashboardPeriod } from "@/features/dashboard/utils/period";
 import { DashboardPrimaryMetrics, DashboardSecondaryMetrics } from "@/features/dashboard/components/DashboardMetrics";
+import { DashboardCharts } from "@/features/dashboard/components/DashboardCharts";
 import { NeedsAttention } from "@/features/dashboard/components/NeedsAttention";
 import { RecentActivity } from "@/features/dashboard/components/RecentActivity";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -19,7 +20,7 @@ function greeting() {
 export function DashboardWorkspace() {
   const dashboard = useDashboard();
 
-  return <div className="mx-auto flex max-w-7xl min-w-0 flex-col gap-5 sm:gap-6">
+  return <div className="flex w-full min-w-0 flex-col gap-4 sm:gap-5">
     <div className="flex flex-wrap items-center justify-between gap-3">
       <div className="min-w-0">
         <h1 className="text-[22px] font-semibold tracking-tight text-text-primary sm:text-[26px]">{greeting()}</h1>
@@ -39,6 +40,7 @@ export function DashboardWorkspace() {
 
     <DashboardPrimaryMetrics dashboard={dashboard} />
     <DashboardSecondaryMetrics dashboard={dashboard} />
+    <DashboardCharts dashboard={dashboard} />
 
     <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(280px,1fr)_minmax(0,2fr)] lg:items-stretch">
       <div className="min-w-0"><NeedsAttention dashboard={dashboard} /></div>

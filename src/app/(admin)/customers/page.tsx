@@ -3,7 +3,7 @@ import { CustomersWorkspace } from "@/features/customers/components/CustomersWor
 
 export default function CustomersPage() {
   return (
-    <div className="mx-auto flex max-w-7xl min-w-0 flex-col gap-5">
+    <div className="flex w-full min-w-0 flex-col gap-5">
       <PageHeader title="Customers" description="Manage merchant-owned customer profiles and lifecycle status." />
 
       <CustomersWorkspace />

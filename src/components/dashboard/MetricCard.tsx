@@ -11,10 +11,22 @@ const trendStyles: Record<TrendDirection, { icon: LucideIcon; className: string 
   flat: { icon: Minus, className: "text-text-muted" },
 };
 
+type Tone = "neutral" | "primary" | "warning" | "error";
+
+const iconTone: Record<Tone, string> = {
+  neutral: "bg-surface-muted text-text-secondary",
+  primary: "bg-primary-muted text-primary",
+  warning: "bg-warning/10 text-warning",
+  error: "bg-error/10 text-error",
+};
+
+/** Compact stat tile: label + small icon on one line, the value under it, and an optional footer line. */
 export function MetricCard({
   label,
   value,
   icon: Icon,
+  tone = "primary",
+  footer,
   trendValue,
   trendDirection,
   trendLabel,
@@ -22,6 +34,8 @@ export function MetricCard({
   label: string;
   value: ReactNode;
   icon: LucideIcon;
+  tone?: Tone;
+  footer?: ReactNode;
   trendValue?: string;
   trendDirection?: TrendDirection;
   trendLabel?: string;
@@ -30,20 +44,17 @@ export function MetricCard({
   const TrendIcon = trend?.icon;
 
   return (
-    <div className="flex h-full min-w-0 flex-col justify-between gap-4 card-surface p-4 sm:p-5">
-      <div className="flex items-start justify-between gap-3">
-        <span className="min-w-0 text-[13px] font-medium leading-4 text-text-secondary">
-          {label}
-        </span>
-        <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary-muted text-primary">
-          <Icon className="size-4" />
+    <div className="flex h-full min-w-0 flex-col gap-2 card-surface px-4 py-3.5">
+      <div className="flex items-center justify-between gap-2">
+        <span className="min-w-0 truncate text-[12.5px] font-medium text-text-secondary">{label}</span>
+        <span className={cn("flex size-7 shrink-0 items-center justify-center rounded-lg", iconTone[tone])}>
+          <Icon className="size-3.5" />
         </span>
       </div>
-      <div className="text-[26px] font-semibold leading-tight tracking-tight text-text-primary">
-        {value}
-      </div>
+      <div className="truncate text-[20px] font-semibold leading-7 tracking-tight tabular-nums text-text-primary">{value}</div>
+      {footer ? <div className="text-[11.5px] text-text-muted">{footer}</div> : null}
       {trend && TrendIcon && (
-        <div className="flex items-center gap-1 text-[12px] leading-4">
+        <div className="flex items-center gap-1 text-[11.5px] leading-4">
           <span className={cn("flex shrink-0 items-center gap-0.5 font-medium", trend.className)}>
             <TrendIcon className="size-3.5" />
             {trendValue}
@@ -58,7 +69,7 @@ export function MetricCard({
 export function SecondaryMetricCard({
   label,
   value,
-  icon: Icon,
+  icon,
   tone = "neutral",
 }: {
   label: string;
@@ -66,21 +77,5 @@ export function SecondaryMetricCard({
   icon: LucideIcon;
   tone?: "neutral" | "warning" | "error";
 }) {
-  const toneClasses: Record<typeof tone, string> = {
-    neutral: "bg-surface-muted text-text-secondary",
-    warning: "bg-warning/10 text-warning",
-    error: "bg-error/10 text-error",
-  };
-
-  return (
-    <div className="flex h-full min-w-0 flex-col items-start gap-2 card-surface px-3 py-3 sm:flex-row sm:items-center sm:gap-3 sm:px-4 sm:py-3.5">
-      <span className={cn("flex size-9 shrink-0 items-center justify-center rounded-full", toneClasses[tone])}>
-        <Icon className="size-4" />
-      </span>
-      <div className="min-w-0">
-        <div className="truncate text-[15px] font-semibold leading-6 text-text-primary sm:text-[17px]">{value}</div>
-        <p className="text-[11.5px] leading-4 text-text-muted sm:truncate sm:text-[12px]">{label}</p>
-      </div>
-    </div>
-  );
+  return <MetricCard label={label} value={value} icon={icon} tone={tone} />;
 }

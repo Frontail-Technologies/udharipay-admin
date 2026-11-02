@@ -106,7 +106,7 @@ export function DataTable<TData, TValue>({
       ) : null}
       <div className={cn("overflow-x-auto overflow-y-visible", isPhone && "hidden")}>
         <Table className={tableClassName}>
-          <TableHeader className={cn("bg-table-header/70", stickyHeader && "sticky top-0 z-10")}>
+          <TableHeader className={cn("bg-table-header [&_tr]:border-border-strong", stickyHeader && "sticky top-0 z-10")}>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="hover:bg-transparent">
                 {showSerialNumber && (

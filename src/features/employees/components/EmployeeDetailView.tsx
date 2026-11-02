@@ -24,7 +24,7 @@ export function EmployeeDetailView({ employeeId }: { employeeId: string }) {
   const employee = query.data.data;
 
   return (
-    <div className="mx-auto flex max-w-6xl min-w-0 flex-col gap-5">
+    <div className="flex w-full min-w-0 flex-col gap-5">
       <EntityPageHeader
         backHref="/employees"
         avatarLabel={initialsFromName(employee.name)}
@@ -51,7 +51,7 @@ export function EmployeeDetailView({ employeeId }: { employeeId: string }) {
 }
 
 function EmployeeDetailSkeleton() {
-  return <div className="mx-auto flex max-w-6xl flex-col gap-5"><Skeleton className="h-24 w-full" /><Skeleton className="h-24 w-full" /><div className="grid gap-4 lg:grid-cols-2"><Skeleton className="h-52" /><Skeleton className="h-52" /></div></div>;
+  return <div className="flex w-full flex-col gap-5"><Skeleton className="h-24 w-full" /><Skeleton className="h-24 w-full" /><div className="grid gap-4 lg:grid-cols-2"><Skeleton className="h-52" /><Skeleton className="h-52" /></div></div>;
 }
 
 function parseStatus(value: string): UserStatusType {

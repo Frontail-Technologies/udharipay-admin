@@ -3,7 +3,7 @@ import { GlobalPaymentsTable } from "@/features/payments/components/GlobalPaymen
 
 export default function PaymentsPage() {
   return (
-    <div className="mx-auto flex max-w-7xl min-w-0 flex-col gap-5">
+    <div className="flex w-full min-w-0 flex-col gap-5">
       <PageHeader title="Payments" description="All transactions across collections, activation fees, and merchant subscriptions." />
 
       <GlobalPaymentsTable />

@@ -34,22 +34,27 @@ beforeEach(() => {
 });
 
 describe("useDashboard", () => {
-  it("requests exactly four bounded canonical reports for the initial default period", async () => {
+  it("requests bounded canonical reports (stats + chart sources) for the initial default period", async () => {
     const { wrapper } = setup();
     const { result } = renderHook(() => useDashboard(), { wrapper });
     await waitFor(() => expect(result.current.collectionsReport.isSuccess).toBe(true));
     await waitFor(() => expect(result.current.merchantsReport.isSuccess).toBe(true));
     await waitFor(() => expect(result.current.customersReport.isSuccess).toBe(true));
     await waitFor(() => expect(result.current.mandatesReport.isSuccess).toBe(true));
+    await waitFor(() => expect(result.current.paymentsReport.isSuccess).toBe(true));
+    await waitFor(() => expect(result.current.merchantPerformanceReport.isSuccess).toBe(true));
+    await waitFor(() => expect(result.current.agingReport.isSuccess).toBe(true));
 
-    expect(api.getReport).toHaveBeenCalledTimes(4);
+    expect(api.getReport).toHaveBeenCalledTimes(7);
     const kinds = api.getReport.mock.calls.map(([kind]) => kind).sort();
-    expect(kinds).toEqual(["collections", "customers", "mandates", "merchants"]);
-    for (const [, params] of api.getReport.mock.calls) {
-      expect(params).toMatchObject({ limit: 1 });
+    expect(kinds).toEqual(["collections", "customers", "mandates", "merchant_performance", "merchants", "outstanding", "payments"]);
+    for (const [kind, params] of api.getReport.mock.calls) {
+      expect(params).toMatchObject({ limit: kind === "merchant_performance" ? 5 : 1 });
       expect(params.dateFrom).toBeTruthy();
       expect(params.dateTo).toBeTruthy();
     }
+    const merchantParams = api.getReport.mock.calls.find(([kind]) => kind === "merchant_performance")?.[1];
+    expect(merchantParams).toMatchObject({ sort: "collected" });
   });
 
   it("requests small bounded attention and activity lists, not full datasets", async () => {
@@ -74,7 +79,7 @@ describe("useDashboard", () => {
 
     result.current.refresh();
 
-    await waitFor(() => expect(api.getReport).toHaveBeenCalledTimes(4));
+    await waitFor(() => expect(api.getReport).toHaveBeenCalledTimes(7));
     expect(api.listCollectionQueue).toHaveBeenCalledOnce();
     expect(api.listKycReviews).toHaveBeenCalledOnce();
     expect(api.listBillingInvoices).toHaveBeenCalledOnce();

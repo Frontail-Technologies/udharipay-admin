@@ -3,7 +3,7 @@ import { CommunicationsView } from "@/features/communications/components/Communi
 
 export default function CommunicationsPage() {
   return (
-    <div className="mx-auto flex max-w-7xl min-w-0 flex-col gap-5">
+    <div className="flex w-full min-w-0 flex-col gap-5">
       <PageHeader title="Communications" description="Manage customer reminders and team announcements." />
       <CommunicationsView />
     </div>
