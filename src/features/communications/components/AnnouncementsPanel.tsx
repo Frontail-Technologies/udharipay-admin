@@ -34,7 +34,7 @@ export function AnnouncementsPanel() {
   return <div className="flex flex-col gap-3">
     <div className="flex items-center justify-between gap-3"><h2 className="text-[15px] font-semibold text-text-primary">Announcements</h2><Button size="sm" className="h-9 gap-1.5" onClick={() => setCreating(true)}><Megaphone className="size-3.5" />New Announcement</Button></div>
     {pushUnavailable && <div role="status" className="rounded-lg bg-surface-muted px-3 py-2 text-[12.5px] text-text-secondary">Push delivery is not configured yet. In-app announcements will still be delivered.</div>}
-    {query.isPending ? <Skeleton className="h-32 w-full" /> : query.isError ? <div className="rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-8 text-center text-[13px] text-destructive">{normalizeApiError(query.error).message}</div> : items.length === 0 ? <div className="rounded-lg border border-border px-4 py-10 text-center text-[13px] text-text-muted">No announcements yet.</div> : <div className="flex flex-col gap-2">
+    {query.isPending ? <Skeleton className="h-32 w-full" /> : query.isError ? <div className="rounded-xl bg-destructive/[0.06] px-4 py-8 text-center text-[13px] text-destructive">{normalizeApiError(query.error).message}</div> : items.length === 0 ? <div className="rounded-lg border border-border px-4 py-10 text-center text-[13px] text-text-muted">No announcements yet.</div> : <div className="flex flex-col gap-2">
       {items.map((announcement) => <AnnouncementRow key={announcement.publicId} announcement={announcement} onView={() => setViewing(announcement)} />)}
       {(cursors.length > 0 || nextCursor) && <div className="flex justify-end gap-1.5"><Button variant="outline" size="sm" className="h-8" disabled={cursors.length === 0} onClick={() => setCursors((current) => current.slice(0, -1))}>Previous</Button><Button variant="outline" size="sm" className="h-8" disabled={!nextCursor} onClick={() => nextCursor && setCursors((current) => [...current, nextCursor])}>Next</Button></div>}
     </div>}
@@ -44,7 +44,7 @@ export function AnnouncementsPanel() {
 }
 
 function AnnouncementRow({ announcement, onView }: { announcement: Announcement; onView: () => void }) {
-  return <div className="flex items-start justify-between gap-4 rounded-[11px] border border-border bg-surface px-4 py-3">
+  return <div className="flex items-start justify-between gap-4 card-surface px-4 py-3">
     <div className="min-w-0 flex-1">
       <div className="flex flex-wrap items-center gap-2"><h3 className="text-[14px] font-semibold text-text-primary">{announcement.title}</h3><StatusBadge tone={announcementStatusTone[announcement.status]}>{humanizeSnakeCase(announcement.status)}</StatusBadge></div>
       <p className="mt-0.5 line-clamp-1 break-words text-[12.5px] text-text-secondary">{announcement.body}</p>

@@ -17,7 +17,7 @@ export function AuditDetailSheet({ event, onOpenChange }: { event: AuditEvent | 
           <SheetDescription className="text-[12px] text-text-muted">{formatTimestamp(event.createdAt)}</SheetDescription>
         </SheetHeader>
         <div className="flex flex-col gap-4 px-4 py-4">
-          <div className="rounded-lg border border-border bg-surface p-3.5">
+          <div className="card-surface p-3.5">
             <div className="flex flex-col divide-y divide-border">
               <KeyValueRow label="Actor" value={event.actorUserId ? `${humanizeAuditToken(event.actorRole ?? "user")} · ${event.actorUserId}` : "System"} />
               <KeyValueRow label="Action" value={humanizeAuditToken(event.action)} />
@@ -37,7 +37,7 @@ export function AuditDetailSheet({ event, onOpenChange }: { event: AuditEvent | 
 
 function AuditPayloadSection({ title, value, empty }: { title: string; value: unknown; empty: string }) {
   const entries = safePayloadEntries(value);
-  return <div className="rounded-lg border border-border bg-surface p-3.5">
+  return <div className="card-surface p-3.5">
     <h3 className="text-[12.5px] font-semibold text-text-primary">{title}</h3>
     {entries === null ? <p className="mt-2 text-[12px] text-text-muted">{empty}</p> : <ul className="mt-2 flex flex-col divide-y divide-border">
       {entries.map(([key, entry]) => <li key={key} className="flex items-center justify-between gap-3 py-2 text-[12.5px]"><span className="font-medium text-text-secondary">{humanizeAuditToken(key)}</span><span className="min-w-0 truncate text-right text-text-primary">{entry}</span></li>)}

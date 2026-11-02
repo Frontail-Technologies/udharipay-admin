@@ -15,7 +15,7 @@ import { formatDate, formatPaiseInr, humanizeSnakeCase } from "@/lib/format";
 export function InvoiceDetailView({ invoiceId }: { invoiceId: string }) {
   const query = useSubscriptionInvoice(invoiceId);
   if (query.isPending) return <div className="mx-auto flex max-w-4xl flex-col gap-5"><Skeleton className="h-24 w-full" /><Skeleton className="h-24 w-full" /><Skeleton className="h-52 w-full" /></div>;
-  if (query.isError) return <div className="rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-8 text-center text-[13px] text-destructive">{normalizeApiError(query.error).message}</div>;
+  if (query.isError) return <div className="rounded-xl bg-destructive/[0.06] px-4 py-8 text-center text-[13px] text-destructive">{normalizeApiError(query.error).message}</div>;
 
   const invoice = query.data.data;
   return <div className="mx-auto flex max-w-4xl min-w-0 flex-col gap-5">

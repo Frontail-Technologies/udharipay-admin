@@ -33,8 +33,8 @@ export function CustomersTable({ directory }: { directory: Directory }) {
   ], []);
   const filters: ManagementFilterDef[] = [{ id: "status", label: "Status", value: status ?? "all", onChange: (value) => replaceState({ merchantId, search: state.search, status: value === "all" ? undefined : value, cursor: undefined }), triggerClassName: "w-36", options: [{ value: "all", label: "All statuses" }, ...Object.values(CustomerStatus).map((value) => ({ value, label: humanizeSnakeCase(value) }))] }];
 
-  if (!merchantId) return <div className="rounded-lg border border-dashed border-border px-4 py-12 text-center text-[13px] text-text-muted">Select a merchant to view customers.</div>;
-  if (query.isError) return <div className="rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-8 text-center text-[13px] text-destructive">{normalizeApiError(query.error).message}</div>;
+  if (!merchantId) return <div className="rounded-xl bg-surface-muted/60 px-4 py-12 text-center text-[13px] text-text-muted">Select a merchant to view customers.</div>;
+  if (query.isError) return <div className="rounded-xl bg-destructive/[0.06] px-4 py-8 text-center text-[13px] text-destructive">{normalizeApiError(query.error).message}</div>;
 
   return <div className="flex flex-col gap-3"><ManagementToolbar search={{ value: search, onChange: (value) => replaceState({ merchantId, search: value || undefined, status: state.status, cursor: undefined }), placeholder: "Search customers...", ariaLabel: "Search customers" }} filters={filters} exportAriaLabel="Export customers" onExport={() => exportRowsToCsv("customers.csv", customers, [
     { header: "Customer ID", accessor: (row) => row.publicId }, { header: "Name", accessor: (row) => row.name }, { header: "Mobile", accessor: (row) => row.phone }, { header: "Alternate Mobile", accessor: (row) => row.alternatePhone ?? "" }, { header: "City", accessor: (row) => row.city }, { header: "State", accessor: (row) => row.state }, { header: "Status", accessor: (row) => humanizeSnakeCase(row.status) },

@@ -30,12 +30,12 @@ export function MetricCard({
   const TrendIcon = trend?.icon;
 
   return (
-    <div className="flex h-full min-w-0 flex-col justify-between gap-3 rounded-lg border border-border bg-surface p-4">
+    <div className="flex h-full min-w-0 flex-col justify-between gap-4 card-surface p-4 sm:p-5">
       <div className="flex items-start justify-between gap-3">
-        <span className="min-w-0 truncate text-[13px] font-medium leading-4 text-text-secondary">
+        <span className="min-w-0 text-[13px] font-medium leading-4 text-text-secondary">
           {label}
         </span>
-        <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-primary-muted text-primary">
+        <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary-muted text-primary">
           <Icon className="size-4" />
         </span>
       </div>
@@ -73,13 +73,13 @@ export function SecondaryMetricCard({
   };
 
   return (
-    <div className="flex h-full min-w-0 items-center gap-3 rounded-lg border border-border bg-surface px-3.5 py-3">
-      <span className={cn("flex size-7 shrink-0 items-center justify-center rounded-md", toneClasses[tone])}>
-        <Icon className="size-3.5" />
+    <div className="flex h-full min-w-0 flex-col items-start gap-2 card-surface px-3 py-3 sm:flex-row sm:items-center sm:gap-3 sm:px-4 sm:py-3.5">
+      <span className={cn("flex size-9 shrink-0 items-center justify-center rounded-full", toneClasses[tone])}>
+        <Icon className="size-4" />
       </span>
       <div className="min-w-0">
-        <p className="truncate text-[11.5px] leading-4 text-text-muted">{label}</p>
-        <div className="truncate text-[15px] font-semibold leading-5 text-text-primary">{value}</div>
+        <div className="truncate text-[15px] font-semibold leading-6 text-text-primary sm:text-[17px]">{value}</div>
+        <p className="text-[11.5px] leading-4 text-text-muted sm:truncate sm:text-[12px]">{label}</p>
       </div>
     </div>
   );

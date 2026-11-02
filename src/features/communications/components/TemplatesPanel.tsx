@@ -25,7 +25,7 @@ export function TemplatesPanel() {
   const query = useWhatsAppTemplates();
   const [editingKey, setEditingKey] = useState<string | null>(null);
   if (query.isPending) return <div className="flex flex-col gap-2"><Skeleton className="h-24 w-full" /><Skeleton className="h-24 w-full" /></div>;
-  if (query.isError) return <div className="rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-8 text-center text-[13px] text-destructive">{normalizeApiError(query.error).message}</div>;
+  if (query.isError) return <div className="rounded-xl bg-destructive/[0.06] px-4 py-8 text-center text-[13px] text-destructive">{normalizeApiError(query.error).message}</div>;
   const templates = query.data.data.items;
   const editing = templates.find((template) => template.templateKey === editingKey);
   return <div className="flex flex-col gap-2">
@@ -37,7 +37,7 @@ export function TemplatesPanel() {
 function TemplateRow({ template, onEdit }: { template: WhatsAppTemplate; onEdit: () => void }) {
   const status = effectiveStatusOf(template);
   const featured = featuredVersionOf(template);
-  return <div className="flex items-center justify-between gap-4 rounded-[11px] border border-border bg-surface px-4 py-3">
+  return <div className="flex items-center justify-between gap-4 card-surface px-4 py-3">
     <div className="min-w-0 flex-1">
       <div className="flex flex-wrap items-center gap-2"><h3 className="text-[14px] font-semibold text-text-primary">{template.displayName}</h3><StatusBadge tone={effectiveStatusTone[status]}>{effectiveStatusLabels[status]}</StatusBadge></div>
       <p className="mt-0.5 text-[12px] text-text-muted">{templateSchedules[template.templateKey] ?? template.description ?? "Customer reminder"}</p>

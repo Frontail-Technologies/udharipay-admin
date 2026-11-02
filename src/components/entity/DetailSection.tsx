@@ -21,7 +21,7 @@ export function DetailSection({
   className?: string;
 }) {
   return (
-    <div className={cn("flex h-full flex-col rounded-[11px] border border-border bg-surface p-4", className)}>
+    <div className={cn("flex h-full flex-col card-surface p-4 sm:p-5", className)}>
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h3 className="text-[13.5px] font-semibold text-text-primary">{title}</h3>

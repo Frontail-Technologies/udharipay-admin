@@ -68,7 +68,7 @@ function ReportBody({ directory }: { directory: ReportDirectory }) {
 
     {filterDefs.length > 0 && <ManagementToolbar filters={filterDefs} />}
 
-    {directory.query.isError ? <div className="rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-8 text-center text-[13px] text-destructive">{normalizeApiError(directory.query.error).message}</div> : report ? <>
+    {directory.query.isError ? <div className="rounded-xl bg-destructive/[0.06] px-4 py-8 text-center text-[13px] text-destructive">{normalizeApiError(directory.query.error).message}</div> : report ? <>
       <p className="text-[12px] text-text-muted">Period: {formatDate(report.period.from)} – {formatDate(report.period.to)} ({report.period.timeZone})</p>
       <ReportMetricsGrid metrics={report.metrics} />
       <ReportTable columns={report.columns} rows={report.rows} isLoading={directory.query.isPending} />

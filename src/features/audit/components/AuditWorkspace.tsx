@@ -31,7 +31,7 @@ export function AuditWorkspace() {
 
     <ManagementToolbar filters={filters} />
 
-    {directory.query.isError ? <div className="rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-8 text-center text-[13px] text-destructive">{normalizeApiError(directory.query.error).message}</div> : <>
+    {directory.query.isError ? <div className="rounded-xl bg-destructive/[0.06] px-4 py-8 text-center text-[13px] text-destructive">{normalizeApiError(directory.query.error).message}</div> : <>
       <AuditTable events={directory.events} isLoading={directory.query.isPending} onRowClick={setSelected} />
       <div className="flex items-center justify-between"><p className="text-[12px] text-text-muted">{directory.events.length} result{directory.events.length === 1 ? "" : "s"} on this page</p><div className="flex gap-1.5"><Button variant="outline" size="sm" className="h-8" disabled={!state.auditCursor} onClick={directory.goPrevious}><ChevronLeft className="size-3.5" />Previous</Button><Button variant="outline" size="sm" className="h-8" disabled={!directory.nextCursor} onClick={() => directory.nextCursor && directory.goNext(directory.nextCursor)}>Next<ChevronRight className="size-3.5" /></Button></div></div>
     </>}

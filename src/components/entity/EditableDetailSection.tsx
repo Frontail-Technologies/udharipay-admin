@@ -31,8 +31,9 @@ export function EditableDetailSection({
   return (
     <div
       className={cn(
-        "flex h-full flex-col rounded-[11px] border bg-surface p-4 transition-colors",
-        editing ? "border-primary/30" : "border-border",
+        "flex h-full flex-col card-surface p-4 transition-shadow sm:p-5",
+        // Editing lifts the section with a primary ring instead of a border change.
+        editing && "ring-2 ring-primary/25",
         className,
       )}
     >

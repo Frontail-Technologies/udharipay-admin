@@ -16,7 +16,7 @@ export function NeedsAttention({ dashboard }: { dashboard: ReturnType<typeof use
     href: `/customers/${item.customerId}`,
     title: item.customerName,
     context: `${item.merchantName} · ${formatPaiseInr(item.outstandingAmountPaise)} overdue · ${item.daysOverdue}d`,
-    badgeLabel: "Overdue Collection",
+    badgeLabel: "Overdue",
   }));
 
   const kycItems: AttentionItem[] = (dashboard.kycAttention.data?.data.items ?? []).map((item) => ({
@@ -34,7 +34,7 @@ export function NeedsAttention({ dashboard }: { dashboard: ReturnType<typeof use
       href: `/subscriptions/${invoice.id}`,
       title: invoice.publicId,
       context: `${humanizeSnakeCase(invoice.type)} · ${formatPaiseInr(invoice.amountPaise)} overdue`,
-      badgeLabel: "Billing Overdue",
+      badgeLabel: "Billing overdue",
     }));
 
   const items = [...collectionItems, ...kycItems, ...billingItems];
@@ -49,12 +49,12 @@ export function NeedsAttention({ dashboard }: { dashboard: ReturnType<typeof use
           const Icon = item.badgeLabel === "KYC Pending" ? AlertTriangle : OctagonAlert;
           return <li key={item.key}>
             <Link href={item.href} className="flex w-full min-w-0 items-center gap-3 rounded-md px-1.5 py-2.5 text-left hover:bg-surface-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-              <span className="flex size-8 shrink-0 items-center justify-center rounded-md bg-error/10 text-error"><Icon className="size-4" /></span>
+              <span className={`flex size-9 shrink-0 items-center justify-center rounded-full ${item.badgeLabel === "KYC Pending" ? "bg-warning/10 text-warning" : "bg-error/10 text-error"}`}><Icon className="size-4" /></span>
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-[13px] font-medium text-text-primary">{item.title}</span>
                 <span className="block truncate text-[11.5px] text-text-muted">{item.context}</span>
               </span>
-              <StatusBadge tone="error">{item.badgeLabel}</StatusBadge>
+              <StatusBadge tone={item.badgeLabel === "KYC Pending" ? "warning" : "error"} className="hidden sm:inline-flex">{item.badgeLabel}</StatusBadge>
               <ChevronRight className="size-4 shrink-0 text-text-muted" />
             </Link>
             {index < items.length - 1 && <div className="mx-1.5 border-t border-border" />}

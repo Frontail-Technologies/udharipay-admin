@@ -22,7 +22,7 @@ export function CustomerRemindersSection({ customerId }: { customerId: string })
   const nextCursor = query.data?.data.pagination.nextCursor ?? null;
 
   if (query.isPending) return <Skeleton className="h-24 w-full" />;
-  if (query.isError) return <div className="rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-6 text-center text-[13px] text-destructive">{normalizeApiError(query.error).message}</div>;
+  if (query.isError) return <div className="rounded-xl bg-destructive/[0.06] px-4 py-6 text-center text-[13px] text-destructive">{normalizeApiError(query.error).message}</div>;
 
   const reminders = query.data.data.items;
   return <DetailSection title="WhatsApp Reminders">

@@ -32,7 +32,7 @@ function ActivationFeeSection() {
   const { register, handleSubmit, reset, setError, formState: { errors } } = useForm<FeeValues>({ defaultValues: { activationFeeRupees: "", customerActivationFeeRupees: "" } });
 
   if (query.isPending) return <Skeleton className="h-24 w-full" />;
-  if (query.isError) return <div className="rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-6 text-center text-[13px] text-destructive">{normalizeApiError(query.error).message}</div>;
+  if (query.isError) return <div className="rounded-xl bg-destructive/[0.06] px-4 py-6 text-center text-[13px] text-destructive">{normalizeApiError(query.error).message}</div>;
 
   const settings = query.data.data;
   const startEdit = () => { reset({ activationFeeRupees: rupeesFromPaise(settings.activationFeePaise), customerActivationFeeRupees: rupeesFromPaise(settings.customerActivationFeePaise) }); setEditing(true); };
@@ -55,7 +55,7 @@ function ActivationFeeSection() {
 function BillingPlansSection() {
   const query = useBillingPlans();
   if (query.isPending) return <Skeleton className="h-52 w-full" />;
-  if (query.isError) return <div className="rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-6 text-center text-[13px] text-destructive">{normalizeApiError(query.error).message}</div>;
+  if (query.isError) return <div className="rounded-xl bg-destructive/[0.06] px-4 py-6 text-center text-[13px] text-destructive">{normalizeApiError(query.error).message}</div>;
 
   const plans = query.data.data.items;
   return <div className="flex flex-col gap-3">

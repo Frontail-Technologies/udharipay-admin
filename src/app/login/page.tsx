@@ -66,7 +66,7 @@ function LoginForm() {
       <BrandPanel />
 
       <div className="flex min-h-dvh items-center justify-center px-5 py-10 sm:px-8 lg:px-12">
-        <section className="w-full max-w-md rounded-2xl border border-border bg-surface p-6 shadow-[0_24px_70px_color-mix(in_oklch,var(--foreground),transparent_90%)] sm:p-8" aria-labelledby="login-title">
+        <section className="w-full max-w-md card-surface p-6 shadow-[0_24px_70px_color-mix(in_oklch,var(--foreground),transparent_90%)] sm:p-8" aria-labelledby="login-title">
           <BrandMark compact />
 
           <div className="mb-7 mt-8">

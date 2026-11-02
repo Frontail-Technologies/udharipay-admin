@@ -17,7 +17,7 @@ export function CustomerActivationSection({ customerId }: { customerId: string }
   if (query.isError) {
     const error = normalizeApiError(query.error);
     if (error.status === 404) return <DetailSection title="Activation"><p className="text-[13px] text-text-muted">No activation fee charged.</p></DetailSection>;
-    return <div className="rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-6 text-center text-[13px] text-destructive">{error.message}</div>;
+    return <div className="rounded-xl bg-destructive/[0.06] px-4 py-6 text-center text-[13px] text-destructive">{error.message}</div>;
   }
   const activation = query.data.data;
   return <DetailSection title="Activation" description="One-time customer activation fee" action={<StatusBadge tone={tone[activation.status] ?? "neutral"}>{humanizeSnakeCase(activation.status)}</StatusBadge>}>

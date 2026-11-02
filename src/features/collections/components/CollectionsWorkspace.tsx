@@ -24,12 +24,12 @@ export function CollectionsWorkspace() {
 
   return <div className="flex flex-col gap-3">
     <ManagementToolbar search={{ value: directory.state.search ?? "", onChange: (search) => directory.setFilters({ search: search || undefined }), placeholder: "Search customer, phone or plan...", ariaLabel: "Search collections" }} filters={filters} />
-    <div className="flex flex-wrap items-end gap-2 rounded-lg border border-border bg-surface-muted/30 p-3">
+    <div className="flex flex-wrap items-end gap-2 rounded-xl bg-surface-muted/70 p-3">
       <label className="flex flex-col gap-1 text-[11.5px] font-medium text-text-secondary">Due from<Input type="date" value={directory.state.dateFrom ?? ""} onChange={(event) => directory.setFilters({ dateFrom: event.target.value || undefined })} className="h-8 w-40 bg-surface text-[12.5px]" /></label>
       <label className="flex flex-col gap-1 text-[11.5px] font-medium text-text-secondary">Due to<Input type="date" value={directory.state.dateTo ?? ""} onChange={(event) => directory.setFilters({ dateTo: event.target.value || undefined })} className="h-8 w-40 bg-surface text-[12.5px]" /></label>
       {(directory.state.dateFrom || directory.state.dateTo) && <Button type="button" variant="ghost" size="sm" className="h-8 text-[12px]" onClick={() => directory.setFilters({ dateFrom: undefined, dateTo: undefined })}>Clear dates</Button>}
     </div>
-    {directory.query.isError ? <div className="rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-8 text-center text-[13px] text-destructive">{normalizeApiError(directory.query.error).message}</div> : <>
+    {directory.query.isError ? <div className="rounded-xl bg-destructive/[0.06] px-4 py-8 text-center text-[13px] text-destructive">{normalizeApiError(directory.query.error).message}</div> : <>
       <CollectionQueueTable rows={directory.rows} isLoading={directory.query.isPending} onSelect={setSelected} />
       <div className="flex items-center justify-between"><p className="text-[12px] text-text-muted">{directory.rows.length} result{directory.rows.length === 1 ? "" : "s"} on this page</p><div className="flex gap-1.5"><Button variant="outline" size="sm" className="h-8" disabled={!directory.hasPrevious} onClick={directory.goPrevious}><ChevronLeft className="size-3.5" />Previous</Button><Button variant="outline" size="sm" className="h-8" disabled={!directory.nextCursor} onClick={() => directory.nextCursor && directory.goNext(directory.nextCursor)}>Next<ChevronRight className="size-3.5" /></Button></div></div>
     </>}

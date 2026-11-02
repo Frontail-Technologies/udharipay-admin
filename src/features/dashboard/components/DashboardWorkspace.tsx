@@ -10,13 +10,19 @@ import { RecentActivity } from "@/features/dashboard/components/RecentActivity";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 
+// Greeting by the hour in India, where the team works, instead of always "Good morning".
+function greeting() {
+  const hour = Number(new Intl.DateTimeFormat("en-IN", { hour: "numeric", hour12: false, timeZone: "Asia/Kolkata" }).format(new Date()));
+  return hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+}
+
 export function DashboardWorkspace() {
   const dashboard = useDashboard();
 
   return <div className="mx-auto flex max-w-7xl min-w-0 flex-col gap-5 sm:gap-6">
     <div className="flex flex-wrap items-center justify-between gap-3">
       <div className="min-w-0">
-        <h1 className="text-[22px] font-semibold tracking-tight text-text-primary sm:text-[26px]">Good morning, Admin</h1>
+        <h1 className="text-[22px] font-semibold tracking-tight text-text-primary sm:text-[26px]">{greeting()}</h1>
         <p className="text-[13px] text-text-secondary">Platform overview for the selected period.</p>
       </div>
       <div className="flex items-center gap-2">

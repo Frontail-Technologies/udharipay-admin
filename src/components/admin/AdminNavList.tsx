@@ -29,7 +29,7 @@ export function AdminNavList({
       {adminNavigation.map((group) => (
         <div key={group.label} className="mb-4">
           {!collapsed && (
-            <div className="px-2 pb-1.5 text-[10.5px] font-semibold uppercase tracking-wider text-text-muted">
+            <div className="px-3 pb-1.5 text-[11px] font-semibold text-text-muted">
               {group.label}
             </div>
           )}
@@ -41,10 +41,10 @@ export function AdminNavList({
               const row = (
                 <span
                   className={cn(
-                    "flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[13px] font-medium transition-colors",
+                    "flex items-center gap-2.5 rounded-xl px-3 py-2 text-[13px] font-medium transition-colors",
                     collapsed && "justify-center px-0",
                     isActive
-                      ? "bg-sidebar-active text-primary"
+                      ? "bg-sidebar-active font-semibold text-primary"
                       : item.disabled
                         ? "text-text-muted/70 cursor-not-allowed"
                         : "text-text-secondary hover:bg-surface-hover hover:text-text-primary",

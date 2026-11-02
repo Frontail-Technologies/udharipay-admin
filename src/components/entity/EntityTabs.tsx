@@ -35,7 +35,7 @@ export function EntityTabs({ tabs, defaultValue, panels, value, onValueChange }:
         <TabsList
           className={cn(
             "inline-flex h-10 min-w-max items-center gap-1",
-            "rounded-lg border border-border",
+            "rounded-full",
             "bg-surface-muted p-1",
           )}
         >
@@ -45,7 +45,7 @@ export function EntityTabs({ tabs, defaultValue, panels, value, onValueChange }:
               value={tab.value}
               className={cn(
                 "h-8 shrink-0 whitespace-nowrap",
-                "rounded-md border border-transparent",
+                "rounded-full border border-transparent",
                 "px-3.5",
                 "text-[13px] font-medium text-text-secondary",
                 "transition-colors duration-150",
@@ -53,11 +53,11 @@ export function EntityTabs({ tabs, defaultValue, panels, value, onValueChange }:
                 "hover:bg-surface-hover",
                 "hover:text-text-primary",
 
-                "data-[state=active]:border-primary/20",
-                "data-[state=active]:bg-primary/10",
+                "data-[state=active]:border-transparent",
+                "data-[state=active]:bg-surface",
                 "data-[state=active]:font-semibold",
                 "data-[state=active]:text-primary",
-                "data-[state=active]:shadow-xs",
+                "data-[state=active]:shadow-[var(--shadow-soft)]",
 
                 "focus-visible:outline-none",
                 "focus-visible:ring-2",

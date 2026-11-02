@@ -2,6 +2,7 @@
 
 import { ChevronsLeft, ChevronsRight, LogOut, ShieldCheck } from "lucide-react";
 import { AdminNavList } from "@/components/admin/AdminNavList";
+import { useAuth } from "@/features/auth/AuthProvider";
 import { cn } from "@/lib/utils";
 
 export function AdminSidebar({
@@ -11,22 +12,25 @@ export function AdminSidebar({
   collapsed: boolean;
   onToggleCollapsed: () => void;
 }) {
+  const { logout } = useAuth();
+
   return (
     <aside
       className={cn(
-        "hidden md:flex h-dvh sticky top-0 shrink-0 flex-col border-r border-sidebar-border bg-sidebar-background transition-[width] duration-150 ease-out",
+        "hidden md:flex h-dvh sticky top-0 shrink-0 flex-col bg-sidebar-background shadow-[1px_0_0_var(--border)] transition-[width] duration-150 ease-out",
         collapsed ? "w-16" : "w-60",
       )}
     >
       <div
         className={cn(
-          "flex h-16 shrink-0 items-center border-b border-sidebar-border px-4",
+          "flex h-16 shrink-0 items-center px-4",
           collapsed ? "justify-center px-0" : "justify-between",
         )}
       >
         {!collapsed && (
-          <span className="text-[15px] font-semibold tracking-tight text-text-primary">
-            UdhariPay <span className="text-primary">Admin</span>
+          <span className="flex items-center gap-2.5 text-[15px] font-semibold tracking-tight text-text-primary">
+            <span className="flex size-8 items-center justify-center rounded-[10px] bg-[linear-gradient(135deg,#b23fe0,#7a1fa8)] text-[14px] font-bold text-white shadow-[0_4px_12px_-4px_rgb(158_43_208/0.6)]">U</span>
+            <span>UdhariPay <span className="font-medium text-text-muted">Admin</span></span>
           </span>
         )}
         <button
@@ -41,10 +45,10 @@ export function AdminSidebar({
 
       <AdminNavList collapsed={collapsed} />
 
-      <div className="shrink-0 border-t border-sidebar-border p-2">
+      <div className="shrink-0 p-2">
         <div
           className={cn(
-            "flex items-center gap-2.5 rounded-md px-2.5 py-2",
+            "flex items-center gap-2.5 rounded-xl bg-surface-muted px-2.5 py-2",
             collapsed && "justify-center px-0",
           )}
         >
@@ -63,6 +67,7 @@ export function AdminSidebar({
             <button
               type="button"
               aria-label="Log out"
+              onClick={() => void logout()}
               className="flex items-center gap-2.5 rounded-md px-2.5 py-2 text-left text-[13px] font-medium text-text-secondary hover:bg-surface-hover hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <LogOut className="size-4.25" />

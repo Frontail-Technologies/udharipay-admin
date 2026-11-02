@@ -34,7 +34,7 @@ export function StatesPanel() {
   }
 
   return <section className="flex flex-col gap-4">
-    <div className="grid gap-2 rounded-lg border border-border bg-surface p-4 md:grid-cols-4">
+    <div className="grid gap-2 card-surface p-4 md:grid-cols-4">
       <select className="h-9 rounded-md border border-border bg-background px-3 text-sm" value={countryId} onChange={(event) => setCountryId(event.target.value)}><option value="">Select country</option>{(countries.data?.data.items ?? []).map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}</select>
       <Input placeholder="State name" value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} />
       <Input placeholder="Code" value={form.code} onChange={(event) => setForm({ ...form, code: event.target.value })} />

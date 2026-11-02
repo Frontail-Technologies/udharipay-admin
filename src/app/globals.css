@@ -72,7 +72,11 @@
 }
 
 :root {
-  --radius: 0.5rem;
+  --radius: 0.75rem;
+
+  /* Soft elevation instead of 1px borders (Material 3 surfaces): cards lift off the page, they are not boxed in. */
+  --shadow-soft: 0 1px 2px rgb(23 19 28 / 0.04), 0 6px 20px -8px rgb(23 19 28 / 0.08);
+  --shadow-raised: 0 2px 4px rgb(23 19 28 / 0.05), 0 12px 32px -10px rgb(23 19 28 / 0.14);
 
   /*
    * Fintech lavender light theme — 4-level surface hierarchy so the page
@@ -80,16 +84,16 @@
    * headers, inactive tab rails) and hover/active tints are all clearly
    * distinguishable from one another, never three near-identical grays.
    */
-  --background: #f6f4f8; /* Level 1 — app background, visibly off-white */
+  --background: #f7f5fa; /* Level 1 — app background, a cool off-white so white cards stand out without borders */
   --surface: #ffffff; /* Level 2 — cards/tables/forms/dialogs */
-  --surface-muted: #f2eef5; /* Level 3 — table headers, inactive tab rails, secondary toolbar surfaces */
+  --surface-muted: #f3eff6; /* Level 3 — table headers, filled inputs, inactive tab rails */
   --surface-hover: color-mix(in oklch, var(--primary), transparent 95%); /* Level 4 — hover, ~primary/5% */
 
   --text-primary: #17131c;
   --text-secondary: #5f5868;
   --text-muted: #81798b;
 
-  --border: #e1dbe6;
+  --border: #ebe6ef;
   --border-strong: #d4cadb;
 
   --primary: #9e2bd0;
@@ -128,13 +132,13 @@
   --chart-3: var(--warning);
   --chart-4: var(--error);
   --chart-5: var(--text-muted);
-  --sidebar: #fcfbfd; /* near-white, deliberately distinct from white content surfaces */
+  --sidebar: #ffffff; /* white column on the off-white page */
   --sidebar-foreground: var(--text-primary);
   --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: var(--primary-foreground);
   --sidebar-accent: var(--primary-muted);
   --sidebar-accent-foreground: var(--primary);
-  --sidebar-border: var(--border-strong); /* the sidebar's right edge is a major structural boundary — use the stronger border */
+  --sidebar-border: transparent; /* the sidebar is set apart by its tone, not a line */
   --sidebar-ring: var(--primary);
   --login-visual: #121015;
   --login-grid: rgba(255, 255, 255, 0.055);
@@ -142,6 +146,8 @@
 }
 
 .dark {
+  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.3), 0 6px 20px -8px rgb(0 0 0 / 0.45);
+  --shadow-raised: 0 2px 4px rgb(0 0 0 / 0.35), 0 12px 32px -10px rgb(0 0 0 / 0.6);
   --background: #0f0e13;
   --surface: #17151d;
   --surface-muted: #1d1b24;
@@ -196,7 +202,7 @@
   --sidebar-primary-foreground: var(--primary-foreground);
   --sidebar-accent: var(--primary-muted);
   --sidebar-accent-foreground: var(--primary);
-  --sidebar-border: var(--border);
+  --sidebar-border: transparent;
   --sidebar-ring: var(--primary);
   --login-visual: #0d0c10;
   --login-grid: rgba(255, 255, 255, 0.06);
@@ -213,6 +219,24 @@
   html {
     @apply font-sans;
   }
+}
+
+/*
+ * One card surface for the whole panel: rounded, white, softly lifted, no border.
+ * Use instead of "rounded-lg border border-border bg-surface".
+ */
+@utility card-surface {
+  border-radius: var(--radius-xl);
+  background-color: var(--surface);
+  box-shadow: var(--shadow-soft);
+}
+
+/* Filled-tonal form fields: soft fill at rest, white with a primary outline on focus. */
+@utility field-tonal {
+  background-color: var(--surface-muted);
+  border-color: transparent;
+  &:hover { border-color: var(--border-strong); }
+  &:focus-visible, &:focus-within { background-color: var(--surface); border-color: var(--ring); }
 }
 
 /* Custom Scrollbar */

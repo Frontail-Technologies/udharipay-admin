@@ -28,7 +28,7 @@ export function ChartCard({
   return (
     <div
       className={cn(
-        "flex h-full min-w-0 flex-col rounded-lg border border-border bg-surface p-4",
+        "flex h-full min-w-0 flex-col card-surface p-4",
         className,
       )}
     >

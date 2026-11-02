@@ -33,7 +33,7 @@ export function AdminTopbar({ onOpenMobileNav }: { onOpenMobileNav: () => void }
   const { logout, session } = useAuth();
 
   return (
-    <header className="sticky top-0 z-10 flex h-16 items-center gap-2 border-b border-border bg-surface/95 px-4 backdrop-blur supports-backdrop-filter:bg-surface/80 sm:gap-3 sm:px-5 lg:gap-4 lg:px-6">
+    <header className="sticky top-0 z-10 flex h-16 items-center gap-2 bg-background/85 px-4 backdrop-blur supports-backdrop-filter:bg-background/70 sm:gap-3 sm:px-5 lg:gap-4 lg:px-6">
       <Button
         variant="ghost"
         size="icon"
@@ -46,9 +46,11 @@ export function AdminTopbar({ onOpenMobileNav }: { onOpenMobileNav: () => void }
 
       <nav aria-label="Breadcrumb" className="min-w-0 shrink-0">
         <ol className="flex items-center gap-1.5 text-[13px]">
-          <li className="hidden text-text-muted sm:inline">UdhariPay Admin</li>
-          <li className="hidden text-text-muted sm:inline">/</li>
-          <li className="truncate font-medium text-text-primary">{activeLabel}</li>
+          <li className="hidden text-text-muted md:inline">UdhariPay Admin</li>
+          <li className="hidden text-text-muted md:inline">/</li>
+          {/* On phones the page's own heading names the page, so the bar shows the brand instead of repeating it. */}
+          <li className="truncate font-semibold text-text-primary md:hidden">UdhariPay</li>
+          <li className="hidden truncate font-medium text-text-primary md:inline">{activeLabel}</li>
         </ol>
       </nav>
 
@@ -59,7 +61,7 @@ export function AdminTopbar({ onOpenMobileNav }: { onOpenMobileNav: () => void }
             type="search"
             placeholder="Search merchants, customers, plans…"
             aria-label="Global search"
-            className="h-9 bg-surface-muted pl-8 text-[13px]"
+            className="h-9 rounded-full bg-surface pl-8 text-[13px] shadow-[0_1px_2px_rgb(23_19_28/0.04)]"
           />
         </div>
       </div>

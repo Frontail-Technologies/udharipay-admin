@@ -18,7 +18,7 @@ const TABS = [{ value: "overview", label: "Overview" }, { value: "schedule", lab
 export function PlanDetailView({ planId, defaultTab }: { planId: string; defaultTab: string }) {
   const query = usePlan(planId);
   if (query.isPending) return <div className="mx-auto flex max-w-6xl flex-col gap-5"><Skeleton className="h-24 w-full" /><Skeleton className="h-24 w-full" /><Skeleton className="h-64 w-full" /></div>;
-  if (query.isError) return <div className="rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-8 text-center text-[13px] text-destructive">{normalizeApiError(query.error).message}</div>;
+  if (query.isError) return <div className="rounded-xl bg-destructive/[0.06] px-4 py-8 text-center text-[13px] text-destructive">{normalizeApiError(query.error).message}</div>;
   const plan = query.data.data;
   return <div className="mx-auto flex max-w-6xl min-w-0 flex-col gap-5"><EntityPageHeader backHref={`/plans?merchantId=${plan.merchantId}&customerId=${plan.customerId}`} avatarLabel="PL" title={plan.publicId} meta={plan.description} badges={<StatusBadge tone={planStatusTone[plan.status]}>{humanizeSnakeCase(plan.status)}</StatusBadge>} /><EntitySummaryGrid items={[{ label: "Original Udhaar", value: formatPaiseInr(plan.originalAmountPaise) }, { label: "Collections", value: String(plan.numberOfCollections) }, { label: "Frequency", value: planFrequencyLabels[plan.frequency] }, { label: "Start Date", value: formatDate(plan.startDate) }]} /><EntityTabs tabs={TABS} defaultValue={defaultTab} panels={{ overview: <PlanOverview plan={plan} />, schedule: <PlanSchedule installments={plan.installments} />, payments: <PaymentHistory planId={plan.id} /> }} /></div>;
 }

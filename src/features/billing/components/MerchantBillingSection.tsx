@@ -18,7 +18,7 @@ export function MerchantBillingSection({ merchantId }: { merchantId: string }) {
 
   if (query.isError) {
     const error = normalizeApiError(query.error);
-    if (error.status !== 404) return <div className="rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-8 text-center text-[13px] text-destructive">{error.message}</div>;
+    if (error.status !== 404) return <div className="rounded-xl bg-destructive/[0.06] px-4 py-8 text-center text-[13px] text-destructive">{error.message}</div>;
     return <DetailSection title="Billing" description="Merchant SaaS subscription" action={<CreateSubscriptionDialog merchantId={merchantId} />}>
       <p className="text-[13px] text-text-muted">This merchant has no subscription yet.</p>
     </DetailSection>;

@@ -45,12 +45,13 @@ export function EntitySummaryGrid({ items }: { items: EntitySummaryItem[] }) {
       {items.map((item) => (
         <div
           key={item.label}
-          className="rounded-xl border border-border bg-surface px-3.5 py-3"
+          className="card-surface px-4 py-3.5"
         >
           <p className="truncate text-[12px] text-text-secondary">{item.label}</p>
           <p
             className={cn(
-              "mt-0.5 truncate text-[20px] font-semibold leading-tight",
+              // Wraps on phones instead of cutting the value off; one line on wider screens.
+              "mt-1 line-clamp-2 text-[15px] font-semibold leading-snug sm:truncate sm:text-[18px]",
               emphasisClass[item.emphasis ?? "default"],
             )}
           >

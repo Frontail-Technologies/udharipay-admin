@@ -29,7 +29,7 @@ export function PaymentHistory({ planId }: { planId: string }) {
     { id: "actions", header: "", cell: ({ row }) => <RowActionsMenu actions={[{ label: "View Payment", href: `/payments/${row.original.id}` }]} /> },
   ], []);
 
-  if (history.query.isError) return <div className="rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-8 text-center text-[13px] text-destructive">{normalizeApiError(history.query.error).message}</div>;
+  if (history.query.isError) return <div className="rounded-xl bg-destructive/[0.06] px-4 py-8 text-center text-[13px] text-destructive">{normalizeApiError(history.query.error).message}</div>;
   return <div className="flex flex-col gap-3"><PlanPaymentNotice /><DataTable columns={columns} data={history.payments} isLoading={history.query.isPending} stickyHeader tableClassName="min-w-[1040px]" onRowClick={(payment) => router.push(`/payments/${payment.id}`)} emptyState={<span className="text-[13px] text-text-muted">No payments recorded for this Plan.</span>} /><div className="flex items-center justify-between"><p className="text-[12px] text-text-muted">{history.payments.length} result{history.payments.length === 1 ? "" : "s"} on this page</p><div className="flex gap-1.5"><Button variant="outline" size="sm" className="h-8" disabled={!history.hasPrevious} onClick={history.goPrevious}><ChevronLeft className="size-3.5" />Previous</Button><Button variant="outline" size="sm" className="h-8" disabled={!history.nextCursor} onClick={() => history.nextCursor && history.goNext(history.nextCursor)}>Next<ChevronRight className="size-3.5" /></Button></div></div></div>;
 }
 
