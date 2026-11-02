@@ -15,7 +15,7 @@ export type CreateEmployeeBody = {
     name: string;
     email?: string;
     phone?: string;
-    initialPassword: string;
+    initialPassword?: string;
     status?: UserStatus;
     branch?: string;
     address?: string;

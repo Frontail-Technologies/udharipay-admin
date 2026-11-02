@@ -19,7 +19,6 @@ type CreateEmployeeValues = {
   name: string;
   email: string;
   phone: string;
-  initialPassword: string;
   status: UserStatusType;
   branch: string;
 };
@@ -28,7 +27,6 @@ const defaultValues: CreateEmployeeValues = {
   name: "",
   email: "",
   phone: "",
-  initialPassword: "",
   status: "active",
   branch: "",
 };
@@ -45,13 +43,8 @@ export function CreateEmployeeDialog() {
   };
 
   const submit = async (values: CreateEmployeeValues) => {
-    if (!values.email.trim() && !values.phone.trim()) {
-      setError("email", { type: "validate", message: "Enter an email or mobile number" });
-      return;
-    }
     const body: CreateEmployeeBody = {
       name: values.name.trim(),
-      initialPassword: values.initialPassword,
       status: values.status,
       ...(values.email.trim() ? { email: values.email.trim() } : {}),
       ...(values.phone.trim() ? { phone: values.phone.trim() } : {}),
@@ -78,7 +71,7 @@ export function CreateEmployeeDialog() {
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-xl">
         <DialogHeader>
           <DialogTitle>Add Employee</DialogTitle>
-          <DialogDescription>Create an employee account and operational profile.</DialogDescription>
+          <DialogDescription>Create an employee account. Email is optional.</DialogDescription>
         </DialogHeader>
         <form id="create-employee-form" className="grid gap-3" onSubmit={handleSubmit(submit)}>
           <FormField label="Name" htmlFor="employee-name" error={errors.name?.message}>
@@ -89,12 +82,13 @@ export function CreateEmployeeDialog() {
               <Input id="employee-email" type="email" {...register("email")} />
             </FormField>
             <FormField label="Mobile" htmlFor="employee-phone" error={errors.phone?.message}>
-              <Input id="employee-phone" type="tel" {...register("phone")} />
+              <Input id="employee-phone" type="tel" inputMode="tel" placeholder="98XXXXXXXX" {...register("phone", { required: "Mobile number is required" })} />
             </FormField>
           </div>
-          <FormField label="Initial Password" htmlFor="employee-password" error={errors.initialPassword?.message}>
-            <Input id="employee-password" type="password" autoComplete="new-password" {...register("initialPassword", { required: "Initial password is required" })} />
-          </FormField>
+          {/* No password: employees sign in to the mobile app with a one-time code sent to this number. */}
+          <p className="rounded-xl bg-primary-muted px-3 py-2.5 text-[12.5px] leading-relaxed text-text-secondary">
+            They sign in to the UdhariPay app with a one-time code (OTP) sent to this mobile number. No password needed.
+          </p>
           <div className="grid gap-3 sm:grid-cols-2">
             <FormField label="Branch" htmlFor="employee-branch" error={errors.branch?.message}>
               <Input id="employee-branch" {...register("branch")} />

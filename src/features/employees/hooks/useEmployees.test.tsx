@@ -78,7 +78,7 @@ describe("Employee API hooks", () => {
     client.setQueryData(employeeKeys.list({ limit: 25 }), { data: { items: [], pagination: { nextCursor: null } } });
     client.setQueryData(["merchants"], { data: [] });
     const { result } = renderHook(() => useCreateEmployee(), { wrapper });
-    const input = { name: "Nikita Rao", email: "nikita@example.test", initialPassword: "secure-password", status: "active" as const };
+    const input = { name: "Nikita Rao", email: "nikita@example.test", phone: "9800000011", status: "active" as const };
     await act(() => result.current.mutateAsync(input));
     expect(api.createEmployee).toHaveBeenCalledWith(input);
     expect(client.getQueryState(employeeKeys.list({ limit: 25 }))?.isInvalidated).toBe(true);

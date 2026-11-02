@@ -16,23 +16,24 @@ beforeEach(() => {
 });
 
 describe("CreateEmployeeDialog", () => {
-  it("submits the generated request shape, closes, and clears sensitive form state", async () => {
+  it("submits name and mobile without a password (OTP login), closes, and clears the form", async () => {
     render(<CreateEmployeeDialog />);
     fireEvent.click(screen.getByRole("button", { name: "Add Employee" }));
     fireEvent.change(screen.getByLabelText("Name"), { target: { value: "Nikita Rao" } });
     fireEvent.change(screen.getByLabelText("Email"), { target: { value: "nikita@example.test" } });
-    fireEvent.change(screen.getByLabelText("Initial Password"), { target: { value: "secure-password" } });
+    fireEvent.change(screen.getByLabelText("Mobile"), { target: { value: "9800000011" } });
     fireEvent.click(screen.getByRole("button", { name: "Create Employee" }));
     await waitFor(() => expect(mutation.mutateAsync).toHaveBeenCalledWith({
       name: "Nikita Rao",
       email: "nikita@example.test",
-      initialPassword: "secure-password",
+      phone: "9800000011",
       status: "active",
     }));
     await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
     fireEvent.click(screen.getByRole("button", { name: "Add Employee" }));
     expect(screen.getByLabelText("Name")).toHaveValue("");
-    expect(screen.getByLabelText("Initial Password")).toHaveValue("");
+    expect(screen.getByLabelText("Mobile")).toHaveValue("");
+    expect(screen.queryByLabelText(/password/i)).not.toBeInTheDocument();
   });
 
   it("maps backend validation errors inline without a duplicate toast", async () => {
@@ -46,10 +47,19 @@ describe("CreateEmployeeDialog", () => {
     fireEvent.click(screen.getByRole("button", { name: "Add Employee" }));
     fireEvent.change(screen.getByLabelText("Name"), { target: { value: "N" } });
     fireEvent.change(screen.getByLabelText("Email"), { target: { value: "nikita@example.test" } });
-    fireEvent.change(screen.getByLabelText("Initial Password"), { target: { value: "secure-password" } });
+    fireEvent.change(screen.getByLabelText("Mobile"), { target: { value: "9800000011" } });
     fireEvent.click(screen.getByRole("button", { name: "Create Employee" }));
     expect(await screen.findByText("Name is invalid")).toBeInTheDocument();
     expect(toast.error).not.toHaveBeenCalled();
+  });
+
+  it("requires a mobile number, because the OTP is sent to it", async () => {
+    render(<CreateEmployeeDialog />);
+    fireEvent.click(screen.getByRole("button", { name: "Add Employee" }));
+    fireEvent.change(screen.getByLabelText("Name"), { target: { value: "Nikita Rao" } });
+    fireEvent.click(screen.getByRole("button", { name: "Create Employee" }));
+    expect(await screen.findByText("Mobile number is required")).toBeInTheDocument();
+    expect(mutation.mutateAsync).not.toHaveBeenCalled();
   });
 
   it("shows a single normalized conflict error", async () => {
@@ -58,7 +68,7 @@ describe("CreateEmployeeDialog", () => {
     fireEvent.click(screen.getByRole("button", { name: "Add Employee" }));
     fireEvent.change(screen.getByLabelText("Name"), { target: { value: "Nikita Rao" } });
     fireEvent.change(screen.getByLabelText("Email"), { target: { value: "nikita@example.test" } });
-    fireEvent.change(screen.getByLabelText("Initial Password"), { target: { value: "secure-password" } });
+    fireEvent.change(screen.getByLabelText("Mobile"), { target: { value: "9800000011" } });
     fireEvent.click(screen.getByRole("button", { name: "Create Employee" }));
     await waitFor(() => expect(toast.error).toHaveBeenCalledWith("Employee login identity already exists"));
     expect(toast.error).toHaveBeenCalledOnce();

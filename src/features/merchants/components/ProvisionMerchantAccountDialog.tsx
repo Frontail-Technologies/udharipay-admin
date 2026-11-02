@@ -12,8 +12,8 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from "@/components/ui/input";
 import { FormField } from "@/components/entity/FormField";
 
-type ProvisionValues = { email: string; phone: string; initialPassword: string };
-const defaultValues: ProvisionValues = { email: "", phone: "", initialPassword: "" };
+type ProvisionValues = { email: string; phone: string };
+const defaultValues: ProvisionValues = { email: "", phone: "" };
 
 export function ProvisionMerchantAccountDialog({ merchantId }: { merchantId: string }) {
   const [open, setOpen] = useState(false);
@@ -27,11 +27,8 @@ export function ProvisionMerchantAccountDialog({ merchantId }: { merchantId: str
   };
 
   const submit = async (values: ProvisionValues) => {
-    if (!values.email.trim() && !values.phone.trim()) {
-      setError("email", { type: "validate", message: "Enter an email or mobile number" });
-      return;
-    }
-    const input: ProvisionMerchantAccountBody = { initialPassword: values.initialPassword, ...(values.email.trim() ? { email: values.email.trim() } : {}), ...(values.phone.trim() ? { phone: values.phone.trim() } : {}) };
+    // Both optional: the login uses the merchant's business mobile unless another number is given.
+    const input: ProvisionMerchantAccountBody = { ...(values.email.trim() ? { email: values.email.trim() } : {}), ...(values.phone.trim() ? { phone: values.phone.trim() } : {}) };
     try {
       await mutation.mutateAsync({ merchantId, input });
       reset(defaultValues);
@@ -44,11 +41,10 @@ export function ProvisionMerchantAccountDialog({ merchantId }: { merchantId: str
 
   return <Dialog open={open} onOpenChange={setDialogOpen}>
     <DialogTrigger asChild><Button type="button" variant="outline" size="sm" className="h-8 gap-1.5 text-[12.5px]"><UserPlus className="size-3.5" />Provision Account</Button></DialogTrigger>
-    <DialogContent className="sm:max-w-md"><DialogHeader><DialogTitle>Provision Merchant Account</DialogTitle><DialogDescription>Create login access for this merchant. Account status remains separate from business status.</DialogDescription></DialogHeader>
+    <DialogContent className="sm:max-w-md"><DialogHeader><DialogTitle>Provision Merchant Account</DialogTitle><DialogDescription>Give this merchant access to the UdhariPay app. They sign in with a one-time code (OTP) sent to their mobile, so there is no password to set.</DialogDescription></DialogHeader>
       <form id="provision-merchant-account-form" className="grid gap-3" onSubmit={handleSubmit(submit)}>
-        <FormField label="Email" htmlFor="account-email" error={errors.email?.message}><Input id="account-email" type="email" autoFocus {...register("email")} /></FormField>
-        <FormField label="Mobile" htmlFor="account-phone" error={errors.phone?.message}><Input id="account-phone" type="tel" {...register("phone")} /></FormField>
-        <FormField label="Initial Password" htmlFor="account-password" error={errors.initialPassword?.message}><Input id="account-password" type="password" autoComplete="new-password" {...register("initialPassword", { required: "Initial password is required" })} /></FormField>
+        <FormField label="Mobile for sign-in" htmlFor="account-phone" error={errors.phone?.message}><Input id="account-phone" type="tel" inputMode="tel" autoFocus placeholder="Leave empty to use the business mobile" {...register("phone")} /></FormField>
+        <FormField label="Email (optional)" htmlFor="account-email" error={errors.email?.message}><Input id="account-email" type="email" {...register("email")} /></FormField>
       </form>
       <DialogFooter><Button type="button" variant="outline" disabled={mutation.isPending} onClick={() => setDialogOpen(false)}>Cancel</Button><Button type="submit" form="provision-merchant-account-form" disabled={mutation.isPending}>{mutation.isPending && <Loader2 className="size-4 animate-spin" />}Provision Account</Button></DialogFooter>
     </DialogContent>

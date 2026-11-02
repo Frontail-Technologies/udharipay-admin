@@ -211,7 +211,7 @@ export type AssignMerchant200 = {
 export type ProvisionMerchantAccountBody = {
     email?: string;
     phone?: string;
-    initialPassword: string;
+    initialPassword?: string;
 };
 export type ProvisionMerchantAccount201 = {
     data: Merchant;
